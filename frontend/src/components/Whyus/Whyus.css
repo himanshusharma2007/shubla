@@ -1,0 +1,153 @@
+.Whyus{
+    width: 100%;
+    height: 100vh;
+    background: url("https://desertcamping.ae/wp-content/uploads/2023/07/fog-in-the-forest.jpg");
+    background-size: cover;
+    display: flex;
+    flex-wrap: wrap;
+    color: #333333;
+}
+.whyusfilter{
+    background: linear-gradient(0deg, rgba(255, 255, 240, 0.637) 17%, rgba(255,255,240,1) 94%);
+    width: 100%;
+    height: auto;
+    z-index: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+.why-1{
+    position: relative;
+    z-index: 1;
+    top: 0%;
+    width: 24%;
+    margin-top: 10%;
+    margin-left: 10%;
+}
+.why-1>h3{
+    font-family: "Rock Salt", cursive;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    color: #8B5A2B;
+    line-height: 17px;
+    margin-bottom: 5%;
+}
+.headingline{
+    width: 70px;
+    height: 1px;
+    margin-left: 15px;
+    margin-right: 15px;
+    background-color: #8B5A2B;
+    display: inline-block;
+}
+.why-1>h4{
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 29px;
+    margin-bottom: 5%;
+}
+.why-1>p{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+}
+.why-1>div{
+    width: 95%;
+    margin-left: 5%;
+    margin-top: 10%;
+}
+.why-1>div>h5{
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 20px;
+    margin-bottom: 2%;
+}
+.why-1>div>p{
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    margin-bottom: 5%;
+    color: #6B8E23;
+}
+.why-1 a{
+    padding: 3% 5%;
+    border-radius: 0;
+    background-color: #6B8E23;
+    border: none;
+    color: #333333;
+    text-decoration: none;
+    font-weight: 500;
+}
+.why-1 a:hover{
+    background-color: #FF5733;
+    border: none;
+    color: #fffff0;
+}
+
+
+
+.why-2{
+    width: 26%;
+    position: relative;
+    z-index: 1;
+    margin-top: 10%;
+    margin-left: 4%;
+}
+.why-2 img{
+    width: 100%;
+}
+
+.why-3{
+    width: 25%;
+    position: relative;
+    z-index: 1;
+    margin-top: 10%;
+    margin-left: 1%;
+    margin-right: 10%;
+}
+.why-3 img{
+    width: 100%;
+}
+.why-3 div{
+    margin-top: 5%;
+    background-color: #fffff0;
+    width: 100%;
+    height: 40%;
+}
+
+
+@media only screen and (max-width: 1000px){
+    .Whyus{
+       height: auto;
+    }
+    .whyusfilter{
+        height: auto;
+    }
+    .why-1{
+        position: relative;
+        z-index: 1;
+        top: 0%;
+        width: 80%;
+        margin-top: 15%;
+        margin-left: 10%;
+    }
+    .whyusfilter{
+        height: auto;
+        padding: 10% 0%;
+    }
+    .why-2{
+        display: none;
+    }
+    .why-3{
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-top: 5%;
+    }
+    .why-3 img{
+        width: 100%;
+        
+    }
+}

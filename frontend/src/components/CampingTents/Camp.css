@@ -1,0 +1,124 @@
+.Camps{
+    width: 100%;
+}
+.camphero{
+    width: 100%;
+    height: 70vh;
+    position: relative;
+    top: 10vh;
+    background-size: cover;
+    overflow: hidden;
+}
+.camphero-img{
+    width: 100%;
+    position: relative;
+    bottom: 100%;
+    z-index: 99;
+}
+.camphero-img img{
+    width: 100%;
+}
+.camphero .camphero-filter{
+    background-color: #0000002a;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 10%;
+}
+.camphero-filter h2{
+    font-size: 80px;
+    color: #fff;
+    font-weight: 700;
+}
+.camphero-filter p{
+    font-size: 30px;
+    color: #fff;
+    font-weight: 600;
+}
+
+
+.abt-camp{
+    width: 100%;
+    background-color: #CEB79F;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0% 10%;
+    padding-top: 10%;
+}
+.abt-camp div{
+    width: 50%;
+    background-color: #fffff0;
+    padding: 3%;
+}
+.abt-camp div h2{
+   font-size: 30px;
+   line-height: 35px;
+   font-weight: 700;
+}
+.abt-camp div p{
+    font-size: 16px;
+    line-height: 20px;
+ }
+.abt-camp div ul{
+    margin-bottom: 5%;
+}
+.abt-camp div ul li{
+    list-style: none;
+    font-size: 16px;
+    line-height: 30px;
+}
+.abt-camp div a{
+    text-decoration: none;
+    font-weight: 500;
+    padding: 2%;
+    border-radius: 0;
+    color: #fffff0;
+    background-color: #6B8E23;
+}
+.abt-camp div a:hover{
+    background-color: #FF5733;
+}
+.abt-camp img{
+    width: 50%;
+}
+
+@media only screen and (max-width: 1000px){
+    
+    .camphero{
+        height: 50vh;
+        top: 8vh;
+    }
+    .camphero-img{
+        height: 110%;
+        display: flex;
+        justify-content: center;
+    }
+    .camphero-img img{
+        width: 100%;
+        height: auto;
+    }
+    .abt-camp{
+        padding: 0% 5%;
+        padding-top: 20%;
+        flex-direction: column-reverse;
+    }
+    .abt-camp div{
+        width: 100%;
+        background-color: #fffff0;
+        padding: 3%;
+    }
+    .abt-camp img{
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 720px){
+    .camphero-img img{
+        width: auto;
+        height: 110%;
+    }
+}

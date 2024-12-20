@@ -1,0 +1,141 @@
+
+.Login_page{
+    width: 100%;
+    height: 100vh;
+    background-color: #fffff0;
+}
+.loginhead{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0% 5%;
+    align-items: center;
+    background-color: #fffff0;
+    border-bottom: 5px solid #000;
+}
+.loginhead img{
+    width: 10%;
+}
+.loginhead span a{
+    font-size: 30px;
+    color: #000;
+}
+
+.loginmain{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 5% 10%;
+}
+.loginmain .loginform{
+    width: 50%;
+}
+.loginform form{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+.loginform form h2{
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 5%;
+}
+.loginform form>input{
+    margin-bottom: 2%;
+    width: 70%;
+    padding: 2% 2%;
+    border: 1px solid #00000029;
+    color: #000000c9 ;
+    font-size: 15px;
+    background-color: #fffff0;
+}
+.loginform form button{
+    width: 70%;
+    margin-top: 3%;
+    margin-bottom: 1%;
+    padding: 2% 2%;
+    color: #fff;
+    text-transform: uppercase;
+    background-color: #000;
+    font-size: 14px;
+    border: none;
+}
+.loginform form>span{
+    width: 70%;
+}
+
+.loginform form>span>a{
+    float: right;
+}
+
+.loginmain .registerform{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.registerform h2{
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 5%;
+}
+.registerform p{
+    font-size: 13px;
+    width: 70%;
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 10%;
+    color: #00000085;
+}
+.registerform button{
+    width: 70%;
+    margin-top: 4%;
+    margin-bottom: 1%;
+    padding: 2% 2%;
+    color: #fff;
+    text-transform: uppercase;
+    background-color: #000;
+    font-size: 14px;
+    border: none;
+}
+
+.sign-up-button {
+    width: 70%;
+    margin-top: 4%;
+    margin-bottom: 1%;
+    padding: 2% 2%;
+    color: #fff;
+    text-transform: uppercase;
+    background-color: #000;
+    font-size: 14px;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+}
+
+
+@media only screen and (max-width: 1000px){
+    .loginhead img{
+        width: 25%;
+    }
+    .loginmain{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 5% 0%;
+    }
+    .loginmain .loginform{
+        width: 100%;
+    }
+    .loginmain .registerform{
+        margin-top: 10%;
+        width: 100%;
+    }
+}

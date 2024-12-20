@@ -1,0 +1,107 @@
+
+.about{
+    width: 100%;
+    height: 100vh;
+    background: #CEB79F;
+    display: flex;
+    z-index: 100;
+    color: #fff;
+}
+.left-abt{
+    width: 40%;
+    height: 100%;
+    border: 2px solid #fff;
+}
+.left-abt video{
+    /* height: 75%; */
+    width: 95%;
+    margin-left: 2.5%;
+    position: relative;
+    /* top: -18%;
+    left: -40%; */
+    z-index: 2;
+}
+.h-2{
+   position: relative;
+   z-index: 1;
+   top: 30%;
+   left: -10%;
+   rotate: 90deg;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.h-2 h2{
+    text-transform: uppercase;
+    font-size: 150px;
+    font-family: "Bodoni Moda", serif;
+    margin-top: 5%;
+ }
+ 
+
+.right-abt{
+    width: 60%;
+    height: 100%;
+    padding: 5%;
+}
+
+.right-abt .p-1{
+    font-size: 24px;
+    font-weight: 300;
+    text-align: center;
+    line-height: 38px;
+    margin: 0% 5%;
+}
+
+.right-abt h4{
+    font-weight: 600;
+    font-size: 23px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 35px;
+    margin: 5%;
+}
+.right-abt .p-2{
+    font-weight: 500;
+    font-size: 22px;
+    text-align: center;
+    line-height: 32px;
+    margin: 5%;
+}
+
+
+
+
+
+
+
+@media only screen and (max-width: 1100px){
+    .about{
+        width: 100%;
+        height: 70vh;
+    }
+    .left-abt{
+        display: none;
+    }
+    .right-abt{
+        width: 100%;
+        height: 100%;
+        padding: 5%;
+    }
+    .h-2-2 h2{
+        font-size: 70px;
+    }
+    .right-abt .p-1{
+        font-size: 20px;
+        line-height: 25px;
+    }
+    .right-abt h4{
+        font-size: 20px;
+        line-height: 30px;
+    }
+    .right-abt .p-2{
+        font-size: 16px;
+        line-height: 20px;
+    }
+    
+}

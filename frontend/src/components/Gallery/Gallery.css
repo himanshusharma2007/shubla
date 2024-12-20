@@ -1,0 +1,118 @@
+
+.gel-hero{
+    width: 100%;
+    height: 70vh;
+    position: relative;
+    top: 10vh;
+    background-size: cover;
+    overflow: hidden;
+}
+.gelhero-img{
+    width: 100%;
+    position: relative;
+    bottom: 100%;
+    z-index: 99;
+}
+.gelhero-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.gelhero-filter{
+    background-color: #0000002a;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 10%;
+}
+.gelhero-filter h2{
+    font-size: 80px;
+    color: #fff;
+    font-weight: 700;
+}
+.gelhero-filter p{
+    font-size: 30px;
+    color: #fff;
+    font-weight: 600;
+}
+
+
+
+
+.gel{
+    width: 100%;
+    padding: 1% 10%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fffff0;
+    margin-top: 4%;
+}
+.gelshow{
+    width: 100%;
+    height: 70%;
+    overflow: hidden;
+    margin-top: 3%;
+}
+.gelshow img{
+    width: 100%;
+}
+.gelselector{
+    width: 100%;
+    height: 20%;
+    overflow: hidden;
+    margin-top: 2%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.gelselector img{
+    width: 15%;
+    cursor: pointer;
+}
+.gelselector img:hover{
+    scale: 1.1;
+}
+
+
+@media only screen and (max-width: 1000px){
+    
+    .gel-hero{
+        height: 50vh;
+        top: 8vh;
+    }
+    .gelhero-img{
+        height: 110%;
+        display: flex;
+        justify-content: center;
+    }
+    .gelhero-img img{
+        width: 100%;
+        height: auto;
+    }
+    .gel{
+        width: 100%;
+        padding: 20% 2%;
+        height: auto;
+        overflow: hidden;
+        background-color: #fffff0;
+        margin-top: 20%;
+    }
+    .gelselector img{
+        width: 30%;
+        margin-top: 2%;
+        cursor: pointer;
+    }
+ 
+}
+
+@media only screen and (max-width: 720px){
+    .gelhero-img img{
+        width: auto;
+        height: 110%;
+    }
+}

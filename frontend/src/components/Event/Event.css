@@ -1,0 +1,138 @@
+
+.eventhero{
+    width: 100%;
+    height: 70vh;
+    position: relative;
+    top: 10vh;
+    background-size: cover;
+    overflow: hidden;
+}
+.eventhero-img{
+    width: 100%;
+    position: relative;
+    bottom: 100%;
+    z-index: 99;
+}
+.eventhero-img img{
+    width: 100%;
+}
+.eventhero .eventhero-filter{
+    background-color: #0000002a;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 10%;
+}
+.eventhero-filter h2{
+    font-size: 80px;
+    color: #fff;
+    font-weight: 700;
+}
+.eventhero-filter p{
+    font-size: 30px;
+    color: #fff;
+    font-weight: 600;
+}
+.abt-event{
+    margin-top: 4%;
+    padding: 10% 10%;
+    width: 100%;
+   background-color: #fffff0;
+}
+.abt-event h2{
+    font-size: 40px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 35px;
+}
+.abt-event p{
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 2%;
+}
+
+
+.event-gallery{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5%;
+    padding: 0%;
+    justify-content: center;
+}
+
+.event-gallery .leftgallery{
+    display: flex;
+    justify-content: center;
+    width: 45%;
+}
+.event-gallery .leftgallery>img{
+    width: 90%;
+}
+
+.event-gallery .rightgallery{
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 2%;
+    row-gap: 1%;
+    width: 40%;
+}
+.event-gallery .rightgallery>img{
+    width: 45%;
+}
+
+
+
+@media (max-width: 1000px) {
+    .eventhero{
+        height: 50vh;
+        top: 8vh;
+    }
+    .eventhero-img{
+        height: 110%;
+        display: flex;
+        justify-content: center;
+    }
+    .eventhero-img img{
+        width: 100%;
+        height: auto;
+    }
+    .abt-event{
+        margin-top: 10%;
+        padding: 15% 5%;
+        width: 100%;
+        background-color: #fffff0;
+    }
+
+    .event-gallery .leftgallery{
+        width: 90%;
+    }
+    .event-gallery .leftgallery>img{
+        width: 100%;
+    }
+    
+    .event-gallery .rightgallery{
+        width: 90%;
+        margin-top: 1%;
+    }
+    .event-gallery .rightgallery>img{
+        width: 49%;
+        margin-top: 2%;
+    }
+}
+
+
+
+
+@media only screen and (max-width: 720px){
+    .eventhero-img img{
+        width: auto;
+        height: 110%;
+    }
+}

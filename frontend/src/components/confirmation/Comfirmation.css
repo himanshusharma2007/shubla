@@ -1,0 +1,11 @@
+.confirmation{
+    width: 100%;
+    height: 100vh;
+    background-color: #CEB79F;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.confirmation img{
+    width: 20%;
+}

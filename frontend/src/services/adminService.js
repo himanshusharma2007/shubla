@@ -3,7 +3,7 @@ import api from './api.js';
 const adminService = {
   registerAdmin: async (adminData) => {
     try {
-      const response = await api.post('/api/admin/register', adminData);
+      const response = await api.post('/admin/register', adminData);
       return response.data;
     } catch (error) {
       throw error;
@@ -12,7 +12,7 @@ const adminService = {
 
   loginAdmin: async (credentials) => {
     try {
-      const response = await api.post('/api/admin/login', credentials);
+      const response = await api.post('/admin/login', credentials);
       return response.data;
     } catch (error) {
       throw error;
@@ -21,7 +21,7 @@ const adminService = {
 
   forgotPassword: async (email) => {
     try {
-      const response = await api.post('/api/admin/forgot-password', { email });
+      const response = await api.post('/admin/forgot-password', { email });
       return response.data;
     } catch (error) {
       throw error;
@@ -30,7 +30,7 @@ const adminService = {
 
   resetPassword: async (resetData) => {
     try {
-      const response = await api.post('/api/admin/reset-password', resetData);
+      const response = await api.post('/admin/reset-password', resetData);
       return response.data;
     } catch (error) {
       throw error;
@@ -39,7 +39,7 @@ const adminService = {
 
   getAdminProfile: async () => {
     try {
-      const response = await api.get('/api/admin/profile');
+      const response = await api.get('/admin/profile');
       return response.data;
     } catch (error) {
       throw error;

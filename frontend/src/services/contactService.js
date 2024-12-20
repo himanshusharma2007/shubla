@@ -3,7 +3,7 @@ import api from './api.js';
 const contactService = {
   sendMessage: async (messageData) => {
     try {
-      const response = await api.post('/api/contact', messageData);
+      const response = await api.post('/contact', messageData);
       return response.data;
     } catch (error) {
       throw error;
@@ -12,7 +12,7 @@ const contactService = {
 
   getAllMessages: async () => {
     try {
-      const response = await api.get('/api/contact/get-messages');
+      const response = await api.get('/contact/get-messages');
       return response.data;
     } catch (error) {
       throw error;

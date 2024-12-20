@@ -3,7 +3,7 @@ import api from './api.js';
 const campsService = {
   updateOrCreateCampsData: async (campData) => {
     try {
-      const response = await api.put('/api/camps/update', campData);
+      const response = await api.put('/camps/update', campData);
       return response.data;
     } catch (error) {
       throw error;
@@ -12,7 +12,7 @@ const campsService = {
 
   getCampsData: async () => {
     try {
-      const response = await api.get('/api/camps');
+      const response = await api.get('/camps');
       return response.data;
     } catch (error) {
       throw error;

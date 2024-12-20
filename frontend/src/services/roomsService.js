@@ -3,7 +3,7 @@ import api from './api.js';
 const roomsService = {
   updateOrCreateRoomsData: async (roomData) => {
     try {
-      const response = await api.put('/api/rooms/update', roomData);
+      const response = await api.put('/rooms/update', roomData);
       return response.data;
     } catch (error) {
       throw error;
@@ -12,7 +12,7 @@ const roomsService = {
 
   getRoomsData: async () => {
     try {
-      const response = await api.get('/api/rooms');
+      const response = await api.get('/rooms');
       return response.data;
     } catch (error) {
       throw error;

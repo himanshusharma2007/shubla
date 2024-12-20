@@ -3,7 +3,7 @@ import api from './api.js';
 const imageService = {
   uploadGalleryImage: async (formData) => {
     try {
-      const response = await api.post('/api/image/gallery', formData, {
+      const response = await api.post('/image/gallery', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       return response.data;
@@ -14,7 +14,7 @@ const imageService = {
 
   getAllGalleryImages: async () => {
     try {
-      const response = await api.get('/api/image/gallery');
+      const response = await api.get('/image/gallery');
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +23,7 @@ const imageService = {
 
   uploadInstagramImage: async (formData) => {
     try {
-      const response = await api.post('/api/image/instagram', formData, {
+      const response = await api.post('/image/instagram', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       return response.data;
@@ -34,7 +34,7 @@ const imageService = {
 
   getAllInstagramImages: async () => {
     try {
-      const response = await api.get('/api/image/instagram');
+      const response = await api.get('/image/instagram');
       return response.data;
     } catch (error) {
       throw error;

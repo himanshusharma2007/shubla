@@ -29,13 +29,7 @@ const parkingSlotSchema = new mongoose.Schema({
     },
     availableSlots: {
         type: Number,
-        required: [true, 'Please specify number of available parking slots'],
-        validate: {
-            validator: function(value) {
-                return value <= this.totalSlots;
-            },
-            message: 'Available slots cannot exceed total slots'
-        }
+        required: [true, 'Please specify number of available parking slots']
     },
     createdAt: {
         type: Date,

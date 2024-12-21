@@ -48,7 +48,7 @@ function Room() {
       <div className="abt-camp">
         <div>
             <h2>Deluxe Room</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate autem deleniti expedita veniam assumenda. Ipsa atque aspernatur accusantium fuga provident excepturi iure assumenda et, magni ratione blanditiis dicta numquam incidunt!</p>
+            <p>Elevate your desert camping experience by booking our <b>Deluxe Room</b>, where luxury meets adventure. Perfect for couples, families, or small groups, our Deluxe Rooms are designed to offer you a cozy and stylish retreat amidst the golden dunes of Dubai.</p>
             <ul>
                 <li><PiTentFill /> Advanture Experience</li>
                 <li><MdFastfood /> Testi Food</li>

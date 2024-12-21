@@ -38,7 +38,8 @@ function Event1() {
     </div>
     <div className="abt-event">
         <h2>Our Events</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, reprehenderit quas perferendis ut cumque, aliquid, ipsum placeat ducimus a numquam quo pariatur itaque magni consequuntur quisquam nam et? Mollitia voluptatem nobis odit quae fuga unde non nesciunt dolores, earum distinctio incidunt neque maiores aspernatur aut cum ratione a voluptas, repudiandae laborum perferendis deserunt quo eaque! Tempore debitis pariatur molestias voluptatum ad! Sint harum minus dignissimos modi explicabo, ratione nulla? Quia aspernatur cupiditate quisquam sequi a reiciendis nostrum! Unde quae odio quis ipsam voluptate at! Dolores obcaecati inventore sit, velit eveniet eius? Eum iure cum aut eveniet praesentium numquam neque expedita.</p>
+        <p><b>A Unique Corporate Experience in the Heart of Dubai’s Desert!</b><br/>
+        Impress your clients, reward your team, or host a memorable business gathering at our premium desert campsite. Our stunning desert backdrop provides a one-of-a-kind venue that blends professionalism with adventure, ensuring a truly unforgettable corporate event.</p>
 
         <div className="event-gallery">
         <div className="leftgallery">

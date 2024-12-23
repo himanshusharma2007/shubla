@@ -11,7 +11,7 @@ const checkAuth = async (req, res, next) => {
     const user = await User.findById(deCodedToken._id);
     console.log('user', user)
     if (!user) return res.status(401).json({ message: "Unauthorized" });
-    res.user = user;
+    req.user = user;
     next();
   } catch (error) {
     console.log('error', error)

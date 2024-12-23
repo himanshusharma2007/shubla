@@ -31,6 +31,11 @@ const roomSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Please specify number of available rooms'],
     },
+    price: {
+        type: Number,
+        required: [true, 'Please specify room price'],
+        min: [1, 'Room price must be at least 1']
+    },
     createdAt: {
         type: Date,
         default: Date.now

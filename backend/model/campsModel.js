@@ -17,6 +17,11 @@ const campSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please specify camp facilities']
     }],
+    price: {
+        type: Number,
+        required: [true, 'Please specify room price'],
+        min: [1, 'Room price must be at least 1']
+    },
     description: {
         type: String,
         required: [true, 'Please provide a camp description'],

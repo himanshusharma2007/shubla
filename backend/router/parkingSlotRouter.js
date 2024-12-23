@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
 const { checkAdmin } = require("../middleware/checkAdmin");
-const { updateParkingData, getParkingData } = require('../controllers/parkingSlotController');
+const { updateOrCreateParkingData, getParkingData } = require('../controller/parkingSlotController');
 
 // Validation middleware
 const parkingValidation = [
@@ -43,15 +43,14 @@ const parkingValidation = [
 ];
 
 // Routes
-router.route('/parking/update')
+router.route('/update')
     .put(
-        isAuthenticatedUser,
         checkAdmin,
         parkingValidation,
-        updateParkingData
+        updateOrCreateParkingData
     );
 
-router.route('/parking')
+router.route('/')
     .get(getParkingData);
 
 module.exports = router;

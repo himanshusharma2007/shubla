@@ -1,18 +1,19 @@
 const ParkingSlot = require('../model/parkingSlotModel');
 
-exports.updateParkingData = async (req, res) => {
+exports.updateOrCreateParkingData = async (req, res) => {
     try {
-        const { 
-            title, 
-            subtitle, 
-            facilities, 
-            description, 
-            totalSlots, 
-            availableSlots 
+        const {
+            title,
+            subtitle,
+            facilities,
+            description,
+            totalSlots,
+            availableSlots,
+            price
         } = req.body;
 
         // Input validation
-        if (!title || !subtitle || !facilities || !description || !totalSlots || !availableSlots) {
+        if (!title || !subtitle || !facilities || !description || !totalSlots || !availableSlots || !price) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -40,9 +41,9 @@ exports.updateParkingData = async (req, res) => {
             });
         }
 
-        // Update all parking slots with the new data
-        const updatedSlots = await ParkingSlot.updateMany(
-            {},  // empty filter to update all documents
+        // Use upsert to update or create a new document
+        const result = await ParkingSlot.updateOne(
+            {}, // empty filter to target any document or create if none exists
             {
                 $set: {
                     title,
@@ -50,36 +51,38 @@ exports.updateParkingData = async (req, res) => {
                     facilities,
                     description,
                     totalSlots,
-                    availableSlots
+                    availableSlots,
+                    price
                 }
             },
-            { 
-                new: true,
-                runValidators: true 
+            {
+                upsert: true, // Create a new document if none exists
+                runValidators: true // Ensures data validation
             }
         );
 
-        if (updatedSlots.matchedCount === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "No parking slots found to update"
+        // Response handling
+        if (result.matchedCount === 0 && result.upsertedCount === 1) {
+            return res.status(201).json({
+                success: true,
+                message: "Parking slot created successfully"
             });
         }
 
         res.status(200).json({
             success: true,
-            message: "All parking slots updated successfully",
-            modifiedCount: updatedSlots.modifiedCount
+            message: "Parking slot updated successfully"
         });
 
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Error updating parking slots",
+            message: "Error updating or creating parking slot",
             error: error.message
         });
     }
 };
+
 
 exports.getParkingData = async (req, res) => {
     try {

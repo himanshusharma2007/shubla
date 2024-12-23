@@ -8,11 +8,12 @@ exports.updateOrCreateCampsData = async (req, res) => {
             facilities, 
             description, 
             totalCamps, 
-            availableCamps 
+            availableCamps,
+            price
         } = req.body;
 
         // Input validation
-        if (!title || !subtitle || !facilities || !description || !totalCamps || !availableCamps) {
+        if (!title || !subtitle || !facilities || !description || !totalCamps || !availableCamps || !price) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -53,7 +54,8 @@ exports.updateOrCreateCampsData = async (req, res) => {
                         facilities,
                         description,
                         totalCamps,
-                        availableCamps
+                        availableCamps,
+                        price
                     }
                 },
                 {
@@ -75,7 +77,8 @@ exports.updateOrCreateCampsData = async (req, res) => {
                 facilities,
                 description,
                 totalCamps,
-                availableCamps
+                availableCamps,
+                price
             });
 
             await newCamp.save();

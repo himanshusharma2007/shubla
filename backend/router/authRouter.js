@@ -42,7 +42,8 @@ router.post("/logout", checkAuth, logout);
 
 // Get User Route
 router.get("/get-user", checkAuth, (req, res) => {
-  res.status(200).json({ user: res.user });
+  console.log('req.user', req.user)
+  res.status(200).json({ user: req.user });
 });
 
 module.exports = router;

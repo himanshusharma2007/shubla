@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
 const app = express();
-
+const cors = require("cors");
 const connectDB = require("./db/connectDB");
 const cookieParser = require("cookie-parser");
 const DB_URL = process.env.MONGO_URI;
@@ -10,6 +10,12 @@ const DB_URL = process.env.MONGO_URI;
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 const authRouter = require("./router/authRouter");
 const roomsRouter = require("./router/roomsRouter");
 const campsRouter = require("./router/campsRouter");

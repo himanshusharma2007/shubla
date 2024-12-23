@@ -1,42 +1,70 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import authService from "../services/authService";
 
 const initialState = {
-    user: JSON.parse(localStorage.getItem('user')) || null,
-    isAuthenticated: !!localStorage.getItem('user'),
-    error: null,
-}
+  user: null, // Single state object to store user data
+  isAuthenticated: false,
+  status: "idle", // For async operation status
+  error: null, // For error handling
+};
 
-const authSlice = createSlice({
-    name: 'auth',
-    initialState,
-    reducers : {
-        signUp : (state, action) => {
-            const user = action.payload;
-            localStorage.setItem('user', JSON.stringify(user));
-            state.user = user;
-            state.isAuthenticated = true;
-            state.error = null;
-        },
-        login: (state, action) => {
-            const {email, password} = action.payload;
-            const storedUser = localStorage.getItem(JSON.stringify('user'));
-            if(storedUser && storedUser.email === email && storedUser.password === password) {
-                state.user = storedUser;
-                state.isAuthenticated = true;
-                state.error = null;
-            } else {
-                state.isAuthenticated = false;
-                state.error = "Invalid Credentials";
-            }
-        },
-        logout: (state) => {
-            state.user = null;
-            state.isAuthenticated = false;
-            state.error = null;
-            localStorage.removeItem('user')
-        },
+export const fetchUser = createAsyncThunk(
+  "user/fetchUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      console.log("Fetching user data...");
+      const userData = await authService.getUser();
+      console.log("------User data fetched successfully-------:", userData);
+      return userData.user; // Return the fetched user data
+    } catch (error) {
+      console.error(
+        "Error fetching user data:",
+        error.response?.data || error.message
+      );
+      return rejectWithValue(error.response?.data || error.message); // Properly handle errors
+    }
+  }
+);
+
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    setUser: (state, action) => {
+      console.log("===========Setting user:============", action.payload);
+      state.user = action.payload; // Set all user data in a single state
+      state.isAuthenticated = true;
+      // console.log('User set successfully:', action.payload);
     },
+    clearUser: (state) => {
+      state.user = null; // Clear user data
+      state.isAuthenticated = false;
+      // console.log('User cleared successfully.');
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUser.pending, (state) => {
+        state.status = "loading";
+        // console.log('Fetching user data... Status: loading');
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload; // Store user data in a single state
+        state.isAuthenticated = true;
+        // console.log('User data set successfully in state:', state.user);
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+        console.error("Error setting user data in state:", action.payload);
+      });
+  },
 });
 
-export const {login, logout, signUp} = authSlice.actions;
-export default authSlice.reducer;
+// Export actions and selectors
+export const { setUser, clearUser } = userSlice.actions;
+export const selectUser = (state) => state.auth.user;
+export const selectIsAuthenticated = (state) => state.user.isAuthenticated;
+
+export default userSlice.reducer;

@@ -16,15 +16,17 @@ const GalleryComponent = () => {
     Insta1,
     Insta2,
     Insta3,
-    Insta3,
-    Insta3,
-    Insta3,
     Insta4,
     Insta5,
     Insta6,
     Insta7,
-    Insta1,
-    Insta1,
+    "./img1.jpg",
+    "./img2.jpg",
+    "./img3.jpg",
+    "./img4.jpg",
+    "./park.jpg",
+  
+
   ]);
 
   const [selectedImage, setSelectedImage] = useState(null);

@@ -47,7 +47,7 @@ function Camp() {
       <div className="abt-camp">
         <div>
             <h2>Camping Tent</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate autem deleniti expedita veniam assumenda. Ipsa atque aspernatur accusantium fuga provident excepturi iure assumenda et, magni ratione blanditiis dicta numquam incidunt!</p>
+            <p>Experience the magic of the Arabian desert with our premium <b>camping tents</b>, designed for comfort and adventure. Whether you're looking for a romantic getaway, a family outing, or an adventure with friends, our desert campsite offers the perfect retreat under the starlit skies.</p>
             <ul>
                 <li><PiTentFill /> Advanture Experience</li>
                 <li><MdFastfood /> Testi Food</li>

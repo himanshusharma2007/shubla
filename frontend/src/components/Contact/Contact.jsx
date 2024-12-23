@@ -12,7 +12,7 @@ function Contact() {
       </div>
       <div className="contact-right">
         <h2>Contact Us <div className='headingline'></div></h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, quia voluptatum. Eveniet dolorem amet asperiores sit architecto vero impedit consequatur reprehenderit animi voluptatibus! Cumque, voluptate. Voluptates deleniti sint ab magni.</p>
+        <p>Have questions about our desert camping packages? Want to book a private experience for your family or friends? We’re here to help you create unforgettable memories under the starry desert skies.</p>
         <form action="">
             <input  className="form-control" type="text" placeholder='Name' />
             <input  className="form-control" type="mail" placeholder='Email' />

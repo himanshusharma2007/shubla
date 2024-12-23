@@ -22,7 +22,7 @@ function Gallery() {
       properties: [
         {
           startValue: 0,
-          endValue: -50,
+          endValue: -150,
           property: "translateY",
         },
       ],
@@ -37,7 +37,7 @@ function Gallery() {
                 <p>We Create Good Memories!</p>
             </div>
             <Plx className='gelhero-img'  parallaxData={galhero}>
-                <img src="./gallery.jpg" alt="" />
+                <img src="./gallery2.jpg" alt="" />
             </Plx>
         </div>
         <Imggel/>

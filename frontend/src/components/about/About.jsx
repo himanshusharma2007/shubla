@@ -18,12 +18,7 @@ const headingdata = [
         },
       ],
     },
-  ];
-
-
-
-
-  
+  ];  
 
   const parlexdiv = [
     {
@@ -48,7 +43,7 @@ function About() {
                 <h2>Desert</h2>
             </Plx>   
             {/* <img src='./img1.jpg' alt="" /> */}
-            <video src={Intro} controls muted autoPlay loop>
+            <video src={Intro}  muted autoPlay loop>
              Your browser does not support the video tag.
            </video>
       </div>

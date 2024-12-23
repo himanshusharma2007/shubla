@@ -13,12 +13,12 @@
     border: 2px solid #fff;
 }
 .left-abt video{
-    /* height: 75%; */
+    height: 70%;
     width: 95%;
     margin-left: 2.5%;
     position: relative;
-    /* top: -18%;
-    left: -40%; */
+    top: -18%;
+    /* left: -40%; */
     z-index: 2;
 }
 .h-2{

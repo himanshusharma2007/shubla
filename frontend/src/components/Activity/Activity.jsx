@@ -29,32 +29,32 @@ function Activity() {
       const activites =[
         {
             actName: "Camel Safari", 
-            actdetails: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente adipisci unde repellendus non atque perferendis molestiae ducimus asperiores accusantium amet quam illum, velit est maiores error? Perspiciatis, quisquam beatae! Ducimus?",
+            actdetails: `Take a journey back in time and explore Dubai’s enchanting desert landscape with a Camel Safari. Known as the "Ship of the Desert", camels offer a serene and authentic way to traverse the golden dunes while immersing yourself in the beauty and tranquility of the Arabian desert.?`,
             actimg: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/11/74/a3/caption.jpg?w=1200&h=-1&s=1'
         },
         {
             actName: "Car Safari", 
-            actdetails: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente adipisci unde repellendus non atque perferendis molestiae ducimus asperiores accusantium amet quam illum, velit est maiores error? Perspiciatis, quisquam beatae! Ducimus?",
+            actdetails: "Looking for an adrenaline-packed adventure through the vast, golden dunes of Dubai? Our Car Safari offers the perfect blend of excitement and exploration as you navigate the desert's rugged terrain in a powerful 4x4 vehicle. Prepare for a thrilling ride that will leave you with unforgettable memories!",
             actimg: 'https://arabiahorizons.com/blog/wp-content/uploads/2020/05/Jeep-safari-Dubai.jpg'
         },
         {
             actName: "Boanfire", 
-            actdetails: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente adipisci unde repellendus non atque perferendis molestiae ducimus asperiores accusantium amet quam illum, velit est maiores error? Perspiciatis, quisquam beatae! Ducimus?",
+            actdetails: "End your day in the desert with a cozy and magical bonfire experience. Gather around the warmth of the crackling fire, share stories, enjoy the soothing desert breeze, and gaze up at the starlit sky. Our bonfire setting provides the perfect atmosphere for relaxation, creating unforgettable moments with friends and family.?",
             actimg: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/09/25/05/7b.jpg'
         },
         {
             actName: "Stars Watching", 
-            actdetails: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente adipisci unde repellendus non atque perferendis molestiae ducimus asperiores accusantium amet quam illum, velit est maiores error? Perspiciatis, quisquam beatae! Ducimus?",
+            actdetails: "Escape the city's lights and immerse yourself in the breathtaking beauty of the desert sky. Our stargazing experience lets you witness the wonders of the night sky like never before. With the vast, clear desert horizon as your backdrop, marvel at the twinkling stars and constellations above, far away from any light pollution",
             actimg: 'https://img.freepik.com/premium-photo/group-individuals-sitting-atop-barren-desert-landscape-gazing-vast-night-sky-group-friends-star-gazing-desert-ai-generated_585735-9362.jpg'
         },
         {
             actName: "Camping", 
-            actdetails: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente adipisci unde repellendus non atque perferendis molestiae ducimus asperiores accusantium amet quam illum, velit est maiores error? Perspiciatis, quisquam beatae! Ducimus?",
+            actdetails: "Step into the heart of the desert and experience the thrill of camping under the vast, open sky. Our desert camping offers a unique opportunity to connect with nature in one of the most serene and stunning environments in Dubai. Sleep under a blanket of stars in our comfortable tents, surrounded by the tranquility of the desert.",
             actimg: 'https://www.tourpackagejaisalmer.com/images/desert-night-camp.png'
         },
         {
             actName: "Games", 
-            actdetails: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente adipisci unde repellendus non atque perferendis molestiae ducimus asperiores accusantium amet quam illum, velit est maiores error? Perspiciatis, quisquam beatae! Ducimus?",
+            actdetails: "Get ready for an action-packed day in the desert with a wide variety of games and activities! From adrenaline-pumping dune bashing to thrilling sandboarding, our desert camp offers something for everyone. Challenge your friends and family to a friendly game of volleyball or soccer on the sand, or try your hand at archery for a unique desert challenge.",
             actimg: 'https://c02.purpledshub.com/uploads/sites/62/2022/01/Playing-board-game.-GettyImages-1227346894-b712fd5.jpg?w=1029&webp=1'
         },
       ]

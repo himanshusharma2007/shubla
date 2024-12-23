@@ -140,6 +140,17 @@ function Book() {
     });
   };
 
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * Redirects the user to the login page.
+ * 
+ * Prevents the default form submission behavior and navigates
+ * to the "/login" route using the provided `navigate` function.
+ *
+ * @param {Event} e - The event object from the triggering event.
+ */
+
+/******  5d5865b1-1101-4d04-886c-64548fbc9d13  *******/
   const redirectToLogin = (e) => {
     e.preventDefault();
     navigate("/login");

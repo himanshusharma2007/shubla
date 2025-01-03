@@ -7,16 +7,36 @@ const roomSchema = new mongoose.Schema({
         trim: true,
         maxLength: [100, 'Room title cannot exceed 100 characters']
     },
+    roomType: {
+        type: String,
+        enum: ['master', 'kids'],
+        required: [true, 'Please specify room type']
+    },
+    capacity: {
+        type: Number,
+        required: [true, 'Please specify room capacity'],
+        max: [4, 'Room capacity cannot exceed 4 people']
+    },
+    features: {
+        hasAttachedBathroom: {
+            type: Boolean,
+            default: false
+        },
+        numberOfBeds: {
+            type: Number,
+            required: true
+        }
+    },
+    facilities: [{
+        type: String,
+        required: [true, 'Please specify room facilities']
+    }],
     subtitle: {
         type: String,
         required: [true, 'Please provide a room subtitle'],
         trim: true,
         maxLength: [200, 'Room subtitle cannot exceed 200 characters']
     },
-    facilities: [{
-        type: String,
-        required: [true, 'Please specify room facilities']
-    }],
     description: {
         type: String,
         required: [true, 'Please provide a room description'],
@@ -31,10 +51,15 @@ const roomSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Please specify number of available rooms'],
     },
-    price: {
-        type: Number,
-        required: [true, 'Please specify room price'],
-        min: [1, 'Room price must be at least 1']
+    pricing: {
+        weekday: {
+            type: Number,
+            default: 200
+        },
+        weekend: {
+            type: Number,
+            default: 250
+        }
     },
     createdAt: {
         type: Date,

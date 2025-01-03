@@ -1,5 +1,6 @@
 const ParkingSlot = require('../model/parkingSlotModel');
 
+// parkingSlotController.js
 exports.updateOrCreateParkingData = async (req, res) => {
     try {
         const {
@@ -9,69 +10,82 @@ exports.updateOrCreateParkingData = async (req, res) => {
             description,
             totalSlots,
             availableSlots,
-            price
+            dimension,
+            pricing,
+            amenities
         } = req.body;
 
         // Input validation
-        if (!title || !subtitle || !facilities || !description || !totalSlots || !availableSlots || !price) {
+        if (!title || !subtitle || !facilities || !description || 
+            !totalSlots || !availableSlots || !dimension || 
+            !pricing || !amenities) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
             });
         }
 
-        if (totalSlots < 1) {
+        // Validate pricing structure
+        if (!pricing.weekday || !pricing.weekend) {
             return res.status(400).json({
                 success: false,
-                message: "Total parking slots must be at least 1"
+                message: "Both weekday and weekend pricing must be specified"
             });
         }
 
-        if (availableSlots > totalSlots) {
+        // Validate dimensions (10x10 meters requirement)
+        if (dimension.width !== 10 || dimension.length !== 10) {
             return res.status(400).json({
                 success: false,
-                message: "Available slots cannot exceed total slots"
+                message: "Parking slot dimensions must be 10x10 meters"
             });
         }
 
-        if (!Array.isArray(facilities) || facilities.length === 0) {
+        // Validate required amenities
+        const requiredAmenities = ['electricity', 'water', 'sanitation'];
+        const missingAmenities = requiredAmenities.filter(amenity => !amenities[amenity]);
+        
+        if (missingAmenities.length > 0) {
             return res.status(400).json({
                 success: false,
-                message: "Facilities must be a non-empty array"
+                message: `Missing required amenities: ${missingAmenities.join(', ')}`
             });
         }
 
-        // Use upsert to update or create a new document
-        const result = await ParkingSlot.updateOne(
-            {}, // empty filter to target any document or create if none exists
-            {
-                $set: {
-                    title,
-                    subtitle,
-                    facilities,
-                    description,
-                    totalSlots,
-                    availableSlots,
-                    price
-                }
+        const parkingData = {
+            title,
+            subtitle,
+            facilities,
+            description,
+            totalSlots,
+            availableSlots,
+            dimension,
+            pricing: {
+                weekday: 200, // Fixed price as per client requirement
+                weekend: 250  // Fixed price as per client requirement
             },
+            amenities
+        };
+
+        // Use findOneAndUpdate with upsert
+        const parkingSlot = await ParkingSlot.findOneAndUpdate(
+            { title },
+            { $set: parkingData },
             {
-                upsert: true, // Create a new document if none exists
-                runValidators: true // Ensures data validation
+                new: true,
+                upsert: true,
+                runValidators: true
             }
         );
 
-        // Response handling
-        if (result.matchedCount === 0 && result.upsertedCount === 1) {
-            return res.status(201).json({
-                success: true,
-                message: "Parking slot created successfully"
-            });
-        }
+        const message = parkingSlot.isNew ? 
+            "Parking slot created successfully" : 
+            "Parking slot updated successfully";
 
-        res.status(200).json({
+        res.status(parkingSlot.isNew ? 201 : 200).json({
             success: true,
-            message: "Parking slot updated successfully"
+            message,
+            parkingSlot
         });
 
     } catch (error) {
@@ -82,7 +96,6 @@ exports.updateOrCreateParkingData = async (req, res) => {
         });
     }
 };
-
 
 exports.getParkingData = async (req, res) => {
     try {

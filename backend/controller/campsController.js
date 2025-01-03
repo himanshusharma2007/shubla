@@ -2,93 +2,77 @@ const Camp = require('../model/campsModel');
 
 exports.updateOrCreateCampsData = async (req, res) => {
     try {
-        const { 
-            title, 
-            subtitle, 
-            facilities, 
-            description, 
-            totalCamps, 
+        const {
+            title,
+            subtitle,
+            facilities,
+            description,
+            totalCamps,
             availableCamps,
-            price
+            tentType,
+            capacity,
+            dimension,
+            pricing
         } = req.body;
 
         // Input validation
-        if (!title || !subtitle || !facilities || !description || !totalCamps || !availableCamps || !price) {
+        if (!title || !subtitle || !facilities || !description || 
+            !totalCamps || !availableCamps || !tentType || 
+            !capacity || !dimension || !pricing) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
             });
         }
 
-        if (totalCamps < 1) {
+        // Validate tent type
+        if (tentType !== 'bedouin') {
             return res.status(400).json({
                 success: false,
-                message: "Total camps must be at least 1"
+                message: "Only Bedouin style tents are supported"
             });
         }
 
-        if (availableCamps > totalCamps) {
+        // Validate capacity
+        if (capacity > 16) {
             return res.status(400).json({
                 success: false,
-                message: "Available camps cannot exceed total camps"
+                message: "Tent capacity cannot exceed 16 people"
             });
         }
 
-        if (!Array.isArray(facilities) || facilities.length === 0) {
-            return res.status(400).json({
-                success: false,
-                message: "Facilities must be a non-empty array"
-            });
-        }
+        const campData = {
+            title,
+            subtitle,
+            facilities,
+            description,
+            totalCamps,
+            availableCamps,
+            tentType,
+            capacity,
+            dimension,
+            pricing
+        };
 
-        // Check if the camp already exists
-        const existingCamp = await Camp.findOne({ title });
+        // Use findOneAndUpdate with upsert
+        const camp = await Camp.findOneAndUpdate(
+            { title },
+            { $set: campData },
+            {
+                new: true,
+                upsert: true,
+                runValidators: true
+            }
+        );
 
-        if (existingCamp) {
-            // Update the existing camp data
-            const updatedCamp = await Camp.findOneAndUpdate(
-                { title },
-                {
-                    $set: {
-                        subtitle,
-                        facilities,
-                        description,
-                        totalCamps,
-                        availableCamps,
-                        price
-                    }
-                },
-                {
-                    new: true, // Return the updated document
-                    runValidators: true
-                }
-            );
+        const message = camp.isNew ? "Camp created successfully" : "Camp updated successfully";
 
-            return res.status(200).json({
-                success: true,
-                message: "Camp updated successfully",
-                camp: updatedCamp
-            });
-        } else {
-            // Create a new camp document
-            const newCamp = new Camp({
-                title,
-                subtitle,
-                facilities,
-                description,
-                totalCamps,
-                availableCamps,
-                price
-            });
+        res.status(camp.isNew ? 201 : 200).json({
+            success: true,
+            message,
+            camp
+        });
 
-            await newCamp.save();
-
-            return res.status(201).json({
-                success: true,
-                message: "Camp created successfully",
-                camp: newCamp
-            });
-        }
     } catch (error) {
         res.status(500).json({
             success: false,

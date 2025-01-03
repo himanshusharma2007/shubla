@@ -17,10 +17,15 @@ const campSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please specify camp facilities']
     }],
-    price: {
-        type: Number,
-        required: [true, 'Please specify room price'],
-        min: [1, 'Room price must be at least 1']
+    pricing: {
+        weekday: {
+            type: Number,
+            default: 200
+        },
+        weekend: {
+            type: Number,
+            default: 250
+        }
     },
     description: {
         type: String,
@@ -35,6 +40,20 @@ const campSchema = new mongoose.Schema({
     availableCamps: {
         type: Number,
         required: [true, 'Please specify number of available camps']
+    },
+    tentType: {
+        type: String,
+        enum: ['bedouin'],
+        required: [true, 'Please specify tent type']
+    },
+    capacity: {
+        type: Number,
+        required: true,
+        max: [16, 'Tent capacity cannot exceed 16 people']
+    },
+    dimension: {
+        width: Number,
+        length: Number
     },
     createdAt: {
         type: Date,

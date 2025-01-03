@@ -7,11 +7,6 @@ const parkingSlotSchema = new mongoose.Schema({
         trim: true,
         maxLength: [100, 'Parking slot title cannot exceed 100 characters']
     },
-    price: {
-        type: Number,
-        required: [true, 'Please specify room price'],
-        min: [1, 'Room price must be at least 1']
-    },
     subtitle: {
         type: String,
         required: [true, 'Please provide a parking slot subtitle'],
@@ -35,6 +30,31 @@ const parkingSlotSchema = new mongoose.Schema({
     availableSlots: {
         type: Number,
         required: [true, 'Please specify number of available parking slots']
+    },
+    dimension: {
+        width: {
+            type: Number,
+            default: 10 // meters
+        },
+        length: {
+            type: Number,
+            default: 10 // meters
+        }
+    },
+    pricing: {
+        weekday: {
+            type: Number,
+            default: 200
+        },
+        weekend: {
+            type: Number,
+            default: 250
+        }
+    },
+    amenities: {
+        electricity: { type: Boolean, default: true },
+        water: { type: Boolean, default: true },
+        sanitation: { type: Boolean, default: true }
     },
     createdAt: {
         type: Date,

@@ -5,7 +5,13 @@ const Camp = require("../model/campsModel");
 const ParkingSlot = require("../model/parkingSlotModel");
 const sendEmail = require("../utils/sendMail");
 
-const checkAvailability = async (serviceType, quantity, checkIn, checkOut) => {
+const checkAvailability = async (
+  serviceType,
+  quantity,
+  checkIn,
+  checkOut,
+  options = {}
+) => {
   let ServiceModel;
   switch (serviceType) {
     case "room":
@@ -20,7 +26,7 @@ const checkAvailability = async (serviceType, quantity, checkIn, checkOut) => {
     default:
       throw new Error("Invalid service type");
   }
-  console.log("ServiceModel", ServiceModel);
+
   // Get current service data
   const service = await ServiceModel.findOne().sort({ createdAt: -1 });
   if (!service) {
@@ -45,16 +51,50 @@ const checkAvailability = async (serviceType, quantity, checkIn, checkOut) => {
     0
   );
 
-  // Check if enough units are available
+  // Calculate price based on service type
+  let price = 0;
+  const isWeekend = (date) => {
+    const day = date.getDay();
+    return day === 0 || day === 6;
+  };
+
+  switch (serviceType) {
+    case "parking":
+      price = isWeekend(new Date(checkIn))
+        ? service.pricing.weekend
+        : service.pricing.weekday;
+      break;
+    case "room":
+      if (options.roomType === "master") {
+        price = service.pricing.master;
+      } else if (options.roomType === "kids") {
+        price = service.pricing.kids;
+      }
+      break;
+    case "camp":
+      price = service.pricing.standard;
+      break;
+  }
+
+  // Check capacity constraints
+  let capacityExceeded = false;
+  if (serviceType === "room" && quantity * 4 < options.guests) {
+    capacityExceeded = true;
+  } else if (serviceType === "camp" && quantity * 16 < options.guests) {
+    capacityExceeded = true;
+  }
+
+  // Calculate available quantity
   const availableQuantity =
     service[
       `total${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}s`
     ] - bookedQuantity;
 
   return {
-    available: availableQuantity >= quantity,
+    available: availableQuantity >= quantity && !capacityExceeded,
     availableQuantity,
-    price: service.price,
+    price,
+    capacityExceeded,
   };
 };
 
@@ -194,12 +234,20 @@ const sendBookingNotifications = async (booking, user) => {
 // Enhanced createBooking controller
 exports.createBooking = async (req, res) => {
   try {
-    const { serviceType, quantity, checkIn, checkOut } = req.body;
-    const user = req.user; // Assuming user is authenticated
-    console.log("user", user);
+    const {
+      serviceType,
+      quantity,
+      checkIn,
+      checkOut,
+      guests,
+      roomType,
+      isPrivateBooking,
+    } = req.body;
+
+    const user = req.user;
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
-    console.log("checkInDate", checkInDate);
+
     if (checkInDate < new Date()) {
       return res.status(400).json({
         success: false,
@@ -207,25 +255,29 @@ exports.createBooking = async (req, res) => {
       });
     }
 
-    // Check availability
+    // Regular service booking
     const availability = await checkAvailability(
       serviceType,
       quantity,
       checkInDate,
-      checkOutDate
+      checkOutDate,
+      { roomType, guests }
     );
-    let status = "confirmed";
-    if (!availability?.available) {
-      status = "pending";
+
+    if (!availability.available) {
+      return res.status(400).json({
+        success: false,
+        message: availability.capacityExceeded
+          ? "Guest count exceeds capacity"
+          : "Service not available for selected dates and quantity",
+      });
     }
 
-    // Calculate total amount
     const duration = Math.ceil(
       (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
     );
     const totalAmount = quantity * availability.price * duration;
 
-    // Create booking
     const booking = await Booking.create({
       user: user._id,
       serviceType,
@@ -233,14 +285,13 @@ exports.createBooking = async (req, res) => {
       checkIn: checkInDate,
       checkOut: checkOutDate,
       totalAmount,
-      status,
+      status: "confirmed",
       paymentStatus: "pending",
+      isPrivateBooking: isPrivateBooking || false,
+      roomType: serviceType === "room" ? roomType : undefined,
     });
 
-    // Update service availability
     await updateServiceAvailability(serviceType);
-
-    // Send notifications
     await sendBookingNotifications(booking, user);
 
     res.status(201).json({
@@ -260,78 +311,84 @@ exports.createBooking = async (req, res) => {
 
 // Enhanced updateBookingStatus controller
 exports.updateBookingStatus = async (req, res) => {
-    try {
-      const { status } = req.body;
-      const booking = await Booking.findById(req.params.id).populate(
-        "user",
-        "name email"
-      );
-  
-      if (!booking) {
-        return res.status(404).json({
-          success: false,
-          message: "Booking not found",
-        });
-      }
-  
-      const oldStatus = booking.status;
-      booking.status = status;
-      await booking.save();
-  
-      // Update service availability if status changed
-      if (oldStatus !== status) {
-        await updateServiceAvailability(booking.serviceType);
-      }
-  
-      // Send status update notification to user
-      const subject = `Booking Status Updated - EJUUZ`;
-  
-      let message;
-      switch (status) {
-        case "confirmed":
-          message = `
+  try {
+    const { status } = req.body;
+    const booking = await Booking.findById(req.params.id).populate(
+      "user",
+      "name email"
+    );
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    const oldStatus = booking.status;
+    booking.status = status;
+    await booking.save();
+
+    // Update service availability if status changed
+    if (oldStatus !== status) {
+      await updateServiceAvailability(booking.serviceType);
+    }
+
+    // Send status update notification to user
+    const subject = `Booking Status Updated - EJUUZ`;
+
+    let message;
+    switch (status) {
+      case "confirmed":
+        message = `
             <h2>Booking Confirmed</h2>
             <p>Dear ${booking.user.name},</p>
             <p>Your booking has been confirmed. Here are the details:</p>
             <ul>
                 <li>Service: ${booking.serviceType}</li>
                 <li>Check-in: ${new Date(booking.checkIn).toLocaleString()}</li>
-                <li>Check-out: ${new Date(booking.checkOut).toLocaleString()}</li>
+                <li>Check-out: ${new Date(
+                  booking.checkOut
+                ).toLocaleString()}</li>
             </ul>
             <p>Thank you for choosing EJUUZ. We look forward to serving you!</p>
           `;
-          break;
-  
-        case "canceled":
-          message = `
+        break;
+
+      case "canceled":
+        message = `
             <h2>Booking Canceled</h2>
             <p>Dear ${booking.user.name},</p>
             <p>We regret to inform you that your booking has been canceled. Here are the details:</p>
             <ul>
                 <li>Service: ${booking.serviceType}</li>
                 <li>Check-in: ${new Date(booking.checkIn).toLocaleString()}</li>
-                <li>Check-out: ${new Date(booking.checkOut).toLocaleString()}</li>
+                <li>Check-out: ${new Date(
+                  booking.checkOut
+                ).toLocaleString()}</li>
             </ul>
             <p>If you have any questions or need further assistance, please contact our support team.</p>
           `;
-          break;
-  
-        case "pending":
-          message = `
+        break;
+
+      case "pending":
+        message = `
             <h2>Booking Pending</h2>
             <p>Dear ${booking.user.name},</p>
             <p>Your booking is currently pending. Here are the details:</p>
             <ul>
                 <li>Service: ${booking.serviceType}</li>
                 <li>Check-in: ${new Date(booking.checkIn).toLocaleString()}</li>
-                <li>Check-out: ${new Date(booking.checkOut).toLocaleString()}</li>
+                <li>Check-out: ${new Date(
+                  booking.checkOut
+                ).toLocaleString()}</li>
             </ul>
             <p>We will notify you once your booking status changes. Thank you for your patience!</p>
           `;
-          break;
-  
-        default:
-          message = `
+        break;
+
+      default:
+        message = `
             <h2>Booking Status Update</h2>
             <p>Dear ${booking.user.name},</p>
             <p>Your booking status has been updated to: ${status}</p>
@@ -339,29 +396,31 @@ exports.updateBookingStatus = async (req, res) => {
             <ul>
                 <li>Service: ${booking.serviceType}</li>
                 <li>Check-in: ${new Date(booking.checkIn).toLocaleString()}</li>
-                <li>Check-out: ${new Date(booking.checkOut).toLocaleString()}</li>
+                <li>Check-out: ${new Date(
+                  booking.checkOut
+                ).toLocaleString()}</li>
             </ul>
           `;
-      }
-  
-      if (status !== "completed") {
-        await sendEmail(booking.user.email, subject, message);
-      }
-  
-      res.status(200).json({
-        success: true,
-        message: "Booking status updated successfully",
-        booking,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Error updating booking status",
-        error: error.message,
-      });
     }
-  };
-  
+
+    if (status !== "completed") {
+      await sendEmail(booking.user.email, subject, message);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Booking status updated successfully",
+      booking,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error updating booking status",
+      error: error.message,
+    });
+  }
+};
+
 // Add automated cleanup for expired bookings
 const cleanupExpiredBookings = async () => {
   try {

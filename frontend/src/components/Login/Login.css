@@ -107,8 +107,8 @@
 
 .sign-up-button {
     width: 70%;
-    margin-top: 4%;
-    margin-bottom: 1%;
+    margin-top: 2%;
+    /* margin-bottom: 1%; */
     padding: 2% 2%;
     color: #fff;
     text-transform: uppercase;

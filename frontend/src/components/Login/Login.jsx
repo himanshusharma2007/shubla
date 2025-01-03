@@ -70,6 +70,9 @@ function Login() {
           <Link className="sign-up-button" to={"/register"}>
             Create Account
           </Link>
+          <Link className="sign-up-button" to={"/register"}>
+            Login as Admin
+          </Link>
         </div>
       </div>
     </div>

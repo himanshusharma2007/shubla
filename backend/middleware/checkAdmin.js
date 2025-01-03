@@ -6,6 +6,7 @@ const checkAdmin = async (req, res, next) => {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ message: "Unauthorized token" });
     const deCodedToken = jwt.verify(token, process.env.JWT_KEY);
+    console.log('deCodedToken', deCodedToken)
     const admin = await Admin.findById(deCodedToken.id);
     if (!admin) return res.status(401).json({ message: "Unauthorized admin not found" });
     if (admin.role !== "superAdmin")

@@ -12,13 +12,13 @@ exports.updateOrCreateCampsData = async (req, res) => {
             tentType,
             capacity,
             dimension,
-            pricing
+            price
         } = req.body;
 
         // Input validation
         if (!title || !subtitle || !facilities || !description || 
             !totalCamps || !availableCamps || !tentType || 
-            !capacity || !dimension || !pricing) {
+            !capacity || !dimension || !price) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -51,7 +51,7 @@ exports.updateOrCreateCampsData = async (req, res) => {
             tentType,
             capacity,
             dimension,
-            pricing
+            price
         };
 
         // Use findOneAndUpdate with upsert

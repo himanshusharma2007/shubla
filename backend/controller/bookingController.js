@@ -53,26 +53,20 @@ const checkAvailability = async (
 
   // Calculate price based on service type
   let price = 0;
-  const isWeekend = (date) => {
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  };
 
   switch (serviceType) {
     case "parking":
+      const isWeekend = (date) => {
+        const day = date.getDay();
+        return day === 0 || day === 6;
+      };
       price = isWeekend(new Date(checkIn))
         ? service.pricing.weekend
         : service.pricing.weekday;
       break;
     case "room":
-      if (options.roomType === "master") {
-        price = service.pricing.master;
-      } else if (options.roomType === "kids") {
-        price = service.pricing.kids;
-      }
-      break;
     case "camp":
-      price = service.pricing.standard;
+      price = service.price; // Single price field for rooms and camps
       break;
   }
 
@@ -97,6 +91,7 @@ const checkAvailability = async (
     capacityExceeded,
   };
 };
+
 
 // Utility function to update service availability
 const updateServiceAvailability = async (serviceType) => {
@@ -234,80 +229,79 @@ const sendBookingNotifications = async (booking, user) => {
 // Enhanced createBooking controller
 exports.createBooking = async (req, res) => {
   try {
-    const {
-      serviceType,
-      quantity,
-      checkIn,
-      checkOut,
-      guests,
-      roomType,
-      isPrivateBooking,
-    } = req.body;
+      const { 
+          serviceType, 
+          quantity, 
+          checkIn, 
+          checkOut, 
+          guests,
+          roomType,
+          isPrivateBooking
+      } = req.body;
+      
+      const user = req.user;
+      const checkInDate = new Date(checkIn);
+      const checkOutDate = new Date(checkOut);
 
-    const user = req.user;
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(checkOut);
+      if (checkInDate < new Date()) {
+          return res.status(400).json({
+              success: false,
+              message: "Check-in time cannot be in the past"
+          });
+      }
 
-    if (checkInDate < new Date()) {
-      return res.status(400).json({
-        success: false,
-        message: "Check-in time cannot be in the past",
+      // Regular service booking
+      const availability = await checkAvailability(
+          serviceType,
+          quantity,
+          checkInDate,
+          checkOutDate,
+          { roomType, guests }
+      );
+
+      if (!availability.available) {
+          return res.status(400).json({
+              success: false,
+              message: availability.capacityExceeded ?
+                  "Guest count exceeds capacity" :
+                  "Service not available for selected dates and quantity"
+          });
+      }
+
+      const duration = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+      const totalAmount = quantity * availability.price * duration;
+
+      const booking = await Booking.create({
+          user: user._id,
+          serviceType,
+          quantity,
+          checkIn: checkInDate,
+          checkOut: checkOutDate,
+          totalAmount,
+          status: "confirmed",
+          paymentStatus: "pending",
+          isPrivateBooking: isPrivateBooking || false,
+          roomType: serviceType === "room" ? roomType : undefined
       });
-    }
 
-    // Regular service booking
-    const availability = await checkAvailability(
-      serviceType,
-      quantity,
-      checkInDate,
-      checkOutDate,
-      { roomType, guests }
-    );
+      await updateServiceAvailability(serviceType);
+      await sendBookingNotifications(booking, user);
 
-    if (!availability.available) {
-      return res.status(400).json({
-        success: false,
-        message: availability.capacityExceeded
-          ? "Guest count exceeds capacity"
-          : "Service not available for selected dates and quantity",
+      res.status(201).json({
+          success: true,
+          message: "Booking confirmed successfully",
+          booking
       });
-    }
-
-    const duration = Math.ceil(
-      (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
-    );
-    const totalAmount = quantity * availability.price * duration;
-
-    const booking = await Booking.create({
-      user: user._id,
-      serviceType,
-      quantity,
-      checkIn: checkInDate,
-      checkOut: checkOutDate,
-      totalAmount,
-      status: "confirmed",
-      paymentStatus: "pending",
-      isPrivateBooking: isPrivateBooking || false,
-      roomType: serviceType === "room" ? roomType : undefined,
-    });
-
-    await updateServiceAvailability(serviceType);
-    await sendBookingNotifications(booking, user);
-
-    res.status(201).json({
-      success: true,
-      message: "Booking confirmed successfully",
-      booking,
-    });
   } catch (error) {
-    console.log("error in create booking", error);
-    res.status(500).json({
-      success: false,
-      message: "Error creating booking",
-      error: error.message,
-    });
+      console.log("error in create booking", error);
+      res.status(500).json({
+          success: false,
+          message: "Error creating booking",
+          error: error.message
+      });
   }
 };
+
 
 // Enhanced updateBookingStatus controller
 exports.updateBookingStatus = async (req, res) => {

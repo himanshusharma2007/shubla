@@ -14,6 +14,7 @@ import Activity from "./components/Activity/Activity";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./redux/authSlice";
+import AdminLogin from "./adminPanel/Login/AdminLogin";
 
 function App() {
   const router = createBrowserRouter([
@@ -60,6 +61,12 @@ function App() {
     {
       path: "/Activites",
       element: <Activity />,
+    },
+
+    //Admin Pages ---------------------------------------------
+    {
+      path: "adminLogin",
+      element: <AdminLogin />
     },
   ]);
   const [message, setMessage] = useState("");

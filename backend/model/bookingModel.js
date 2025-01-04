@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const bookingSchema = new mongoose.Schema({
-  bookingType: {
-    type: String,
-    enum: ["24hours", "overnight", "fullday"],
-    required: true,
-  },
   isPrivateBooking: {
     type: Boolean,
     default: true,
@@ -19,6 +14,13 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     enum: ["room", "camp", "parking"],
     required: [true, "Please specify service type"],
+  },
+  roomType: {
+    type: String,
+    enum: ["master", "kids"], // Add all possible room types here
+    required: function () {
+      return this.serviceType === "room";
+    },
   },
   quantity: {
     type: Number,

@@ -4,103 +4,15 @@ const Room = require("../model/roomsModel");
 const Camp = require("../model/campsModel");
 const ParkingSlot = require("../model/parkingSlotModel");
 const sendEmail = require("../utils/sendMail");
-
-const checkAvailability = async (
-  serviceType,
-  quantity,
-  checkIn,
-  checkOut,
-  options = {}
-) => {
-  let ServiceModel;
-  switch (serviceType) {
-    case "room":
-      ServiceModel = Room;
-      break;
-    case "camp":
-      ServiceModel = Camp;
-      break;
-    case "parking":
-      ServiceModel = ParkingSlot;
-      break;
-    default:
-      throw new Error("Invalid service type");
-  }
-
-  // Get current service data
-  const service = await ServiceModel.findOne().sort({ createdAt: -1 });
-  if (!service) {
-    throw new Error("Service not found");
-  }
-
-  // Get overlapping bookings
-  const overlappingBookings = await Booking.find({
-    serviceType,
-    status: { $in: ["pending", "confirmed"] },
-    $or: [
-      {
-        checkIn: { $lte: checkOut },
-        checkOut: { $gte: checkIn },
-      },
-    ],
-  });
-
-  // Calculate total booked quantity for the period
-  const bookedQuantity = overlappingBookings.reduce(
-    (total, booking) => total + booking.quantity,
-    0
-  );
-
-  // Calculate price based on service type
-  let price = 0;
-  const isWeekend = (date) => {
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  };
-
-  switch (serviceType) {
-    case "parking":
-      price = isWeekend(new Date(checkIn))
-        ? service.pricing.weekend
-        : service.pricing.weekday;
-      break;
-    case "room":
-      if (options.roomType === "master") {
-        price = service.pricing.master;
-      } else if (options.roomType === "kids") {
-        price = service.pricing.kids;
-      }
-      break;
-    case "camp":
-      price = service.pricing.standard;
-      break;
-  }
-
-  // Check capacity constraints
-  let capacityExceeded = false;
-  if (serviceType === "room" && quantity * 4 < options.guests) {
-    capacityExceeded = true;
-  } else if (serviceType === "camp" && quantity * 16 < options.guests) {
-    capacityExceeded = true;
-  }
-
-  // Calculate available quantity
-  const availableQuantity =
-    service[
-      `total${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}s`
-    ] - bookedQuantity;
-
-  return {
-    available: availableQuantity >= quantity && !capacityExceeded,
-    availableQuantity,
-    price,
-    capacityExceeded,
-  };
-};
+const checkAvailability = require("../utils/checkAvailability");
 
 // Utility function to update service availability
 const updateServiceAvailability = async (serviceType) => {
+  console.log("Execution started for service type:", serviceType);
+
   let ServiceModel;
+
+  // Determine the service model
   switch (serviceType) {
     case "room":
       ServiceModel = Room;
@@ -112,21 +24,101 @@ const updateServiceAvailability = async (serviceType) => {
       ServiceModel = ParkingSlot;
       break;
     default:
+      console.error("Invalid service type:", serviceType);
       throw new Error("Invalid service type");
   }
 
-  // Get current service data
+  if (serviceType === "room") {
+    console.log("Handling room service type...");
+
+    // Handle each room type individually
+    const roomTypes = ["master", "kids"]; // Add more types as needed
+    console.log("Room types to process:", roomTypes);
+
+    for (const roomType of roomTypes) {
+      console.log(`Processing room type: ${roomType}`);
+      const service = await ServiceModel.findOne({ roomType }).sort({
+        createdAt: -1,
+      });
+
+      if (!service) {
+        console.warn(`No service found for room type: ${roomType}`);
+        continue;
+      }
+
+      console.log(`Service found for room type ${roomType}:`, service);
+
+      // Get all active bookings for this room type
+      const activeBookings = await Booking.find({
+        serviceType,
+        status: "confirmed",
+        checkOut: { $gt: new Date() },
+        roomType,
+      });
+
+      console.log(`Active bookings for room type ${roomType}:`, activeBookings);
+
+      // Calculate total booked quantity
+      const bookedQuantity = activeBookings.reduce(
+        (total, booking) => total + booking.quantity,
+        0
+      );
+
+      console.log(
+        `Total booked quantity for room type ${roomType}:`,
+        bookedQuantity
+      );
+
+      // Update available quantity for the specific room type
+      const availableQuantity = service.totalRooms - bookedQuantity;
+
+      console.log(
+        `Updating availableRooms for ${roomType}:`,
+        availableQuantity
+      );
+
+      // Update the service document
+      await ServiceModel.updateMany(
+        { roomType },
+        {
+          $set: {
+            availableRooms: availableQuantity,
+          },
+        }
+      );
+
+      console.log(`Successfully updated availableRooms for ${roomType}`);
+    }
+
+    console.log("Room service type processing completed.");
+    return;
+  }
+
+  console.log("Handling generic service type...");
+
+  // Generic handling for other service types
   const service = await ServiceModel.findOne().sort({ createdAt: -1 });
   if (!service) {
+    console.error("No service found for generic service type:", serviceType);
     throw new Error("Service not found");
   }
+
+  console.log(
+    `Service found for generic service type ${serviceType}:`,
+    service
+  );
 
   // Get all active bookings for this service type
   const activeBookings = await Booking.find({
     serviceType,
-    status: { $in: ["pending", "confirmed"] },
+    status: "confirmed" ,
     checkOut: { $gt: new Date() },
   });
+
+  console.log(
+    `Active bookings for service type ${serviceType}:`,
+    activeBookings
+  );
 
   // Calculate total booked quantity
   const bookedQuantity = activeBookings.reduce(
@@ -134,11 +126,21 @@ const updateServiceAvailability = async (serviceType) => {
     0
   );
 
+  console.log(
+    `Total booked quantity for service type ${serviceType}:`,
+    bookedQuantity
+  );
+
   // Update available quantity
   const availableQuantity =
     service[
       `total${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}s`
     ] - bookedQuantity;
+
+  console.log(
+    `Updating available quantity for ${serviceType}:`,
+    availableQuantity
+  );
 
   // Update the service document
   await ServiceModel.updateMany(
@@ -152,86 +154,12 @@ const updateServiceAvailability = async (serviceType) => {
     }
   );
 
+  console.log(`Successfully updated available quantity for ${serviceType}`);
   return availableQuantity;
 };
 
-// Utility function to send booking notifications
-const sendBookingNotifications = async (booking, user) => {
-  const isPending = booking.status === "pending";
-  const statusMessage = isPending ? "Booking Pending" : "Booking Confirmed";
+// Utility function to send booking notifications// controllers/bookingController.js
 
-  // Email to user
-  const userSubject = `${statusMessage} - Shubla`;
-  const userMessage = `
-          ${statusMessage}!
-          
-          Dear ${user.name},
-  
-          Your booking status is: ${statusMessage}.
-          Here are the details:
-  
-          Service: ${
-            booking.serviceType.charAt(0).toUpperCase() +
-            booking.serviceType.slice(1)
-          }
-  
-          Quantity: ${booking.quantity}
-  
-          Check-in: ${new Date(booking.checkIn).toLocaleString()}
-  
-          Check-out: ${new Date(booking.checkOut).toLocaleString()}
-  
-          Total Amount: R${booking.totalAmount}
-  
-          ${
-            isPending
-              ? "We are reviewing your booking and will notify you once it is confirmed."
-              : "Thank you for choosing our services!"
-          }
-  
-          Best regards,
-  
-          Shubla Team
-      `;
-
-  // Email to admin
-  const adminSubject = `New Booking Alert - ${statusMessage} - Shubla`;
-  const adminMessage = `
-          ${statusMessage}
-  
-          Booking Details:
-  
-          Service: ${booking.serviceType}
-  
-          Quantity: ${booking.quantity}
-  
-          Check-in: ${new Date(booking.checkIn).toLocaleString()}
-  
-          Check-out: ${new Date(booking.checkOut).toLocaleString()}
-  
-          Total Amount: R${booking.totalAmount}
-  
-          Customer Details:
-  
-          Name: ${user.name}
-  
-          Email: ${user.email}
-  
-          ${
-            isPending
-              ? "Please review and confirm the booking at your earliest convenience."
-              : "The booking has been confirmed successfully."
-          }
-      `;
-
-  // Send emails
-  await Promise.all([
-    sendEmail(user.email, userSubject, userMessage),
-    sendEmail(process.env.ADMIN_EMAIL, adminSubject, adminMessage),
-  ]);
-};
-
-// Enhanced createBooking controller
 exports.createBooking = async (req, res) => {
   try {
     const {
@@ -248,6 +176,7 @@ exports.createBooking = async (req, res) => {
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
 
+    // Validate check-in date
     if (checkInDate < new Date()) {
       return res.status(400).json({
         success: false,
@@ -255,7 +184,31 @@ exports.createBooking = async (req, res) => {
       });
     }
 
-    // Regular service booking
+    // Validate check-out date
+    if (checkOutDate <= checkInDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Check-out time must be after check-in time",
+      });
+    }
+
+    // Validate service type
+    if (!["room", "camp", "parking"].includes(serviceType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid service type",
+      });
+    }
+
+    // Validate room type if service type is room
+    if (serviceType === "room" && !["master", "kids"].includes(roomType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid room type",
+      });
+    }
+
+    // Check service availability
     const availability = await checkAvailability(
       serviceType,
       quantity,
@@ -267,17 +220,19 @@ exports.createBooking = async (req, res) => {
     if (!availability.available) {
       return res.status(400).json({
         success: false,
-        message: availability.capacityExceeded
-          ? "Guest count exceeds capacity"
-          : "Service not available for selected dates and quantity",
+        message: availability.message,
       });
     }
 
+    // Calculate duration in days
     const duration = Math.ceil(
       (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
     );
+
+    // Calculate total amount
     const totalAmount = quantity * availability.price * duration;
 
+    // Create booking with dynamic status
     const booking = await Booking.create({
       user: user._id,
       serviceType,
@@ -285,28 +240,114 @@ exports.createBooking = async (req, res) => {
       checkIn: checkInDate,
       checkOut: checkOutDate,
       totalAmount,
-      status: "confirmed",
+      status: availability.status, // Dynamic status based on availability
       paymentStatus: "pending",
       isPrivateBooking: isPrivateBooking || false,
       roomType: serviceType === "room" ? roomType : undefined,
     });
-
-    await updateServiceAvailability(serviceType);
+    if (availability.status === "confirmed") {
+      // Update service availability
+      await updateServiceAvailability(serviceType);
+    }
+    // Send notifications based on booking status
     await sendBookingNotifications(booking, user);
+
+    // Prepare response message based on status
+    const statusMessage =
+      availability.status === "confirmed"
+        ? "Booking confirmed successfully"
+        : "Booking request received and pending confirmation";
 
     res.status(201).json({
       success: true,
-      message: "Booking confirmed successfully",
+      message: statusMessage,
       booking,
+      availability: {
+        status: availability.status,
+        message: availability.message,
+      },
     });
   } catch (error) {
-    console.log("error in create booking", error);
+    console.error("Error in create booking:", error);
     res.status(500).json({
       success: false,
       message: "Error creating booking",
       error: error.message,
     });
   }
+};
+
+// Update the sendBookingNotifications function to handle different statuses
+const sendBookingNotifications = async (booking, user) => {
+  const isPending = booking.status === "pending";
+  const statusMessage = isPending
+    ? "Booking Request Pending"
+    : "Booking Confirmed";
+  const serviceTypeFormatted =
+    booking.serviceType.charAt(0).toUpperCase() + booking.serviceType.slice(1);
+
+  // Email to user
+  const userSubject = `${statusMessage} - Booking Reference`;
+  const userMessage = `
+      ${statusMessage}!
+      
+      Dear ${user.name},
+
+      Your booking status is: ${statusMessage}
+      Here are the details:
+
+      Service: ${serviceTypeFormatted}
+      ${booking.roomType ? `Room Type: ${booking.roomType}\n` : ""}
+      Quantity: ${booking.quantity}
+      Check-in: ${new Date(booking.checkIn).toLocaleString()}
+      Check-out: ${new Date(booking.checkOut).toLocaleString()}
+      Total Amount: R${booking.totalAmount}
+
+      ${
+        isPending
+          ? "Your booking is currently pending availability. We will notify you as soon as we can confirm your booking."
+          : "Your booking is confirmed! We look forward to hosting you."
+      }
+
+      ${
+        isPending
+          ? "\nNote: Pending bookings are subject to availability. We will process your request as soon as possible."
+          : "\nIf you need to modify or cancel your booking, please contact us at least 24 hours in advance."
+      }
+
+      Best regards,
+      Booking Team
+  `;
+
+  // Email to admin
+  const adminSubject = `New ${statusMessage} - Administrative Notice`;
+  const adminMessage = `
+      New ${statusMessage}
+
+      Booking Details:
+      Service: ${serviceTypeFormatted}
+      ${booking.roomType ? `Room Type: ${booking.roomType}\n` : ""}
+      Quantity: ${booking.quantity}
+      Check-in: ${new Date(booking.checkIn).toLocaleString()}
+      Check-out: ${new Date(booking.checkOut).toLocaleString()}
+      Total Amount: R${booking.totalAmount}
+
+      Customer Details:
+      Name: ${user.name}
+      Email: ${user.email}
+
+      ${
+        isPending
+          ? "This booking requires review due to pending availability status."
+          : "This booking has been automatically confirmed based on availability."
+      }
+  `;
+
+  // Send emails
+  await Promise.all([
+    sendEmail(user.email, userSubject, userMessage),
+    sendEmail(process.env.ADMIN_EMAIL, adminSubject, adminMessage),
+  ]);
 };
 
 // Enhanced updateBookingStatus controller

@@ -14,7 +14,11 @@ import Activity from "./components/Activity/Activity";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./redux/authSlice";
+import Parking from "./components/parking/PArking";
 import AdminLogin from "./adminPanel/Login/AdminLogin";
+import Layout from "./adminPanel/Layout/Layout"
+import AdminHome from "./adminPanel/Dashboard/AdminHome";
+import ContactAdminPanel from "./adminPanel/Dashboard/Contact";
 
 function App() {
   const router = createBrowserRouter([
@@ -62,11 +66,23 @@ function App() {
       path: "/Activites",
       element: <Activity />,
     },
-
-    //Admin Pages ---------------------------------------------
     {
-      path: "adminLogin",
+      path: "/parking",
+      element: <Parking />,
+    },
+
+    //Admin Login 
+    {
+      path: 'adminLogin',
       element: <AdminLogin />
+    },
+    {
+      path: "dashboard",
+      element: <Layout><AdminHome/></Layout>
+    },
+    {
+      path: "contactAdminPanel",
+      element: <Layout><ContactAdminPanel/></Layout>
     },
   ]);
   const [message, setMessage] = useState("");

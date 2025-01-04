@@ -60,7 +60,6 @@ function Camp() {
         <img src="./camp5.jpg" alt="" />
       </div>
     </div>
-    <Book/>
     <Contact/>
     <Footer/>
     

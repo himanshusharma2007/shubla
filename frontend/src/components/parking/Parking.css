@@ -1,0 +1,41 @@
+
+.parkhero{
+    width: 100%;
+    height: 70vh;
+    position: relative;
+    top: 10vh;
+    background-size: cover;
+    overflow: hidden;
+}
+.parkhero-img{
+    width: 100%;
+    position: relative;
+    bottom: 100%;
+    z-index: 99;
+}
+.parkhero-img img{
+    width: 100%;
+}
+.parkhero .acthero-filter{
+    background-color: #0000002a;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 10%;
+}
+.parkhero-filter h2{
+    font-size: 80px;
+    color: #fff;
+    font-weight: 700;
+}
+.parkhero-filter p{
+    font-size: 30px;
+    color: #fff;
+    font-weight: 600;
+}
+
+

@@ -64,7 +64,7 @@ function Nav() {
 
   return (
     <>
-      <nav className="bg-red-500">
+      <nav className="">
         <div className="left-nav">
           <div className={burgar} onClick={makecross}>
             <span></span>
@@ -90,6 +90,11 @@ function Nav() {
                 <li>
                   <NavLink to="/DeluxeRoom" className="drop-link">
                     Deluxe Room
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/parking" className="drop-link">
+                    Caravan Parking
                   </NavLink>
                 </li>
               </ul>

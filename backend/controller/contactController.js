@@ -2,10 +2,11 @@ const Contact = require('../model/contactModel');
 const sendEmail = require('../utils/sendMail');
 const dotenv=require('dotenv');
 dotenv.config();
+
 exports.sendMessage = async (req, res) => {
     try {
         const { name, email, message } = req.body;
-
+        console.log('req.body', req.body)
         // Input validation
         if (!name || !email || !message) {
             return res.status(400).json({

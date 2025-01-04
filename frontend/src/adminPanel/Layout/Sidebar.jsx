@@ -1,62 +1,65 @@
-import { NavLink } from "react-router-dom";
-import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
+import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   return (
     <div className="h-screen w-64 bg-gray-800 text-white flex flex-col">
-      {/* Logo */}
-      <div className="flex items-center justify-center h-16 border-b border-gray-700">
-        <h1 className="text-2xl font-bold">MyApp</h1>
+      <div className="p-4 text-xl font-bold border-b border-gray-700">Shubhla</div>
+      <div className="flex-1 p-4">
+        <ul className="space-y-2">
+          <li>
+            <NavLink 
+              to="/dashboard" 
+              className={({ isActive }) => 
+                `block py-2 px-4 rounded hover:bg-gray-700 ${
+                  isActive ? 'bg-gray-700 text-white' : ''
+                }`
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/about" 
+              className={({ isActive }) => 
+                `block py-2 px-4 rounded hover:bg-gray-700 ${
+                  isActive ? 'bg-gray-700 text-white' : ''
+                }`
+              }
+            >
+              About
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/services" 
+              className={({ isActive }) => 
+                `block py-2 px-4 rounded hover:bg-gray-700 ${
+                  isActive ? 'bg-gray-700 text-white' : ''
+                }`
+              }
+            >
+              Services
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/contactAdminPanel" 
+              className={({ isActive }) => 
+                `block py-2 px-4 rounded hover:bg-gray-700 ${
+                  isActive ? 'bg-gray-700 text-white' : ''
+                }`
+              }
+            >
+              Contact
+            </NavLink>
+          </li>
+        </ul>
       </div>
-
-      {/* Navigation Links */}
-      <nav className="flex-grow mt-5">
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `flex items-center px-4 py-2 hover:bg-gray-700 ${
-              isActive ? "bg-gray-700" : ""
-            }`
-          }
-        >
-          <FaHome className="mr-3" />
-          Dashboard
-        </NavLink>
-
-        <NavLink
-          to="/profile"
-          className={({ isActive }) =>
-            `flex items-center px-4 py-2 hover:bg-gray-700 ${
-              isActive ? "bg-gray-700" : ""
-            }`
-          }
-        >
-          <FaUser className="mr-3" />
-          Profile
-        </NavLink>
-
-        <NavLink
-          to="/settings"
-          className={({ isActive }) =>
-            `flex items-center px-4 py-2 hover:bg-gray-700 ${
-              isActive ? "bg-gray-700" : ""
-            }`
-          }
-        >
-          <FaCog className="mr-3" />
-          Settings
-        </NavLink>
-      </nav>
-
-      {/* Logout */}
-      <div className="border-t border-gray-700">
-        <NavLink
-          to="/logout"
-          className="flex items-center px-4 py-2 hover:bg-gray-700"
-        >
-          <FaSignOutAlt className="mr-3" />
-          Logout
-        </NavLink>
+      <div className="p-4 border-t border-gray-700">
+        <button className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-500 rounded">
+          Log Out
+        </button>
       </div>
     </div>
   );

@@ -18,10 +18,10 @@ function Whyus() {
             <a href="#Contact">Contact Us</a>
         </div>
         <div className="why-2">
-            <img src="https://desertcamping.ae/wp-content/uploads/2023/07/picture.png" alt="" />
+            <img src="/camp4.jpg" alt="" />
         </div>
         <div className="why-3">
-            <img src="https://desertcamping.ae/wp-content/uploads/2023/07/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A8%AD%E8%A8%88-1-1.jpg" alt="" />
+            <img src="/insta2.png" alt="" />
             <div>
                 <p>"</p>
                 <p>Fill your life with adventures, not things. Have stories to tell not stuff to show. </p>

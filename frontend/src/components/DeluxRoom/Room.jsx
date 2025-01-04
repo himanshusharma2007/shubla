@@ -61,7 +61,6 @@ function Room() {
         <img src="./room.jpg" alt="" />
       </div>
     </div>
-    <Book/>
     <Contact/>
     <Footer/>
     

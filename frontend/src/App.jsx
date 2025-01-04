@@ -14,6 +14,7 @@ import Activity from "./components/Activity/Activity";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./redux/authSlice";
+import Parking from "./components/parking/PArking";
 
 function App() {
   const router = createBrowserRouter([
@@ -60,6 +61,10 @@ function App() {
     {
       path: "/Activites",
       element: <Activity />,
+    },
+    {
+      path: "/parking",
+      element: <Parking />,
     },
   ]);
   const [message, setMessage] = useState("");

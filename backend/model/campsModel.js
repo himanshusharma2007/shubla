@@ -19,10 +19,9 @@ const campSchema = new mongoose.Schema({
       required: [true, "Please specify camp facilities"],
     },
   ],
-  price: {
+  pricing: {
     type: Number,
-    required: [true, "Please specify parking slot price"],
-    min: [1, "Parking slot price must be at least 1"],
+    default: 200,
   },
   description: {
     type: String,

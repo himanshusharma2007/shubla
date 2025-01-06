@@ -19,6 +19,8 @@ import AdminLogin from "./adminPanel/Login/AdminLogin";
 import Layout from "./adminPanel/Layout/Layout"
 import AdminHome from "./adminPanel/Dashboard/AdminHome";
 import ContactAdminPanel from "./adminPanel/Dashboard/Contact";
+import Rooms from "./adminPanel/Dashboard/Rooms";
+import Camps from "./adminPanel/Dashboard/Camps"
 
 function App() {
   const router = createBrowserRouter([
@@ -83,6 +85,14 @@ function App() {
     {
       path: "contactAdminPanel",
       element: <Layout><ContactAdminPanel/></Layout>
+    },
+    {
+      path: "rooms",
+      element: <Layout><Rooms/></Layout>
+    },
+    {
+      path: "tents",
+      element: <Layout><Camps/></Layout>
     },
   ]);
   const [message, setMessage] = useState("");

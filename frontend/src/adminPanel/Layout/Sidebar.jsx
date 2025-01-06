@@ -20,26 +20,26 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink 
-              to="/about" 
+              to="/tents" 
               className={({ isActive }) => 
                 `block py-2 px-4 rounded hover:bg-gray-700 ${
                   isActive ? 'bg-gray-700 text-white' : ''
                 }`
               }
             >
-              About
+              Add Camps
             </NavLink>
           </li>
           <li>
             <NavLink 
-              to="/services" 
+              to="/rooms" 
               className={({ isActive }) => 
                 `block py-2 px-4 rounded hover:bg-gray-700 ${
                   isActive ? 'bg-gray-700 text-white' : ''
                 }`
               }
             >
-              Services
+             Add Rooms
             </NavLink>
           </li>
           <li>

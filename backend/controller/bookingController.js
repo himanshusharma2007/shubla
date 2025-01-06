@@ -162,22 +162,30 @@ const updateServiceAvailability = async (serviceType) => {
 
 exports.createBooking = async (req, res) => {
   try {
-      const { 
-          serviceType, 
-          quantity, 
-          checkIn, 
-          checkOut, 
-          guests,
-          roomType,
-          isPrivateBooking
-      } = req.body;
-      
-      const user = req.user;
-      const checkInDate = new Date(checkIn);
-      const checkOutDate = new Date(checkOut);
+    console.log("Create booking API called with body:", req.body);
+
+    const { 
+        serviceType, 
+        quantity, 
+        checkIn, 
+        checkOut, 
+        guests,
+        roomType,
+        isPrivateBooking
+    } = req.body;
+    
+    const user = req.user;
+    console.log("User information:", user);
+
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+
+    console.log("Parsed check-in date:", checkInDate);
+    console.log("Parsed check-out date:", checkOutDate);
 
     // Validate check-in date
     if (checkInDate < new Date()) {
+      console.log("Validation failed: Check-in date is in the past");
       return res.status(400).json({
         success: false,
         message: "Check-in time cannot be in the past",
@@ -186,6 +194,7 @@ exports.createBooking = async (req, res) => {
 
     // Validate check-out date
     if (checkOutDate <= checkInDate) {
+      console.log("Validation failed: Check-out date is not after check-in date");
       return res.status(400).json({
         success: false,
         message: "Check-out time must be after check-in time",
@@ -194,6 +203,7 @@ exports.createBooking = async (req, res) => {
 
     // Validate service type
     if (!["room", "camp", "parking"].includes(serviceType)) {
+      console.log("Validation failed: Invalid service type:", serviceType);
       return res.status(400).json({
         success: false,
         message: "Invalid service type",
@@ -202,6 +212,7 @@ exports.createBooking = async (req, res) => {
 
     // Validate room type if service type is room
     if (serviceType === "room" && !["master", "kids"].includes(roomType)) {
+      console.log("Validation failed: Invalid room type:", roomType);
       return res.status(400).json({
         success: false,
         message: "Invalid room type",
@@ -209,6 +220,7 @@ exports.createBooking = async (req, res) => {
     }
 
     // Check service availability
+    console.log("Checking service availability...");
     const availability = await checkAvailability(
       serviceType,
       quantity,
@@ -217,7 +229,10 @@ exports.createBooking = async (req, res) => {
       { roomType, guests }
     );
 
+    console.log("Service availability:", availability);
+
     if (!availability.available) {
+      console.log("Validation failed: Service not available:", availability.message);
       return res.status(400).json({
         success: false,
         message: availability.message,
@@ -228,11 +243,14 @@ exports.createBooking = async (req, res) => {
     const duration = Math.ceil(
       (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
     );
+    console.log("Calculated booking duration (days):", duration);
 
     // Calculate total amount
     const totalAmount = quantity * availability.price * duration;
+    console.log("Calculated total amount:", totalAmount);
 
     // Create booking with dynamic status
+    console.log("Creating booking...");
     const booking = await Booking.create({
       user: user._id,
       serviceType,
@@ -245,11 +263,16 @@ exports.createBooking = async (req, res) => {
       isPrivateBooking: isPrivateBooking || false,
       roomType: serviceType === "room" ? roomType : undefined,
     });
+
+    console.log("Booking created:", booking);
+
     if (availability.status === "confirmed") {
-      // Update service availability
+      console.log("Updating service availability as status is confirmed...");
       await updateServiceAvailability(serviceType);
     }
+
     // Send notifications based on booking status
+    console.log("Sending booking notifications...");
     await sendBookingNotifications(booking, user);
 
     // Prepare response message based on status
@@ -257,6 +280,8 @@ exports.createBooking = async (req, res) => {
       availability.status === "confirmed"
         ? "Booking confirmed successfully"
         : "Booking request received and pending confirmation";
+
+    console.log("Final response prepared with status message:", statusMessage);
 
     res.status(201).json({
       success: true,
@@ -276,6 +301,7 @@ exports.createBooking = async (req, res) => {
     });
   }
 };
+
 
 // Update the sendBookingNotifications function to handle different statuses
 const sendBookingNotifications = async (booking, user) => {

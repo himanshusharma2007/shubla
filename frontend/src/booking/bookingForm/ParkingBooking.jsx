@@ -1,4 +1,5 @@
 import { ChevronRight } from "lucide-react";
+import { useState } from "react";
 import DatePicker from "react-datepicker";
 
 const ParkingBookingForm = ({ onSubmit }) => {
@@ -58,7 +59,7 @@ const ParkingBookingForm = ({ onSubmit }) => {
   
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center"
+          className="w-full bg-zinc-600 text-white py-3 px-6 rounded-md hover:bg-zinc-700 transition-colors flex items-center justify-center"
         >
           Book Parking
           <ChevronRight className="w-5 h-5 ml-2" />

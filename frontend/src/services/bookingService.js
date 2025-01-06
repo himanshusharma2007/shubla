@@ -1,4 +1,4 @@
-import api from "../api";
+import api from "./api";
 
 /**
  * Create a new booking
@@ -6,8 +6,9 @@ import api from "../api";
  * @returns {Promise} - API response
  */
 export const createBooking = async (bookingData) => {
+  console.log('booking data', bookingData)
   try {
-    const response = await api.post("/bookings", bookingData);
+    const response = await api.post("/booking", bookingData);
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;

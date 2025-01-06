@@ -88,20 +88,20 @@ function App() {
 
     //Booking Routes
     {
-      path: "/booking",
+      path: "/booking/:serviceType",
       element: <BookingContainer />,
     }
   ]);
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchUser());
-  }, [dispatch]);
-  useEffect(() => {
-    fetch("https://desert-backend.onrender.com")
-      .then((res) => res.jsonp())
-      .then((data) => setMessage(data.message));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchUser());
+  // }, [dispatch]);
+  // useEffect(() => {
+  //   fetch("https://desert-backend.onrender.com")
+  //     .then((res) => res.jsonp())
+  //     .then((data) => setMessage(data.message));
+  // }, []);
   console.log("message::", message);
 
   return (

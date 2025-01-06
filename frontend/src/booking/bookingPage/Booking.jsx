@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import {  Tent, Car, Home, AlertCircle } from 'lucide-react';
 import 'react-datepicker/dist/react-datepicker.css';
-import { createBooking } from './bookingService';
+import { createBooking } from '../../services/bookingService';
 import RoomBookingForm from '../bookingForm/RoomBooking';
 import CampBookingForm from '../bookingForm/CampBooking';
 import ParkingBookingForm from '../bookingForm/ParkingBooking';
+import { useParams } from 'react-router-dom';
+import Nav from '../../components/Nav/Nav';
+import Footer from '../../components/footer/Footer';
 
 // Main Booking Container Component
-const BookingContainer = ({ serviceType }) => {
+const BookingContainer = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-
+  const {serviceType}= useParams()
   const forms = {
     room: <RoomBookingForm onSubmit={handleBookingSubmit} />,
     camp: <CampBookingForm onSubmit={handleBookingSubmit} />,
@@ -36,9 +39,11 @@ const BookingContainer = ({ serviceType }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
+    <>
+    <Nav />
+    <div className="min-h-screen mt-[10vh] bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto ">
+        <div className="mt-14 rounded-lg shadow-lg p-6 md:p-8">
           <BookingHeader serviceType={serviceType} />
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md flex items-center text-red-700">
@@ -52,15 +57,18 @@ const BookingContainer = ({ serviceType }) => {
             </div>
           )}
           {loading ? (
-            <div className="flex justify-center py-12">
+            <div className="flex justify-center  ">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
           ) : (
-            forms[serviceType]
+
+              forms[serviceType]
           )}
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 
@@ -81,7 +89,7 @@ const BookingHeader = ({ serviceType }) => {
   return (
     <div className="mb-8 text-center">
       <div className="flex justify-center mb-4">
-        <Icon className="w-12 h-12 text-blue-600" />
+        <Icon className="w-12 h-12 text-zinc-600" />
       </div>
       <h1 className="text-2xl font-bold text-gray-900">{titles[serviceType]}</h1>
       <p className="mt-2 text-gray-600">Complete the form below to make your reservation</p>

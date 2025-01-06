@@ -6,6 +6,8 @@ const {checkAdmin} = require("../middleware/checkAdmin");
 const {
   updateOrCreateCampsData,
   getCampsData,
+  updateCamp,
+  createCamp,
 } = require("../controller/campsController");
 
 // Validation middleware
@@ -45,7 +47,8 @@ const campValidation = [
 ];
 
 // Routes
-router.route("/update").put(checkAdmin, campValidation, updateOrCreateCampsData);
+router.route("/update/:id").put(checkAdmin, campValidation, updateCamp);
+router.route("/create").post(checkAdmin, campValidation, createCamp);
 
 router.route("/").get( getCampsData);
 

@@ -21,7 +21,7 @@ import AdminHome from "./adminPanel/Dashboard/AdminHome";
 import ContactAdminPanel from "./adminPanel/Dashboard/Contact";
 import Rooms from "./adminPanel/Dashboard/Rooms";
 import Camps from "./adminPanel/Dashboard/Camps"
-
+import BookingContainer from "./booking/bookingPage/Booking"
 function App() {
   const router = createBrowserRouter([
     {
@@ -94,17 +94,23 @@ function App() {
       path: "tents",
       element: <Layout><Camps/></Layout>
     },
+
+     //Booking Routes
+     {
+      path: "/booking/:serviceType",
+      element: <BookingContainer />,
+    }
   ]);
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchUser());
-  }, [dispatch]);
-  useEffect(() => {
-    fetch("https://desert-backend.onrender.com")
-      .then((res) => res.jsonp())
-      .then((data) => setMessage(data.message));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchUser());
+  // }, [dispatch]);
+  // useEffect(() => {
+  //   fetch("https://desert-backend.onrender.com")
+  //     .then((res) => res.jsonp())
+  //     .then((data) => setMessage(data.message));
+  // }, []);
   console.log("message::", message);
 
   return (

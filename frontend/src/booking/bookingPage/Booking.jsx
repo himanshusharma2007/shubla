@@ -5,12 +5,18 @@ import { createBooking } from '../../services/bookingService';
 import RoomBookingForm from '../bookingForm/RoomBooking';
 import CampBookingForm from '../bookingForm/CampBooking';
 import ParkingBookingForm from '../bookingForm/ParkingBooking';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Nav from '../../components/Nav/Nav';
 import Footer from '../../components/footer/Footer';
+import { useSelector, useDispatch } from 'react-redux';
+import { setbooking } from '../../redux/bookingSlice';
 
 // Main Booking Container Component
 const BookingContainer = () => {
+  const isuser = useSelector((state) => state.auth.user)
+  const isAuth = useSelector((state) => state.auth.isAuthenticated)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -23,14 +29,18 @@ const BookingContainer = () => {
 
   async function handleBookingSubmit(bookingData) {
     try {
+      if(!isAuth){
+        navigate("/Login")
+      }
       setLoading(true);
       setError(null);
-      const response = await createBooking({
-        ...bookingData,
-        serviceType
-      });
+      dispatch(setbooking({...bookingData, serviceType}));
+      // const response = await createBooking({
+      //   ...bookingData,
+      //   serviceType
+      // });
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 5000);
+      navigate("/payment")
     } catch (err) {
       setError(err.message || 'An error occurred during booking');
     } finally {

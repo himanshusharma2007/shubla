@@ -20,8 +20,28 @@ import Layout from "./adminPanel/Layout/Layout"
 import AdminHome from "./adminPanel/Dashboard/AdminHome";
 import ContactAdminPanel from "./adminPanel/Dashboard/Contact";
 import BookingContainer from "./booking/bookingPage/booking";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import paymentService from "./services/paymentService";
+import ProtectedRoute from "./route/ProtectedRoute";
+import PaymentForm from "./components/Payment/PaymentForm";
 
 function App() {
+
+  const dispatch = useDispatch();
+  const [stripeApiKey, setStripeApiKey] = useState("");
+  const [stripePromise, setStripePromise] = useState(null);
+
+  async function getStripeApiKey() {
+    const data = await paymentService.stripeapikey();
+    setStripeApiKey(data.stripeApiKey);
+    setStripePromise(loadStripe(data.stripeApiKey));
+  }
+  useEffect(() => {
+    dispatch(fetchUser());
+    getStripeApiKey()
+  }, [dispatch]);
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -90,13 +110,14 @@ function App() {
     {
       path: "/booking/:serviceType",
       element: <BookingContainer />,
+    },
+    {
+      path: "/payment",
+      element: <Elements stripe={loadStripe(stripeApiKey)}> <ProtectedRoute element={PaymentForm}></ProtectedRoute></Elements>,
     }
   ]);
   const [message, setMessage] = useState("");
-  const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(fetchUser());
-  // }, [dispatch]);
+  
   // useEffect(() => {
   //   fetch("https://desert-backend.onrender.com")
   //     .then((res) => res.jsonp())

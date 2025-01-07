@@ -54,7 +54,7 @@ function Camp() {
                 <li><IoIosBonfire /> Bonfire</li>
                 <li><GiDesert /> Desert View</li>
             </ul>
-            <a href=''>Contact us</a>
+            <a onClick={() => navigate("/booking/camp")}>Contact us</a>
     
         </div>
         <img src="./camp5.jpg" alt="" />

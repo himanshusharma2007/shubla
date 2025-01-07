@@ -9,11 +9,12 @@ import { MdFastfood } from "react-icons/md";
 import { IoIosBonfire } from "react-icons/io";
 import { GiDesert } from "react-icons/gi";
 import Contact from '../Contact/Contact'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 
 function Camp() {
     const { pathname } = useLocation();
+    const navigate = useNavigate();
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pathname]);
@@ -54,7 +55,13 @@ function Camp() {
                 <li><IoIosBonfire /> Bonfire</li>
                 <li><GiDesert /> Desert View</li>
             </ul>
-            <a onClick={() => navigate("/booking/camp")}>Contact us</a>
+            <button
+            className="bg-zinc-900 text-white px-4 py-2 hover:scale-105 transition duration-300"
+            type="submit"
+            onClick={() => navigate("/booking/camp")}
+          >
+            Book Now
+          </button>
     
         </div>
         <img src="./camp5.jpg" alt="" />

@@ -44,11 +44,13 @@
     width: 100%;
     background-color: #fffff0;
     margin-top: 2%;
+    border-bottom: 1px solid #0000003f;
 }
 .contact-right form textarea{
     width: 100%;
     background-color: #fffff0;
     margin-top: 2%;
+    border-bottom: 1px solid #0000003f;
 }
 .contact-right form button{
     width: 15%;

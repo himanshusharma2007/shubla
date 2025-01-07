@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./redux/authSlice";
 import Parking from "./components/parking/PArking";
+import Mybooking from "./components/Mybooking/Mybooking";
 
 function App() {
   const router = createBrowserRouter([
@@ -65,6 +66,10 @@ function App() {
     {
       path: "/parking",
       element: <Parking />,
+    },
+    {
+      path: "/mybooking",
+      element: <Mybooking />,
     },
   ]);
   const [message, setMessage] = useState("");

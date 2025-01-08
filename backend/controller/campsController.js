@@ -165,7 +165,7 @@ exports.getCampsData = async (req, res) => {
         // Find the most recent camp document
         // Since all camps have the same data, we only need to fetch one
         const campData = await Camp.findOne()
-            .select('title subtitle facilities description totalCamps availableCamps')
+            .select('title subtitle facilities description totalCamps availableCampsn pricing availableCamps')
             .sort({ createdAt: -1 });
 
         if (!campData) {

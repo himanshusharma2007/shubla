@@ -111,7 +111,7 @@ const updateServiceAvailability = async (serviceType) => {
   // Get all active bookings for this service type
   const activeBookings = await Booking.find({
     serviceType,
-    status: "confirmed" ,
+    status: "confirmed",
     checkOut: { $gt: new Date() },
   });
 
@@ -134,7 +134,7 @@ const updateServiceAvailability = async (serviceType) => {
   // Update available quantity
   const availableQuantity =
     service[
-      `total${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}s`
+    `total${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}s`
     ] - bookedQuantity;
 
   console.log(
@@ -147,9 +147,8 @@ const updateServiceAvailability = async (serviceType) => {
     {},
     {
       $set: {
-        [`available${
-          serviceType.charAt(0).toUpperCase() + serviceType.slice(1)
-        }s`]: availableQuantity,
+        [`available${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)
+          }s`]: availableQuantity,
       },
     }
   );
@@ -164,16 +163,18 @@ exports.createBooking = async (req, res) => {
   try {
     console.log("Create booking API called with body:", req.body);
 
-    const { 
-        serviceType, 
-        quantity, 
-        checkIn, 
-        checkOut, 
-        guests,
-        roomType,
-        isPrivateBooking
+    const {
+      serviceType,
+      quantity,
+      checkIn,
+      checkOut,
+      guests,
+      roomType,
+      isPrivateBooking,
+      paymentInfo,
+      paymentStatus
     } = req.body;
-    
+
     const user = req.user;
     console.log("User information:", user);
 
@@ -259,7 +260,8 @@ exports.createBooking = async (req, res) => {
       checkOut: checkOutDate,
       totalAmount,
       status: availability.status, // Dynamic status based on availability
-      paymentStatus: "pending",
+      paymentInfo,
+      paymentStatus,
       isPrivateBooking: isPrivateBooking || false,
       roomType: serviceType === "room" ? roomType : undefined,
     });
@@ -329,17 +331,15 @@ const sendBookingNotifications = async (booking, user) => {
       Check-out: ${new Date(booking.checkOut).toLocaleString()}
       Total Amount: R${booking.totalAmount}
 
-      ${
-        isPending
-          ? "Your booking is currently pending availability. We will notify you as soon as we can confirm your booking."
-          : "Your booking is confirmed! We look forward to hosting you."
-      }
+      ${isPending
+      ? "Your booking is currently pending availability. We will notify you as soon as we can confirm your booking."
+      : "Your booking is confirmed! We look forward to hosting you."
+    }
 
-      ${
-        isPending
-          ? "\nNote: Pending bookings are subject to availability. We will process your request as soon as possible."
-          : "\nIf you need to modify or cancel your booking, please contact us at least 24 hours in advance."
-      }
+      ${isPending
+      ? "\nNote: Pending bookings are subject to availability. We will process your request as soon as possible."
+      : "\nIf you need to modify or cancel your booking, please contact us at least 24 hours in advance."
+    }
 
       Best regards,
       Booking Team
@@ -362,11 +362,10 @@ const sendBookingNotifications = async (booking, user) => {
       Name: ${user.name}
       Email: ${user.email}
 
-      ${
-        isPending
-          ? "This booking requires review due to pending availability status."
-          : "This booking has been automatically confirmed based on availability."
-      }
+      ${isPending
+      ? "This booking requires review due to pending availability status."
+      : "This booking has been automatically confirmed based on availability."
+    }
   `;
 
   // Send emails
@@ -415,8 +414,8 @@ exports.updateBookingStatus = async (req, res) => {
                 <li>Service: ${booking.serviceType}</li>
                 <li>Check-in: ${new Date(booking.checkIn).toLocaleString()}</li>
                 <li>Check-out: ${new Date(
-                  booking.checkOut
-                ).toLocaleString()}</li>
+          booking.checkOut
+        ).toLocaleString()}</li>
             </ul>
             <p>Thank you for choosing EJUUZ. We look forward to serving you!</p>
           `;
@@ -431,8 +430,8 @@ exports.updateBookingStatus = async (req, res) => {
                 <li>Service: ${booking.serviceType}</li>
                 <li>Check-in: ${new Date(booking.checkIn).toLocaleString()}</li>
                 <li>Check-out: ${new Date(
-                  booking.checkOut
-                ).toLocaleString()}</li>
+          booking.checkOut
+        ).toLocaleString()}</li>
             </ul>
             <p>If you have any questions or need further assistance, please contact our support team.</p>
           `;
@@ -447,8 +446,8 @@ exports.updateBookingStatus = async (req, res) => {
                 <li>Service: ${booking.serviceType}</li>
                 <li>Check-in: ${new Date(booking.checkIn).toLocaleString()}</li>
                 <li>Check-out: ${new Date(
-                  booking.checkOut
-                ).toLocaleString()}</li>
+          booking.checkOut
+        ).toLocaleString()}</li>
             </ul>
             <p>We will notify you once your booking status changes. Thank you for your patience!</p>
           `;
@@ -464,8 +463,8 @@ exports.updateBookingStatus = async (req, res) => {
                 <li>Service: ${booking.serviceType}</li>
                 <li>Check-in: ${new Date(booking.checkIn).toLocaleString()}</li>
                 <li>Check-out: ${new Date(
-                  booking.checkOut
-                ).toLocaleString()}</li>
+          booking.checkOut
+        ).toLocaleString()}</li>
             </ul>
           `;
     }

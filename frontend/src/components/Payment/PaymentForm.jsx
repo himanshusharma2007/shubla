@@ -166,6 +166,13 @@ const PaymentForm = () => {
                                     {booking?.isPrivateBooking ? 'Yes' : 'No'}
                                 </span>
                             </div>
+                            <hr/>
+                            <div className="flex justify-between items-center">
+                                <span className="text-lg font-bold text-amber-800">Pay amount</span>
+                                <span className="text-lg font-bold text-amber-900">
+                                    {booking?.amount}
+                                </span>
+                            </div>
                         </div>
                     </div>
 

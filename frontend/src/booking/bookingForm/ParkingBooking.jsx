@@ -12,9 +12,6 @@ const ParkingBookingForm = ({ onSubmit }) => {
   const [parkingData, setParkingData] = useState(null);
   const [errors, setErrors] = useState({});
 
-  // Assuming $10 per slot per day - you can adjust this or fetch from API
-  const PRICE_PER_DAY = 10;
-
   useEffect(() => {
     fetchParkingData();
   }, []);
@@ -74,8 +71,13 @@ const ParkingBookingForm = ({ onSubmit }) => {
   };
   
   const calculateTotalPrice = () => {
-    const days = calculateDays();
-    return PRICE_PER_DAY * formData.quantity * days;
+    const checkInDay = new Date(formData.checkIn).getDay();
+    const price =
+      checkInDay === 0 || checkInDay === 6
+        ? parkingData?.pricing?.weekend
+        : parkingData?.pricing?.weekday;
+
+    return price*calculateDays()
   };
 
   const handleSubmit = (e) => {
@@ -92,7 +94,8 @@ const ParkingBookingForm = ({ onSubmit }) => {
           <div className="space-y-4">
             <div className="flex justify-between">
               <h3 className="font-semibold">{parkingData.title}</h3>
-              <p className="text-zinc-600">${PRICE_PER_DAY}/day</p>
+              <p className="text-zinc-600">${parkingData?.pricing?.weekday}/day</p>
+              <p className="text-zinc-600">weekend ${parkingData?.pricing?.weekend}/day</p>
             </div>
             <div className="flex justify-between text-sm text-zinc-600">
               <div>Featured: {parkingData.subtitle}</div>

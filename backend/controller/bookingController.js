@@ -302,7 +302,112 @@ exports.createBooking = async (req, res) => {
       error: error.message,
     });
   }
-};
+}
+
+exports.getAvailability = async(req,res)=> {
+  try {
+    console.log("Create booking API called with body:", req.body);
+
+    const {
+      serviceType,
+      quantity,
+      checkIn,
+      checkOut,
+      guests,
+      roomType,
+    } = req.body;
+
+    const user = req.user;
+    console.log("User information:", user);
+
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+
+    console.log("Parsed check-in date:", checkInDate);
+    console.log("Parsed check-out date:", checkOutDate);
+
+    // Validate check-in date
+    if (checkInDate < new Date()) {
+      console.log("Validation failed: Check-in date is in the past");
+      return res.status(400).json({
+        success: false,
+        message: "Check-in time cannot be in the past",
+      });
+    }
+
+    // Validate check-out date
+    if (checkOutDate <= checkInDate) {
+      console.log("Validation failed: Check-out date is not after check-in date");
+      return res.status(400).json({
+        success: false,
+        message: "Check-out time must be after check-in time",
+      });
+    }
+
+    // Validate service type
+    if (!["room", "camp", "parking"].includes(serviceType)) {
+      console.log("Validation failed: Invalid service type:", serviceType);
+      return res.status(400).json({
+        success: false,
+        message: "Invalid service type",
+      });
+    }
+
+    // Validate room type if service type is room
+    if (serviceType === "room" && !["master", "kids"].includes(roomType)) {
+      console.log("Validation failed: Invalid room type:", roomType);
+      return res.status(400).json({
+        success: false,
+        message: "Invalid room type",
+      });
+    }
+
+    // Check service availability
+    console.log("Checking service availability...");
+    const availability = await checkAvailability(
+      serviceType,
+      quantity,
+      checkInDate,
+      checkOutDate,
+      { roomType, guests }
+    );
+
+    console.log("Service availability:", availability);
+
+    if (!availability.available) {
+      console.log("Validation failed: Service not available:", availability.message);
+      return res.status(400).json({
+        success: false,
+        message: availability.message,
+      });
+    }
+
+    // Calculate duration in days
+    const duration = Math.ceil(
+      (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
+    );
+    console.log("Calculated booking duration (days):", duration);
+
+    // Calculate total amount
+    const totalAmount = quantity * availability.price * duration;
+    console.log("Calculated total amount:", totalAmount);
+
+    res.status(201).json({
+      success: true,
+      data: {
+        ...availability, totalAmount
+      }
+    }
+    );
+  } catch (error) {
+    console.error("Error in booking availability:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error get booking availability",
+      error: error.message,
+    });
+  }
+}
 
 
 // Update the sendBookingNotifications function to handle different statuses

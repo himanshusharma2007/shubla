@@ -15,6 +15,16 @@ export const createBooking = async (bookingData) => {
   }
 };
 
+export const bookingAvailability = async (bookingData) => {
+  console.log('booking data', bookingData)
+  try {
+    const response = await api.post("/booking/check-availability", bookingData);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
 /**
  * Get the bookings of the currently logged-in user
  * @returns {Promise} - API response

@@ -25,6 +25,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import paymentService from "./services/paymentService";
 import ProtectedRoute from "./route/ProtectedRoute";
 import PaymentForm from "./components/Payment/PaymentForm";
+import Rooms from "./adminPanel/Dashboard/Rooms";
+import Camps from "./adminPanel/Dashboard/Camps"
 
 function App() {
 
@@ -105,9 +107,17 @@ function App() {
       path: "contactAdminPanel",
       element: <Layout><ContactAdminPanel/></Layout>
     },
-
-    //Booking Routes
     {
+      path: "rooms",
+      element: <Layout><Rooms/></Layout>
+    },
+    {
+      path: "tents",
+      element: <Layout><Camps/></Layout>
+    },
+
+     //Booking Routes
+     {
       path: "/booking/:serviceType",
       element: <BookingContainer />,
     },

@@ -8,7 +8,7 @@ const ContactAdminPanel = () => {
   const [error, setError] = useState(null);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [response, setResponse] = useState("");
-  const [sending, setSending] = useState(false); // Track sending state
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     fetchMessages();
@@ -21,7 +21,7 @@ const ContactAdminPanel = () => {
       console.log("response", response);
       setMessagesData(response.messages || []);
     } catch (err) {
-      setError("Failed to fetch messages");
+      setError("Failed to fetch messages", err);
     } finally {
       setLoading(false);
     }

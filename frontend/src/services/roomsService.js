@@ -25,7 +25,7 @@ const roomsService = {
 
   // Fetch all room data
   getRoomsData: async () => {
-    try {
+   try{
       const response = await api.get('/rooms');
       return response.data;
     } catch (error) {

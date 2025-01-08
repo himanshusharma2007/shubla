@@ -184,9 +184,7 @@ exports.getRoomsData = async (req, res) => {
   try {
     // Find the most recent room document
     // Since all rooms have the same data, we only need to fetch one
-    const roomData = await Room.findOne()
-      .select("title subtitle facilities description totalRooms availableRooms")
-      .sort({ createdAt: -1 });
+    const roomData = await Room.find().sort({ createdAt: -1 });
 
     if (!roomData) {
       return res.status(404).json({

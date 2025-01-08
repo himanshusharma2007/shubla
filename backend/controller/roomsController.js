@@ -14,7 +14,7 @@ exports.createRoom = async (req, res) => {
       features,
       pricing,
     } = req.body;
-
+    console.log(req.body)
     // Enhanced input validation
     if (
       !title ||

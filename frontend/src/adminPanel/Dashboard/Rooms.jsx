@@ -1,281 +1,296 @@
-import React, { useState } from 'react';
-import roomsService from '../../services/roomsService';
+import React, { useState, useEffect } from "react";
+import {
+  PlusCircle,
+  X,
+} from "lucide-react";
+import roomsService from "../../services/roomsService";
+import { RoomForm, RoomDisplay } from "../form/RoomForm";
 
-const Rooms = ({ onSubmit }) => {
-  const [error, setError] = useState('');
+const Rooms = () => {
+  const [rooms, setRooms] = useState({ master: null, kids: null });
+  const [isEditing, setIsEditing] = useState({ master: false, kids: false });
+  const [error, setError] = useState("");
+  const [showToast, setShowToast] = useState(false);
   const [formData, setFormData] = useState({
-    title: '',
-    subtitle: '',
-    description: '',
-    roomType: '',
-    capacity: '',
-    totalRooms: '',
-    availableRooms: '',
-    pricing: '',
+    title: "",
+    subtitle: "",
+    description: "",
+    capacity: "",
+    totalRooms: "",
+    availableRooms: "",
+    pricing: "",
     facilities: [],
+    roomType: "",
     features: {
-      hasAttachedBathroom: false  ,
-      numberOfBeds: 1
-    }
+      hasAttachedBathroom: false,
+      numberOfBeds: 1,
+    },
   });
+  const [facilityInput, setFacilityInput] = useState("");
 
-  const [facilityInput, setFacilityInput] = useState('');
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  const fetchRooms = async () => {
+    try {
+      const response = await roomsService.getRoomsData();
+      const roomsData = response.roomData;
+
+      if (Array.isArray(roomsData)) {
+        setRooms({
+          master: roomsData.find((room) => room.roomType === "master") || null,
+          kids: roomsData.find((room) => room.roomType === "kids") || null,
+        });
+      } else if (roomsData) {
+        setRooms({
+          master: roomsData.roomType === "master" ? roomsData : null,
+          kids: roomsData.roomType === "kids" ? roomsData : null,
+        });
+      }
+    } catch (err) {
+      setError("Failed to fetch rooms data");
+      showToastMessage("Error fetching rooms data", "error");
+    }
+  };
+
+  const showToastMessage = (message, type = "success") => {
+    setShowToast({ message, type });
+    setTimeout(() => setShowToast(false), 3000);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
+  };
+
+  const initializeForm = (roomType) => {
+    const initialData = {
+      title: "",
+      subtitle: "",
+      description: "",
+      capacity: "",
+      totalRooms: "",
+      availableRooms: "",
+      pricing: "",
+      facilities: [],
+      roomType: roomType,
+      features: {
+        hasAttachedBathroom: false,
+        numberOfBeds: 1,
+      },
+    };
+
+    setFormData(initialData);
+    setFacilityInput("");
+    setIsEditing({ ...isEditing, [roomType]: true });
+    setError("");
   };
 
   const handleFeatureChange = (name, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       features: {
         ...prev.features,
-        [name]: value
-      }
+        [name]: value,
+      },
     }));
   };
+
+  useEffect(() => {
+    if (isEditing.master && rooms.master) {
+      setFormData(rooms.master);
+    } else if (isEditing.kids && rooms.kids) {
+      setFormData(rooms.kids);
+    }
+  }, [isEditing, rooms]);
 
   const handleFacilityAdd = () => {
     if (facilityInput.trim()) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        facilities: [...prev.facilities, facilityInput.trim()]
+        facilities: [...prev.facilities, facilityInput.trim()],
       }));
-      setFacilityInput('');
+      setFacilityInput("");
     }
   };
 
-  const removeFacility = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      facilities: prev.facilities.filter((_, i) => i !== index)
-    }));
-  };
-
-  const handleSubmit = async (e) => {
+  // In Rooms.jsx
+  const handleSubmit = async (e, roomType) => {
     e.preventDefault();
-    setError('');
-
-    // Validation
-    if (!formData.title || !formData.subtitle || !formData.description || 
-        !formData.roomType || !formData.capacity || !formData.totalRooms || 
-        !formData.availableRooms || !formData.pricing || formData.facilities.length === 0) {
-      setError('All fields are required');
-      return;
-    }
+    setError("");
 
     try {
-      // Convert numeric strings to numbers
       const roomData = {
         ...formData,
         capacity: parseInt(formData.capacity),
         totalRooms: parseInt(formData.totalRooms),
         availableRooms: parseInt(formData.availableRooms),
-        pricing: parseFloat(formData.pricing)
+        pricing: parseFloat(formData.pricing),
       };
 
-      // Call the service to create room
-      await roomsService.createRoomData(roomData);
+      if (isEditing[roomType] && rooms[roomType]?._id) {
+        // Update existing room
+        await roomsService.updateRoomData(rooms[roomType]._id, roomData);
+      } else {
+        // Create new room
+        await roomsService.createRoomData(roomData);
+      }
 
-      // Reset form after successful submission
-      setFormData({
-        title: '',
-        subtitle: '',
-        description: '',
-        roomType: '',
-        capacity: '',
-        totalRooms: '',
-        availableRooms: '',
-        pricing: '',
-        facilities: [],
-        features: {
-          hasAttachedBathroom: false,
-          numberOfBeds: 1
-        }
-      });
-
-      // You might want to show a success message or redirect
-      alert('Room created successfully!');
-      
+      await fetchRooms();
+      setIsEditing({ ...isEditing, [roomType]: false });
+      showToastMessage(
+        isEditing[roomType]
+          ? "Room updated successfully!"
+          : "Room saved successfully!"
+      );
     } catch (err) {
-      setError(err.message || 'Failed to create room');
+      setError(err.message || "Failed to save room");
+      showToastMessage(
+        `Error ${isEditing[roomType] ? "updating" : "saving"} room data`,
+        "error"
+      );
     }
   };
 
+  const handleUpdate = async (e, roomType) => {
+    console.log("handle update called ");
+    e.preventDefault();
+    if (!rooms[roomType]?._id) return;
+
+    try {
+      const response = await roomsService.updateRoomData(
+        rooms[roomType]._id,
+        formData
+      );
+      await fetchRooms();
+      setIsEditing({ ...isEditing, [roomType]: false });
+      showToastMessage("Room updated successfully!");
+    } catch (err) {
+      setError(err.message || "Failed to update room");
+      showToastMessage("Error updating room data", "error");
+    }
+  };
+
+  const removeFacility = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      facilities: prev.facilities.filter((_, i) => i !== index),
+    }));
+  };
+
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Add New Room</h2>
-      
+    <div className="max-w-6xl mx-auto p-6">
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-gray-900">Room Management</h2>
+        <p className="text-gray-600 mt-2">
+          Manage your hotel's master and kids rooms
+        </p>
+      </div>
+
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
+        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-lg">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <X className="h-5 w-5 text-red-400" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          </div>
         </div>
       )}
 
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-8">
         <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            maxLength={100}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Subtitle</label>
-          <input
-            type="text"
-            name="subtitle"
-            value={formData.subtitle}
-            onChange={handleInputChange}
-            maxLength={200}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 h-32"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Room Type</label>
-          <select
-            name="roomType"
-            value={formData.roomType}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select Room Type</option>
-            <option value="master">Master</option>
-            <option value="kids">Kids</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Capacity</label>
-          <input
-            type="number"
-            name="capacity"
-            value={formData.capacity}
-            onChange={handleInputChange}
-            max={4}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Total Rooms</label>
-          <input
-            type="number"
-            name="totalRooms"
-            value={formData.totalRooms}
-            onChange={handleInputChange}
-            min={1}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Available Rooms</label>
-          <input
-            type="number"
-            name="availableRooms"
-            value={formData.availableRooms}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Pricing</label>
-          <input
-            type="number"
-            name="pricing"
-            value={formData.pricing}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Facilities</label>
-          <div className="flex gap-2 mb-2">
-            <input
-              type="text"
-              value={facilityInput}
-              onChange={(e) => setFacilityInput(e.target.value)}
-              className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500"
-              placeholder="Add facility"
-            />
+          {!rooms.master && !isEditing.master ? (
             <button
-              type="button"
-              onClick={handleFacilityAdd}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              onClick={() => initializeForm("master")}
+              className="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
             >
-              Add
+              <PlusCircle className="w-5 h-5 mr-2" />
+              Add Master Room
             </button>
-          </div>
-          <div className="space-y-2">
-            {formData.facilities.map((facility, index) => (
-              <div key={index} className="flex items-center gap-2 bg-gray-100 p-2 rounded">
-                <span>{facility}</span>
-                <button
-                  type="button"
-                  onClick={() => removeFacility(index)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
+          ) : isEditing.master ? (
+            <div className="bg-white rounded-lg p-6">
+              <h3 className="text-xl font-bold text-blue-600 mb-6">
+                Edit Master Room
+              </h3>
+              <RoomForm
+                type="master"
+                formData={formData}
+                handleInputChange={handleInputChange}
+                handleFeatureChange={handleFeatureChange}
+                handleSubmit={handleSubmit}
+                facilityInput={facilityInput}
+                setFacilityInput={setFacilityInput}
+                handleFacilityAdd={handleFacilityAdd}
+                removeFacility={removeFacility}
+                setIsEditing={setIsEditing}
+                isEditing={isEditing}
+              />
+            </div>
+          ) : (
+            <RoomDisplay
+              room={rooms.master}
+              type="master"
+              setIsEditing={setIsEditing}
+            />
+          )}
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={formData.features.hasAttachedBathroom}
-              onChange={(e) => handleFeatureChange('hasAttachedBathroom', e.target.checked)}
-              className="rounded"
+        <div>
+          {!rooms.kids && !isEditing.kids ? (
+            <button
+              onClick={() => initializeForm("kids")}
+              className="inline-flex items-center px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all"
+            >
+              <PlusCircle className="w-5 h-5 mr-2" />
+              Add Kids Room
+            </button>
+          ) : isEditing.kids ? (
+            <div className="bg-white rounded-lg p-6">
+              <h3 className="text-xl font-bold text-purple-600 mb-6">
+                Edit Kids Room
+              </h3>
+              <RoomForm
+                type="kids"
+                formData={formData}
+                handleInputChange={handleInputChange}
+                handleFeatureChange={handleFeatureChange}
+                handleSubmit={handleSubmit}
+                facilityInput={facilityInput}
+                setFacilityInput={setFacilityInput}
+                handleFacilityAdd={handleFacilityAdd}
+                removeFacility={removeFacility}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+              />
+            </div>
+          ) : (
+            <RoomDisplay
+              room={rooms.kids}
+              type="kids"
+              setIsEditing={setIsEditing}
             />
-            <label className="text-sm">Has Attached Bathroom</label>
-          </div>
+          )}
+        </div>
+      </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Number of Beds</label>
-            <input
-              type="number"
-              value={formData.features.numberOfBeds}
-              onChange={(e) => handleFeatureChange('numberOfBeds', parseInt(e.target.value))}
-              min={1}
-              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-            />
+      {showToast && (
+        <div className="fixed bottom-4 right-4 flex flex-col gap-2">
+          <div
+            className={`px-6 py-3 rounded-lg shadow-lg ${
+              showToast.type === "error" ? "bg-red-500" : "bg-green-500"
+            } text-white transition-all transform translate-y-0`}
+          >
+            {showToast.message}
           </div>
         </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:ring-2 focus:ring-blue-500"
-        >
-          Create Room
-        </button>
-      </form>
+      )}
     </div>
   );
 };

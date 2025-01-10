@@ -14,7 +14,7 @@ exports.createRoom = async (req, res) => {
       features,
       pricing,
     } = req.body;
-
+    console.log(req.body);
     // Enhanced input validation
     if (
       !title ||
@@ -84,6 +84,7 @@ exports.createRoom = async (req, res) => {
 };
 
 exports.updateRoom = async (req, res) => {
+  console.log("req.body in update func", req.body);
   try {
     const {
       title,
@@ -108,7 +109,6 @@ exports.updateRoom = async (req, res) => {
       !availableRooms ||
       !roomType ||
       !capacity ||
-      !features ||
       !pricing
     ) {
       return res.status(400).json({
@@ -143,8 +143,8 @@ exports.updateRoom = async (req, res) => {
       roomType,
       capacity,
       features: {
-        hasAttachedBathroom: features.hasAttachedBathroom || false,
-        numberOfBeds: features.numberOfBeds,
+        hasAttachedBathroom: features?.hasAttachedBathroom || false,
+        numberOfBeds: features?.numberOfBeds || 2,
       },
       pricing,
     };
@@ -164,7 +164,7 @@ exports.updateRoom = async (req, res) => {
       { $set: roomData },
       { new: true, runValidators: true }
     );
-
+    console.log("updatedRoom", updatedRoom);
     return res.status(200).json({
       success: true,
       message: "Room updated successfully",
@@ -178,7 +178,6 @@ exports.updateRoom = async (req, res) => {
     });
   }
 };
-
 
 exports.getRoomsData = async (req, res) => {
   try {

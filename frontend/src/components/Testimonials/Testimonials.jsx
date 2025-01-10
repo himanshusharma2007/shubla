@@ -57,10 +57,10 @@ function Testimonials() {
               <p className="text-white text-lg mb-6 italic">
                 "{testimonial.text}"
               </p>
-              <h5 className="text-xl font-semibold text-gray-900 mb-2">
+              <h5 className="text-xl font-semibold text-white mb-2">
                 {testimonial.name}
               </h5>
-              <h6 className="text-sm text-gray-600">
+              <h6 className="text-sm text-gray-300">
                 {testimonial.location}
               </h6>
             </div>

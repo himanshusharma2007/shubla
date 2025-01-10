@@ -64,7 +64,7 @@ function Nav() {
 
   return (
     <>
-      <nav>
+      <nav className="">
         <div className="left-nav">
           <div className={burgar} onClick={makecross}>
             <span></span>

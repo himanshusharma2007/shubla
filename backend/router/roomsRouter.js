@@ -3,8 +3,9 @@ const router = express.Router();
 const { check } = require("express-validator");
 const { checkAuth } = require("../middleware/checkAuth");
 const {
-  updateOrCreateRoomsData,
   getRoomsData,
+  updateRoom,
+  createRoom,
 } = require("../controller/roomsController");
 const { checkAdmin } = require("../middleware/checkAdmin");
 
@@ -46,8 +47,11 @@ const roomValidation = [
 
 // Routes
 router
-  .route("/update")
-  .put(checkAdmin, roomValidation, updateOrCreateRoomsData);
+  .route("/update/:id")
+  .put(checkAdmin, roomValidation, updateRoom);
+router
+  .route("/create")
+  .post(checkAdmin, roomValidation, createRoom);
 
 router.get("/", getRoomsData);
 

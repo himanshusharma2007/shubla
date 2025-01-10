@@ -39,6 +39,7 @@ const PaymentForm = () => {
             console.log("payment")
             const data = await paymentService.processPayment(booking.amount * 100);
             const client_secret = data.client_secret;
+            console.log(client_secret)
             if (!stripe || !elements) return;
             console.log(elements.getElement(CardNumberElement))
             const result = await stripe.confirmCardPayment(client_secret, {

@@ -14,6 +14,7 @@ const roomsService = {
 
   // Update an existing room
   updateRoomData: async (id, roomData) => {
+    console.log('roomData', roomData)
     try {
       const response = await api.put(`/rooms/update/${id}`, roomData);
       return response.data;

@@ -27,6 +27,7 @@ import ProtectedRoute from "./route/ProtectedRoute";
 import PaymentForm from "./components/Payment/PaymentForm";
 import Rooms from "./adminPanel/Dashboard/Rooms";
 import Camps from "./adminPanel/Dashboard/Camps"
+import ParkingManagement from "./adminPanel/Dashboard/ParkingManagement";
 
 function App() {
 
@@ -114,6 +115,10 @@ function App() {
     {
       path: "tents",
       element: <Layout><Camps/></Layout>
+    },
+    {
+      path: "parkingmanagement",
+      element: <Layout><ParkingManagement/></Layout>
     },
 
      //Booking Routes

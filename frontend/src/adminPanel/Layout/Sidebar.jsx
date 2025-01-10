@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   return (
-    <div className="h-screen w-64 bg-gray-800 text-white flex flex-col">
+    <div className="h-screen w-full bg-gray-800 text-white flex flex-col">
       <div className="p-4 text-xl font-bold border-b border-gray-700">Shubhla</div>
       <div className="flex-1 p-4">
         <ul className="space-y-2">
@@ -40,6 +40,18 @@ const Sidebar = () => {
               }
             >
              Add Rooms
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/parkingmanagement" 
+              className={({ isActive }) => 
+                `block py-2 px-4 rounded hover:bg-gray-700 ${
+                  isActive ? 'bg-gray-700 text-white' : ''
+                }`
+              }
+            >
+             Parking
             </NavLink>
           </li>
           <li>

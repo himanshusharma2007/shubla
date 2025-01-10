@@ -3,7 +3,6 @@ const router = express.Router();
 const { check } = require("express-validator");
 const { checkAuth } = require("../middleware/checkAuth");
 const {
-  updateOrCreateRoomsData,
   getRoomsData,
   updateRoom,
   createRoom,
@@ -48,7 +47,7 @@ const roomValidation = [
 
 // Routes
 router
-  .route("/update")
+  .route("/update/:id")
   .put(checkAdmin, roomValidation, updateRoom);
 router
   .route("/create")

@@ -28,6 +28,8 @@ import PaymentForm from "./components/Payment/PaymentForm";
 import Rooms from "./adminPanel/Dashboard/Rooms";
 import Camps from "./adminPanel/Dashboard/Camps"
 import ParkingManagement from "./adminPanel/Dashboard/ParkingManagement";
+import AdminBooking from "./adminPanel/Dashboard/AdminBooking";
+import ImageUploadAdmin from "./adminPanel/Dashboard/ImageUploadAdmin";
 
 function App() {
 
@@ -119,6 +121,14 @@ function App() {
     {
       path: "parkingmanagement",
       element: <Layout><ParkingManagement/></Layout>
+    },
+    {
+      path: "bookingmanagement",
+      element: <Layout><AdminBooking/></Layout>
+    },
+    {
+      path: "uploadImage",
+      element: <Layout><ImageUploadAdmin/></Layout>
     },
 
      //Booking Routes

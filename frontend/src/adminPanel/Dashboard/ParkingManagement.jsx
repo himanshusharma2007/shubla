@@ -7,98 +7,133 @@ const ParkingManagement = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
-    facilities: [''],
+    facilities: [''], // Default facility array
     description: '',
     totalSlots: '',
     availableSlots: '',
     dimension: {
-      width: 10,
-      length: 10
+        width: 10,
+        length: 10,
     },
-    price: '',
+    pricing: {
+        weekday: '',
+        weekend: '',
+    },
     amenities: {
-      electricity: true,
-      water: true,
-      sanitation: true
-    }
-  });
+        electricity: true,
+        water: true,
+        sanitation: true,
+    },
+});
 
-  useEffect(() => {
+useEffect(() => {
     fetchParkingData();
-  }, []);
+}, []);
 
-  const fetchParkingData = async () => {
+const fetchParkingData = async () => {
     try {
-      const response = await getParkingData();
-      if (response.success) {
-        setParkingData(response.parkingData);
-        if (response.parkingData) {
-          setFormData({
-            ...response.parkingData,
-            price: response.parkingData.price || '',
-            dimension: response.parkingData.dimension || { width: 10, length: 10 }
-          });
+        const response = await getParkingData();
+        if (response.success) {
+            setParkingData(response.parkingData);
+            if (response.parkingData) {
+                setFormData({
+                    ...response.parkingData,
+                    pricing: response.parkingData.pricing || { weekday: '', weekend: '' },
+                    dimension: response.parkingData.dimension || { width: 10, length: 10 },
+                });
+            }
         }
-      }
     } catch (err) {
-      setError('Failed to fetch parking data');
+        setError('Failed to fetch parking data');
     }
-  };
+};
 
-  const handleInputChange = (e) => {
+const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
+    setFormData((prev) => ({
+        ...prev,
+        [name]: value,
     }));
-  };
+};
 
-  const handleFacilityChange = (index, value) => {
-    const newFacilities = [...formData.facilities];
-    newFacilities[index] = value;
-    setFormData(prev => ({
-      ...prev,
-      facilities: newFacilities
+const handleDimensionChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+        ...prev,
+        dimension: {
+            ...prev.dimension,
+            [name]: Number(value), // Ensure numeric type
+        },
     }));
-  };
+};
 
-  const addFacility = () => {
-    setFormData(prev => ({
-      ...prev,
-      facilities: [...prev.facilities, '']
+const handlePricingChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+        ...prev,
+        pricing: {
+            ...prev.pricing,
+            [name]: Number(value), // Ensure numeric type
+        },
     }));
-  };
+};
 
-  const removeFacility = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      facilities: prev.facilities.filter((_, i) => i !== index)
+const handleAmenityChange = (e) => {
+    const { name, checked } = e.target;
+    setFormData((prev) => ({
+        ...prev,
+        amenities: {
+            ...prev.amenities,
+            [name]: checked,
+        },
     }));
-  };
+};
 
-  const handleSubmit = async (e) => {
+const handleFacilityChange = (index, value) => {
+    setFormData((prev) => {
+        const updatedFacilities = [...prev.facilities];
+        updatedFacilities[index] = value;
+        return { ...prev, facilities: updatedFacilities };
+    });
+};
+
+const addFacility = () => {
+    setFormData((prev) => ({
+        ...prev,
+        facilities: [...prev.facilities, ''],
+    }));
+};
+
+const removeFacility = (index) => {
+    setFormData((prev) => {
+        const updatedFacilities = prev.facilities.filter((_, i) => i !== index);
+        return { ...prev, facilities: updatedFacilities };
+    });
+};
+
+const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      if (parkingData && isEditing) {
-        await updateParkingSlot(parkingData._id, formData);
-      } else {
-        await createParkingSlot(formData);
-      }
-      await fetchParkingData();
-      setIsEditing(false);
+        if (parkingData && isEditing) {
+            await updateParkingSlot(parkingData._id, formData);
+        } else {
+            await createParkingSlot(formData);
+        }
+        await fetchParkingData();
+        setIsEditing(false);
     } catch (err) {
-      setError(err.message || 'An error occurred');
+        setError(err.message || 'An error occurred');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -250,20 +285,108 @@ const ParkingManagement = () => {
             </div>
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Price
+              Pricing
             </label>
             <input
               type="number"
-              name="price"
-              value={formData.price}
+              name="pricing"
+              value={formData.pricing}
               onChange={handleInputChange}
               className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               min="1"
               required
               disabled={!isEditing && parkingData}
             />
+          </div> */}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Dimension (Width x Length)
+            </label>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Width (m)
+                </label>
+                <input
+                type="number"
+                name="width"
+                value={formData.dimension.width}
+                onChange={handleDimensionChange}
+                required
+                className="input-class"
+              />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Length (m)
+                </label>
+                <input
+                type="number"
+                name="length"
+                value={formData.dimension.length}
+                onChange={handleDimensionChange}
+                required
+                className="input-class"
+              />
+              </div>
+            </div>
+          </div>
+          <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+        Pricing
+    </label>
+    <div className="grid grid-cols-2 gap-4">
+        <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+                Weekday Price
+            </label>
+            <input
+              type="number"
+              name="weekday"
+              value={formData.pricing.weekday}
+              onChange={handlePricingChange}
+              required
+              className="input-class"
+            />
+        </div>
+        <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+                Weekend Price
+            </label>
+            <input
+              type="number"
+              name="weekend"
+              value={formData.pricing.weekend}
+              onChange={handlePricingChange}
+              required
+              className="input-class"
+            />
+        </div>
+    </div>
+</div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Amenities
+            </label>
+            <div className="space-y-2">
+              {['electricity', 'water', 'sanitation'].map((amenity) => (
+                <div key={amenity} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    name={amenity}
+                    checked={formData.amenities[amenity]}
+                    onChange={handleAmenityChange}
+                    disabled={!isEditing && parkingData}
+                  />
+                  <label className="text-sm">{amenity.charAt(0).toUpperCase() + amenity.slice(1)}</label>
+                </div>
+              ))}
+            </div>
           </div>
 
           {(!parkingData || isEditing) && (

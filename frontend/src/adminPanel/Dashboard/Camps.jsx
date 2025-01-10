@@ -90,7 +90,7 @@ const Camps = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
   
@@ -125,7 +125,6 @@ const Camps = () => {
       setSubmitStatus({ message: error || 'Failed to create camp', type: 'error' });
     }
   };
-
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Create New Camp</h2>

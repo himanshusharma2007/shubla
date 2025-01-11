@@ -13,7 +13,7 @@ import Event2 from "./components/Event/Event2";
 import Activity from "./components/Activity/Activity";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { fetchUser } from "./redux/authSlice";
+import { fetchUser } from "./redux/authSlice";         
 import Parking from "./components/parking/PArking";
 import AdminLogin from "./adminPanel/Login/AdminLogin";
 import Layout from "./adminPanel/Layout/Layout";

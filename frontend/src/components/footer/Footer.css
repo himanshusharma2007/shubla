@@ -6,7 +6,7 @@ footer{
 }
 .social{
     width: 100%;
-    background-color: #ff5833e2;
+    background-color: #d89863;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -44,7 +44,7 @@ footer{
 .footfilter{
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, rgba(255,87,51,0.8839868711156338) 0%, rgba(139,90,43,0.3265639019279587) 48%);
+    background: linear-gradient(180deg, #d89863fa 0%, rgba(139,90,43,0.3265639019279587) 48%);
     padding: 1% 10%;
     color: #fffff0;
 }
@@ -83,6 +83,9 @@ footer{
 }
 .donwfoot ul li{
     list-style: none;
+    display: flex;
+    gap: 10px;
+    align-items: center;
     color: #fffff0;
 }
 .donwfoot ul li:hover{

@@ -46,10 +46,10 @@
 }
 
 .right-abt .p-1{
-    font-size: 24px;
-    font-weight: 300;
+    font-size: 20px;
+    font-weight: 400;
     text-align: center;
-    line-height: 38px;
+    line-height: 35px;
     margin: 0% 5%;
 }
 
@@ -58,12 +58,12 @@
     font-size: 23px;
     text-transform: uppercase;
     text-align: center;
-    line-height: 35px;
+    line-height: 25px;
     margin: 5%;
 }
 .right-abt .p-2{
-    font-weight: 500;
-    font-size: 22px;
+    font-weight: 400;
+    font-size: 20px;
     text-align: center;
     line-height: 32px;
     margin: 5%;

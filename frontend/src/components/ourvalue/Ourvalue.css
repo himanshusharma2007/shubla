@@ -39,7 +39,7 @@
     width: 50%;
 }
 .r-val>div{
-    background-color: #FF5733;
+    background-color: #CEB79F;
     padding: 5% 5%;
     margin: 2% 0%;
     display: flex;
@@ -49,17 +49,17 @@
     font-size: 28px;
     line-height: 31px;
     font-weight: 600;
-    color: #fffff0;
+    color: #333333;
     display: flex;
     align-items:flex-start;
     display: inline;
 }
 .r-val span{ 
     display: flex;
-    color: #fffff0;
+    color: #333333;
     font-size: 30px;
     padding: 2%;
-    background-color: #8B5A2B;
+    /* background-color: #8B5A2B; */
     height: 10%;
     margin-right: 2%;
 }
@@ -68,7 +68,7 @@
     font-size: 16px;
     line-height: 24px;
     font-weight: 400;
-    color: #fffff0;
+    color: #333333c7;
 }
 
 

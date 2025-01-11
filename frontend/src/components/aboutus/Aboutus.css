@@ -87,4 +87,11 @@
         width: auto;
         height: 110%;
     }
+    .abthero-filter h2{
+        font-size: 50px;
+        width: 80%;
+    }
+    .abthero-filter p{
+        font-size: 20px;
+    }
 }

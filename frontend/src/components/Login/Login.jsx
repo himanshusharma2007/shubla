@@ -68,9 +68,9 @@ function Login() {
           <Link className="sign-up-button" to={"/register"}>
             Create Account
           </Link>
-          <Link className="sign-up-button" to={"/adminLogin"}>
+          {/* <Link className="sign-up-button" to={"/adminLogin"}>
             Login as Admin
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

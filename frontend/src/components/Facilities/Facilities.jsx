@@ -23,21 +23,21 @@ function Facilities() {
       <div className="f-slider">
         <Plx className="f-inner" parallaxData={facilities}>
                     <h4>Rooms</h4>
-                    <img src="./camp1.jpg" alt="Rooms" />
+                    <img src="./room11.jpg" alt="Rooms" />
                     
         </Plx>
         <Plx className="f-inner" parallaxData={facilities}>
-                    <h4>Camps</h4>
-                    <img src="./camp2.jpg" alt="Camps" />
+                    <h4>Tents</h4>
+                    <img src="./tent.jpg" alt="Camps" />
                     
         </Plx>
         <Plx className="f-inner" parallaxData={facilities}>
-                    <h4>Parking</h4>
-                    <img src="./camp4.jpg" alt="Parking" />
+                    <h4>Caravan Parking</h4>
+                    <img src="./parking.jpg" alt="Parking" />
                     
         </Plx>
         <Plx className="f-inner" parallaxData={facilities}>
-                    <h4>Bonfire</h4>
+                    <h4>Kids Play Area</h4>
                     <img src="./Bonfire.jpg" alt="Bonfire" />
                     
         </Plx>

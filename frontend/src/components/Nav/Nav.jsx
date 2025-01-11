@@ -99,7 +99,7 @@ function Nav() {
                 </li>
               </ul>
             </li>
-            <li className="moblink" onClick={openEvent}>
+            {/* <li className="moblink" onClick={openEvent} >
               Events
               <FaAngleDown />
               <ul className={openevent}>
@@ -114,7 +114,7 @@ function Nav() {
                   </NavLink>
                 </li>
               </ul>
-            </li>
+            </li> */}
             <li className="moblink" onClick={openOther}>
               Other
               <FaAngleDown />
@@ -139,12 +139,12 @@ function Nav() {
         <div className="center-nav-logo">
           <a href="/">
             {" "}
-            <img src="./logo.png" alt="Logo" />
+            <img src="/logo.png" alt="Logo" />
           </a>
         </div>
         <div className="right-nav">
           <ul>
-            <li className="dropdown">
+            {/* <li className="dropdown">
               Events <FaAngleDown />
               <ul className="dropdown-menu">
                 <li>
@@ -158,7 +158,7 @@ function Nav() {
                   </NavLink>
                 </li>
               </ul>
-            </li>
+            </li> */}
             <li className="dropdown">
               Other <FaAngleDown />
               <ul className="dropdown-menu">

@@ -12,14 +12,16 @@ exports.createParkingSlot = async (req, res) => {
             totalSlots,
             availableSlots,
             dimension,
-            pricing,
+            price,
             amenities
         } = req.body;
+
+        console.log(req.body)
 
         // Input validation
         if (!title || !subtitle || !facilities || !description || 
             !totalSlots || !availableSlots || !dimension || 
-            !pricing || !amenities) {
+            !price || !amenities) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -27,7 +29,7 @@ exports.createParkingSlot = async (req, res) => {
         }
 
         // Validate pricing structure
-        if (!pricing.weekday || !pricing.weekend) {
+        if (!price.weekday || !price.weekend) {
             return res.status(400).json({
                 success: false,
                 message: "Both weekday and weekend pricing must be specified"
@@ -62,10 +64,7 @@ exports.createParkingSlot = async (req, res) => {
             totalSlots,
             availableSlots,
             dimension,
-            pricing: {
-                weekday: 200, // Fixed price as per client requirement
-                weekend: 250  // Fixed price as per client requirement
-            },
+            pricing: price,
             amenities
         });
 

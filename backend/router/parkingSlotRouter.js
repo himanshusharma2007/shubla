@@ -43,6 +43,8 @@ const parkingValidation = [
 ];
 
 // Routes
+router.route('/')
+    .get(getParkingData);
 router.route('/update/:id')
     .put(
         checkAdmin,
@@ -56,7 +58,5 @@ router.route('/create')
         createParkingSlot
     );
 
-router.route('/')
-    .get(getParkingData);
 
 module.exports = router;

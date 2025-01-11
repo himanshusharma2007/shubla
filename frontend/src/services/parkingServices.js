@@ -3,7 +3,7 @@ import api from './api';
 // Fetch all parking data
 export const getParkingData = async () => {
     try {
-        const response = await api.get('/parking');
+        const response = await api.get('/parking/');
         return response.data;
     } catch (error) {
         throw error.response?.data?.message || 'Failed to fetch parking data';
@@ -16,6 +16,7 @@ export const createParkingSlot = async (parkingDetails) => {
         const response = await api.post('/parking/create', parkingDetails);
         return response.data;
     } catch (error) {
+        console.log(error)
         throw error.response?.data?.message || 'Failed to create parking slot';
     }
 };

@@ -28,6 +28,7 @@ const roomsService = {
   getRoomsData: async () => {
    try{
       const response = await api.get('/rooms');
+      console.log("rooms",response.data)
       return response.data;
     } catch (error) {
       console.error('Failed to fetch rooms:', error.response?.data || error.message);

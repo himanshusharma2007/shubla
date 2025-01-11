@@ -43,10 +43,17 @@ const parkingSlotSchema = new mongoose.Schema({
       default: 10, // meters
     },
   },
-  price: {
-    type: Number,
-    required: [true, "Please specify parking slot price"],
-    min: [1, "Parking slot price must be at least 1"],
+  pricing: {
+    weekend: {
+      type: Number,
+      required: [true, "Please specify parking slot price"],
+      min: [1, "Parking slot price must be at least 1"],
+    },
+    weekday: {
+      type: Number,
+      required: [true, "Please specify parking slot price"],
+      min: [1, "Parking slot price must be at least 1"],
+    }
   },
   amenities: {
     electricity: { type: Boolean, default: true },

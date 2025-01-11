@@ -185,9 +185,7 @@ exports.getParkingData = async (req, res) => {
     try {
         // Find the most recent parking slot document
         // Since all slots have the same data, we only need to fetch one
-        const parkingData = await ParkingSlot.findOne()
-            .select('title subtitle facilities description totalSlots availableSlots')
-            .sort({ createdAt: -1 });
+        const parkingData = await ParkingSlot.findOne().sort({ createdAt: -1 });
 
         if (!parkingData) {
             return res.status(404).json({

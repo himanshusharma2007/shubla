@@ -39,6 +39,7 @@ const PaymentForm = () => {
             console.log("payment")
             const data = await paymentService.processPayment(booking.amount * 100);
             const client_secret = data.client_secret;
+            console.log(client_secret)
             if (!stripe || !elements) return;
             console.log(elements.getElement(CardNumberElement))
             const result = await stripe.confirmCardPayment(client_secret, {
@@ -164,6 +165,13 @@ const PaymentForm = () => {
                                 <span className="text-sm font-medium text-amber-800">Private Booking:</span>
                                 <span className="text-sm text-amber-900">
                                     {booking?.isPrivateBooking ? 'Yes' : 'No'}
+                                </span>
+                            </div>
+                            <hr/>
+                            <div className="flex justify-between items-center">
+                                <span className="text-lg font-bold text-amber-800">Pay amount</span>
+                                <span className="text-lg font-bold text-amber-900">
+                                    {booking?.amount}
                                 </span>
                             </div>
                         </div>

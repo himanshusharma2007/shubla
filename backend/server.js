@@ -25,6 +25,7 @@ const adminRouter = require("./router/adminRouter");
 const parkingSlotRouter = require("./router/parkingSlotRouter");
 const bookingRouter = require("./router/bookingRouter");
 const paymentRouter = require("./router/paymentRouter")
+const dashboardRouter = require("./router/dashboardRouter")
 
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -36,6 +37,7 @@ app.use("/api/camps", campsRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/image", imageRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/admin/dashboard", dashboardRouter );
 app.use("/api/booking", bookingRouter);
 app.use("/api/parking", parkingSlotRouter);
 app.use("/api/payment", paymentRouter);

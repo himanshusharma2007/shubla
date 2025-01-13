@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   return (
     <div className="h-screen w-full bg-gray-800 text-white flex flex-col">
-      <div className="p-4 text-xl font-bold border-b border-gray-700">Shubhla</div>
+      <div className="p-4 text-xl font-bold border-b border-gray-700">Subhla</div>
       <div className="flex-1 p-4">
         <ul className="space-y-2">
           <li>

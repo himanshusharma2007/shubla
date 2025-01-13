@@ -19,6 +19,15 @@ const adminService = {
     }
   },
 
+  logOutAdmin: async (credentials) => {
+    try {
+      const response = await api.get('/admin/logout');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   forgotPassword: async (email) => {
     try {
       const response = await api.post('/admin/forgot-password', { email });

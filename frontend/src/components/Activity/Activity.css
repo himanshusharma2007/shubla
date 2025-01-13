@@ -77,10 +77,14 @@
 }
 .actpicker h4{
     font-size: 20px;
-    line-height: 30px;
+    line-height: 60px;
     font-weight: 700;
     cursor: pointer;
     padding-left: 5%;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .actpicker h4:hover{
     scale: 1.2;
@@ -146,15 +150,16 @@
     .acthero{
         height: 50vh;
         top: 8vh;
+        margin-bottom: 5%;
     }
     .acthero-img{
-        height: 110%;
+        height: 100%;
         display: flex;
         justify-content: center;
     }
-    .acthero-img img{
-        width: 100%;
-        height: auto;
+    .acthero-img>img{
+        width: 100% !important;
+        height: auto !important;
     }
 
     .actpicker{

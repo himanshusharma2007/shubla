@@ -1,6 +1,8 @@
 import React from 'react'
 import './Whyus.css'
 import { Link } from 'react-router-dom'
+import why2 from "./img/why-1.jpg"
+import why1 from "./img/why-2.jpg"
 
 function Whyus() {
   return (
@@ -18,10 +20,10 @@ function Whyus() {
             <a href="#Contact">Contact Us</a>
         </div>
         <div className="why-2">
-            <img src="/why-3.jpg" alt="" />
+            <img src={why1} alt="" />
         </div>
         <div className="why-3">
-            <img src="/why-2.jpg" alt="" />
+            <img src={why2} alt="" />
             <br />
             <div>
                 <p>"</p>

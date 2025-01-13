@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "./Faq.css";
 import { GoArrowDownLeft } from "react-icons/go";
+import faqimg from "./img/faq.jpg"
 
 function Faq() {
 
@@ -55,7 +56,7 @@ function Faq() {
         <div className="Faq-1">
             <h2>FAQ's <div className='headingline'></div></h2>
             <p>Experience the thrill of camping in the UAE’s stunning deserts with confidence and ease. Happy camping!</p>
-            <img src="faq.jpg" alt="" />
+            <img src={faqimg} alt="" />
         </div>
         <div className="Faq-2">
             {

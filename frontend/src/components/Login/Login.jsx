@@ -53,8 +53,7 @@ function Login() {
             />
             <button>Sign in</button>
             <span>
-              <input type="checkbox" name="remember" />
-              <label htmlFor="remember">Remember me</label>
+             
               <a href="/register">Forgot Password ?</a>
             </span>
           </form>

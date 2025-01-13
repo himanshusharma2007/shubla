@@ -6,6 +6,7 @@ import Whyus from '../Whyus/Whyus';
 import Footer from '../footer/Footer';
 import Ourvalue from '../ourvalue/Ourvalue';
 import Contact from '../Contact/Contact';
+import abouthero from './img/abthero.jpg'
 import { useLocation } from 'react-router-dom';
 
 
@@ -38,7 +39,7 @@ function Aboutus() {
                 <p>A Place Where Time Pauses</p>
             </div>
             <Plx className='abthero-img'  parallaxData={abthero}>
-                <img src="./img2.jpg" alt="" />
+                <img src={abouthero} alt="" />
             </Plx>
         </div>
 

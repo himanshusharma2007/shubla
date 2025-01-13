@@ -1,6 +1,10 @@
 import React from 'react'
 import './Facilities.css'
 import Plx from "react-plx";
+import room from "./img/room.jpg"
+import tent from "./img/tent.jpg"
+import parking from "./img/parking.jpg"
+import playground from "./img/playground.jpg"
 
 function Facilities() {
     const facilities = [
@@ -23,22 +27,23 @@ function Facilities() {
       <div className="f-slider">
         <Plx className="f-inner" parallaxData={facilities}>
                     <h4>Rooms</h4>
-                    <img src="./room11.jpg" alt="Rooms" />
+                    <img src={room} alt="Rooms" />
                     
         </Plx>
         <Plx className="f-inner" parallaxData={facilities}>
                     <h4>Tents</h4>
-                    <img src="./tent.jpg" alt="Camps" />
+                    <img src={tent} alt="Camps" />
                     
         </Plx>
         <Plx className="f-inner" parallaxData={facilities}>
                     <h4>Caravan Parking</h4>
-                    <img src="./parking.jpg" alt="Parking" />
+                    <img src={parking} alt="Parking" />
                     
         </Plx>
         <Plx className="f-inner" parallaxData={facilities}>
                     <h4>Kids Play Area</h4>
-                    <img src="./Bonfire.jpg" alt="Bonfire" />
+                    <img src={playground}
+                    alt="Bonfire" />
                     
         </Plx>
       </div>

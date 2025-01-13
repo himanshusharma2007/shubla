@@ -7,7 +7,7 @@
     height: 100vh;
     position: relative;
     z-index: 100;
-    background-image: url("../../../public/bg1.jpg");
+    background-image: url("./img/herobg.jpg");
     background-size: cover;
     overflow: hidden;
 }
@@ -41,16 +41,19 @@
     justify-content: center;
 }
 .herolayer1 h1{
-    font-size: 100px;
+    font-size: 110px;
     font-family: "Lato", sans-serif;
-    font-weight: 300;
-    color: #fff;
+    font-weight: 500;
+    color: #fffff0;
     text-transform: uppercase;
     /* font-family: "Archivo Black", sans-serif; */
     font-optical-sizing: auto;
     font-style: normal;
     text-align: center;
-    line-height: 100px;
+    line-height: 120px;
+    text-shadow: 0px 15px 5px rgba(0,0,0,0.1),
+                 10px 20px 5px rgba(0,0,0,0.05),
+                 -10px 20px 5px rgba(0,0,0,0.05);
 }
 
 
@@ -86,8 +89,8 @@
        width: 100%;
     }
     .herolayer1 h1{
-        font-size: 70px;
-        line-height: 70px;
+        font-size: 80px;
+        line-height: 90px;
     }
     .Hero2section .herolayer2{
         width: 1300px;
@@ -108,8 +111,8 @@
        width: 100%;
     }
     .herolayer1 h1{
-        font-size: 50px;
-        line-height: 50px;
+        font-size: 60px;
+        line-height: 70px;
     }
     .Hero2section .herolayer2{
         width: 1300px;

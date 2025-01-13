@@ -6,6 +6,18 @@ import Footer from '../footer/Footer'
 import Plx from "react-plx";
 import { RxDoubleArrowRight } from "react-icons/rx";
 import { useLocation } from 'react-router-dom'
+import activityhero from "./img/activityhero.jpg"
+import horseriding from "./img/horseriding.jpg"
+import carsafari from "./img/carsafari.jpg"
+import bonefire from "./img/bonefire.jpg"
+import starwatching from "./img/starwatching.jpg"
+import camping from "./img/camping.jpg"
+import camelsafari from "./img/camelsafari.jpg"
+import gel1 from "./img/gel1.jpg"
+import gel2 from "./img/gel2.jpg"
+import gel3 from "./img/gel3.jpg"
+import gel4 from "./img/gel4.jpg"
+import gel5 from "./img/gel5.jpg"
 
 function Activity() {
     const { pathname } = useLocation();
@@ -28,34 +40,34 @@ function Activity() {
 
       const activites =[
         {
-            actName: "Camel Safari", 
-            actdetails: `Take a journey back in time and explore Dubai’s enchanting desert landscape with a Camel Safari. Known as the "Ship of the Desert", camels offer a serene and authentic way to traverse the golden dunes while immersing yourself in the beauty and tranquility of the Arabian desert.?`,
-            actimg: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/11/74/a3/caption.jpg?w=1200&h=-1&s=1'
+            actName: "Horse Riding", 
+            actdetails: `With the amazing horseback riding experience offered by Subla Camp, discover the desert of Dubai on horseback. Riding over breathtaking dunes under knowledgeable supervision is ideal for riders of all ability levels. Savor the adventure, peace, and stunning vistas that will make your trip through the desert genuinely unforgettable.`,
+            actimg: horseriding
         },
         {
             actName: "Car Safari", 
-            actdetails: "Looking for an adrenaline-packed adventure through the vast, golden dunes of Dubai? Our Car Safari offers the perfect blend of excitement and exploration as you navigate the desert's rugged terrain in a powerful 4x4 vehicle. Prepare for a thrilling ride that will leave you with unforgettable memories!",
-            actimg: 'https://arabiahorizons.com/blog/wp-content/uploads/2020/05/Jeep-safari-Dubai.jpg'
+            actdetails: "Discover the excitement of a desert vehicle safari in Dubai's Subla Camp. Drive a 4x4 through stunning dunes under the direction of skilled drivers. This thrilling ride is ideal for those who enjoy adventure since it blends thrills with breathtaking views of the desert to create a voyage that will never be forgotten.",
+            actimg: carsafari
         },
         {
-            actName: "Boanfire", 
-            actdetails: "End your day in the desert with a cozy and magical bonfire experience. Gather around the warmth of the crackling fire, share stories, enjoy the soothing desert breeze, and gaze up at the starlit sky. Our bonfire setting provides the perfect atmosphere for relaxation, creating unforgettable moments with friends and family.?",
-            actimg: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/09/25/05/7b.jpg'
+            actName: "Bonfire", 
+            actdetails: "Enjoy the comforting bonfire experience at Subla Camp while relaxing beneath the beautiful desert sky. In the middle of Dubai's tranquil desert, assemble around the cozy fire, take in the traditional music, and make lifelong memories. Ideal for moments of connection and relaxation.",
+            actimg: bonefire
         },
         {
             actName: "Stars Watching", 
-            actdetails: "Escape the city's lights and immerse yourself in the breathtaking beauty of the desert sky. Our stargazing experience lets you witness the wonders of the night sky like never before. With the vast, clear desert horizon as your backdrop, marvel at the twinkling stars and constellations above, far away from any light pollution",
-            actimg: 'https://img.freepik.com/premium-photo/group-individuals-sitting-atop-barren-desert-landscape-gazing-vast-night-sky-group-friends-star-gazing-desert-ai-generated_585735-9362.jpg'
+            actdetails: "Take advantage of Subla Camp's stargazing experience to fully appreciate the splendor of Dubai's desert. Away from the lights of the city, take in the peace and quiet of the quiet dunes and see a starry sky. An ideal pastime for those who enjoy astronomy and the natural world.",
+            actimg: starwatching
         },
         {
             actName: "Camping", 
-            actdetails: "Step into the heart of the desert and experience the thrill of camping under the vast, open sky. Our desert camping offers a unique opportunity to connect with nature in one of the most serene and stunning environments in Dubai. Sleep under a blanket of stars in our comfortable tents, surrounded by the tranquility of the desert.",
-            actimg: 'https://www.tourpackagejaisalmer.com/images/desert-night-camp.png'
+            actdetails: "Take advantage of Subla Camp's camping adventure in Dubai for the ultimate desert getaway. Under the stars, savor traditional dinners, stay in cozy tents surrounded by tranquil dunes, and establish a connection with nature. Ideal for an unforgettable vacation.",
+            actimg: camping
         },
         {
-            actName: "Games", 
-            actdetails: "Get ready for an action-packed day in the desert with a wide variety of games and activities! From adrenaline-pumping dune bashing to thrilling sandboarding, our desert camp offers something for everyone. Challenge your friends and family to a friendly game of volleyball or soccer on the sand, or try your hand at archery for a unique desert challenge.",
-            actimg: 'https://c02.purpledshub.com/uploads/sites/62/2022/01/Playing-board-game.-GettyImages-1227346894-b712fd5.jpg?w=1029&webp=1'
+            actName: "Camel Safari", 
+            actdetails: "Experience the breathtaking Dubai desert like never before by going on a traditional camel safari at Subla Camp. For an experience that will never be forgotten, ride across golden dunes, take in breath-taking scenery, and become fully immersed in Arabian culture.",
+            actimg: camelsafari
         },
       ]
       const [act,setAct] = useState(0);
@@ -68,10 +80,9 @@ function Activity() {
                 <p>Enjoy Different Activites!</p>
             </div>
             <Plx className='acthero-img'  parallaxData={acthero}>
-                <img src="./act1.jpg" alt="" />
+                <img src={activityhero} alt="" />
             </Plx>
       </div>
-      <h2 className='acthead'>Things To do with Us</h2>
       <div className="activites">
         <div className="actpicker">
             <h2>Things to do <div className='headingline'></div></h2>
@@ -93,13 +104,13 @@ function Activity() {
       </div>
       <div className="act-gallery">
         <div className="leftgallery">
-          <img src='https://cdn-imgix.headout.com/tour/19728/TOUR-IMAGE/498347a2-2851-4cd0-a593-df08144994fc-1890-HummerDesertSafari-14.JPG' alt="" />
+          <img src={gel1} alt="" />
         </div>
         <div className="rightgallery">
-            <img src='https://assets-global.website-files.com/5f858c8d952706d07e333d4b/65411698e2851cf9352b8433_BUR06006.jpg' alt="" />
-            <img src='https://assets-global.website-files.com/5f858c8d952706d07e333d4b/654116c2292264df8283bc56_orhan%20Kardeniz%20(9).jpg' alt="" />
-            <img src='https://extranet.transindiaholidays.com/images/package/images/Thumbnail/TransIndia-Desert-Dunes-20191023_041052.jpg' alt="" />
-            <img src='https://assets-global.website-files.com/5f858c8d02ebf5f32ed60fc2/60988bd7342b818c3debeca5_bien-etre-2.jpg' alt="" />
+            <img src={gel2} alt="" />
+            <img src={gel3} alt="" />
+            <img src={gel4} alt="" />
+            <img src={gel5} alt="" />
         </div>
        </div>
       <Contact/>

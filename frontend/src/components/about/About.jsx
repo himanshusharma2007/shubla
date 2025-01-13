@@ -9,7 +9,7 @@ import Intro from '../../assets/intro.mp4'
 const headingdata = [
     {
       start: "self",
-      duration: "100vh",
+      duration: "70vh",
       properties: [
         {
           startValue: 0,
@@ -40,7 +40,8 @@ function About() {
     <div className='about'>
       <div className="left-abt">
             <Plx className='h-2' parallaxData={headingdata}>
-                <h2>Desert</h2>
+                {/* <h2>Desert</h2> */}
+                <h2>استراحةالشبة</h2>
             </Plx>   
             {/* <img src='./img1.jpg' alt="" /> */}
             <video src={Intro}  muted autoPlay loop>

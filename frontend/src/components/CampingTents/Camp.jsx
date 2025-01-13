@@ -9,6 +9,8 @@ import { MdFastfood } from "react-icons/md";
 import { IoIosBonfire } from "react-icons/io";
 import { GiDesert } from "react-icons/gi";
 import Contact from '../Contact/Contact'
+import campheroimg from './img/camphero.jpg'
+import campimg from './img/camp.jpg'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 
@@ -22,11 +24,11 @@ function Camp() {
     const camphero = [
         {
           start: 'self',
-          end: 500,
+          end: 400,
           properties: [
             {
               startValue: 0,
-              endValue: -50,
+              endValue: -200,
               property: "translateY",
             },
           ],
@@ -42,7 +44,7 @@ function Camp() {
                 <p>We Love Camping Too!</p>
             </div>
             <Plx className='camphero-img'  parallaxData={camphero}>
-                <img src="./camp.jpg" alt="" />
+                <img src={campheroimg} alt="" />
             </Plx>
       </div>
       <div className="abt-camp">
@@ -51,9 +53,9 @@ function Camp() {
             <p>Experience the magic of the Arabian desert with our premium <b>camping tents</b>, designed for comfort and adventure. Whether you're looking for a romantic getaway, a family outing, or an adventure with friends, our desert campsite offers the perfect retreat under the starlit skies.</p>
             <ul>
                 <li><PiTentFill /> Advanture Experience</li>
-                <li><MdFastfood /> Testi Food</li>
+                <li><MdFastfood /> Tasty Food</li>
                 <li><IoIosBonfire /> Bonfire</li>
-                <li><GiDesert /> Desert View</li>
+                <li><GiDesert /> Mountain View</li>
             </ul>
             <button
             className="bg-zinc-900 text-white px-4 py-2 hover:scale-105 transition duration-300"
@@ -64,7 +66,7 @@ function Camp() {
           </button>
     
         </div>
-        <img src="./camp5.jpg" alt="" />
+        <img src={campimg} alt="" />
       </div>
     </div>
     <Contact/>

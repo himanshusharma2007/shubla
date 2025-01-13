@@ -7,6 +7,7 @@ import { IoCallSharp } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
 import { clearUser, selectUser } from "../../redux/authSlice";
 import authService from "../../services/authService";
+import logo from "./img/logo.png"
 
 function Nav() {
   const [burgar, setBurgar] = useState("hamburgar");
@@ -15,6 +16,7 @@ function Nav() {
   const [openevent, setOpenevent] = useState("dropdown-menu");
   const [openother, setOpenother] = useState("dropdown-menu");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
 
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -73,14 +75,17 @@ function Nav() {
           </div>
           <ul className={menu}>
             <li>
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>Home</NavLink>
             </li>
             <li>
-              <NavLink to="/Aboutus">About Us</NavLink>
+              <NavLink to="/Aboutus" className={({ isActive }) => (isActive ? "active" : "")}>About Us</NavLink>
             </li>
-            <li className="dropdown" onClick={openShop}>
-              Rooms
+            <li className={`dropdown`} onClick={openShop}>
+              <p> 
+                Rooms 
               <FaAngleDown />
+              </p>
+             
               <ul className={openshop}>
                 <li>
                   <NavLink to="/CampingTents" className="drop-link">
@@ -116,11 +121,14 @@ function Nav() {
               </ul>
             </li> */}
             <li className="moblink" onClick={openOther}>
-              Other
-              <FaAngleDown />
+              <p>
+                Other
+                <FaAngleDown />
+              </p>
+              
               <ul className={openother}>
                 <li>
-                  <NavLink to="/Gallery" className="drop-link">
+                  <NavLink to="/Gallery"  className="drop-link">
                     Gallery
                   </NavLink>
                 </li>
@@ -139,7 +147,7 @@ function Nav() {
         <div className="center-nav-logo">
           <a href="/">
             {" "}
-            <img src="/logo.png" alt="Logo" />
+            <img src={logo} alt="Subla-Camp" />
           </a>
         </div>
         <div className="right-nav">

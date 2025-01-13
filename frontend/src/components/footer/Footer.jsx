@@ -8,6 +8,7 @@ import { FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
+import logo from "./img/logo.png"
 
 function Footer() {
   return (
@@ -24,7 +25,7 @@ function Footer() {
 
       <div className="footfilter">
       <div className="upperfoot">
-          <img src="./logo.png" alt="" />
+          <img src={logo} alt="" />
           <p>Greetings from Subla Camps! For truly remarkable desert camping experiences in the United Arab Emirates, we are your top choice. We're committed to make your desert travels genuinely remarkable, from opulent lodging to distinctive and fashionable amenities. </p>
       </div>
       <div className="donwfoot">
@@ -55,7 +56,7 @@ function Footer() {
           </ul>
       </div>
       <div className="copright">
-        <p>Copyright © 2024 Desert Camping, All rights reserved</p>
+        <p>Copyright © 2025 Subla Camp, All rights reserved</p>
       </div>
       </div>
     </footer>

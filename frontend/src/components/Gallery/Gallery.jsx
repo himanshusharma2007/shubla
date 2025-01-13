@@ -7,6 +7,7 @@ import Plx from "react-plx";
 import { useLocation } from 'react-router-dom'
 import Imggel from './Imggel'
 import GalleryComponent from './Gallery2'
+import galheroimg from "./img/galleryhero.jpg"
 
 
 function Gallery() {
@@ -37,7 +38,7 @@ function Gallery() {
                 <p>We Create Good Memories!</p>
             </div>
             <Plx className='gelhero-img'  parallaxData={galhero}>
-                <img src="./gallery2.jpg" alt="" />
+                <img src={galheroimg} alt="" />
             </Plx>
         </div>
         <Imggel/>

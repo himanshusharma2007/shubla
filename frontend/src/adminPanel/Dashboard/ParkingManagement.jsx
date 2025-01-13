@@ -322,7 +322,7 @@ const ParkingManagement = () => {
               </button>
             </div>
           )}
-        </form>
+        </form> 
       </div>
     </div>
   );

@@ -18,10 +18,10 @@
     padding: 0% 5%;
 }
 .contact-right h2{
-    font-family: "Rock Salt", cursive;
+    /* font-family: "Rock Salt", cursive; */
     font-weight: 600;
     font-style: normal;
-    font-size: 14px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     color: #8B5A2B;
@@ -44,11 +44,13 @@
     width: 100%;
     background-color: #fffff0;
     margin-top: 2%;
+    border-bottom: 1px solid #0000003f;
 }
 .contact-right form textarea{
     width: 100%;
     background-color: #fffff0;
     margin-top: 2%;
+    border-bottom: 1px solid #0000003f;
 }
 .contact-right form button{
     width: 15%;

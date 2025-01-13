@@ -77,8 +77,9 @@
 
     .abttxt{
         width: 100%;
-        padding: 2% 5%; 
-        margin: 5% 0%;
+        padding: 10% 5%; 
+        margin: 0% 0%;
+        height: fit-content;
     }
 }
 
@@ -86,5 +87,13 @@
     .abthero-img img{
         width: auto;
         height: 110%;
+        object-fit: cover;
+    }
+    .abthero-filter h2{
+        font-size: 50px;
+        width: 80%;
+    }
+    .abthero-filter p{
+        font-size: 20px;
     }
 }

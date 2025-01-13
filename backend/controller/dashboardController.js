@@ -21,7 +21,6 @@ const getDateRanges = () => {
     yearly: startOfYear,
   };
 };
-
 // Helper function to calculate earnings
 const calculateEarnings = async (startDate, serviceType) => {
   const query = {
@@ -37,38 +36,125 @@ const calculateEarnings = async (startDate, serviceType) => {
   return bookings.reduce((sum, booking) => sum + booking.totalAmount, 0);
 };
 
-// Helper function to calculate type-specific metrics
-const calculateTypeMetrics = (
-  items,
-  activeBookings,
-  serviceType,
-  typeField
-) => {
-  const types = [...new Set(items.map((item) => item[typeField]))];
-  const metrics = {};
+const calculateStayDuration = (checkIn, checkOut) => {
+  return Math.ceil(
+    (new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24)
+  );
+};
 
-  types.forEach((type) => {
-    const typeItems = items.filter((item) => item[typeField] === type);
-    const typeBookings = activeBookings.filter(
-      (b) => b.serviceType === serviceType && b[typeField] === type
-    );
+const calculateRevenue = async (startDate, filters = {}) => {
+  const query = {
+    createdAt: { $gte: startDate },
+    paymentStatus: "completed",
+    ...filters,
+  };
 
-    const total = typeItems.reduce(
-      (sum, item) =>
-        sum + item.totalRooms || item.totalCamps || item.totalSlots,
-      0
-    );
-    const occupied = typeBookings.length;
+  const bookings = await Booking.find(query);
+  return bookings.reduce((sum, booking) => sum + booking.totalAmount, 0);
+};
 
-    metrics[type] = {
-      total,
-      occupied,
-      available: total - occupied,
-      revenue: typeBookings.reduce((sum, b) => sum + b.totalAmount, 0),
-    };
+const calculateRoomMetrics = async (rooms, activeBookings) => {
+  const metrics = {
+    master: {
+      total: 0,
+      occupied: 0,
+      available: 0,
+      occupancyRate: 0,
+      capacityUtilization: 0,
+    },
+    kids: {
+      total: 0,
+      occupied: 0,
+      available: 0,
+      occupancyRate: 0,
+      capacityUtilization: 0,
+    },
+  };
+
+  // Calculate totals by room type
+  rooms.forEach((room) => {
+    metrics[room.roomType].total += room.totalRooms;
+    metrics[room.roomType].capacity = room.capacity;
+  });
+
+  // Calculate occupancy by room type
+  activeBookings.forEach((booking) => {
+    if (booking.serviceType === "room") {
+      metrics[booking.roomType].occupied += booking.quantity;
+    }
+  });
+
+  // Calculate rates
+  ["master", "kids"].forEach((type) => {
+    metrics[type].available = metrics[type].total - metrics[type].occupied;
+    metrics[type].occupancyRate =
+      (metrics[type].occupied / metrics[type].total) * 100;
+
+    // Calculate capacity utilization based on actual people vs maximum capacity
+    const maxCapacity = metrics[type].total * metrics[type].capacity;
+    const actualOccupants = activeBookings
+      .filter((b) => b.serviceType === "room" && b.roomType === type)
+      .reduce((sum, b) => sum + b.quantity, 0);
+    metrics[type].capacityUtilization = (actualOccupants / maxCapacity) * 100;
   });
 
   return metrics;
+};
+
+const calculateCampMetrics = async (camps, activeBookings) => {
+  const totalCamps = camps.reduce((sum, camp) => sum + camp.totalCamps, 0);
+  const occupiedCamps = activeBookings
+    .filter((b) => b.serviceType === "camp")
+    .reduce((sum, b) => sum + b.quantity, 0);
+
+  const maxCapacity = camps.reduce(
+    (sum, camp) => sum + camp.totalCamps * camp.capacity,
+    0
+  );
+  const actualOccupants = activeBookings
+    .filter((b) => b.serviceType === "camp")
+    .reduce((sum, b) => sum + b.quantity, 0);
+
+  return {
+    total: totalCamps,
+    occupied: occupiedCamps,
+    available: totalCamps - occupiedCamps,
+    occupancyRate: (occupiedCamps / totalCamps) * 100,
+    capacityUtilization: (actualOccupants / maxCapacity) * 100,
+  };
+};
+
+const calculateParkingMetrics = async (parkingSlots, activeBookings) => {
+  const totalSlots = parkingSlots.reduce(
+    (sum, slot) => sum + slot.totalSlots,
+    0
+  );
+  const occupiedSlots = activeBookings
+    .filter((b) => b.serviceType === "parking")
+    .reduce((sum, b) => sum + b.quantity, 0);
+
+  // Calculate amenity usage
+  const amenityUsage = {
+    electricity: 0,
+    water: 0,
+    sanitation: 0,
+  };
+
+  parkingSlots.forEach((slot) => {
+    Object.keys(amenityUsage).forEach((amenity) => {
+      if (slot.amenities[amenity]) {
+        amenityUsage[amenity] += slot.totalSlots;
+      }
+    });
+  });
+
+  return {
+    total: totalSlots,
+    occupied: occupiedSlots,
+    available: totalSlots - occupiedSlots,
+    occupancyRate: (occupiedSlots / totalSlots) * 100,
+    byAmenities: amenityUsage,
+  };
 };
 
 exports.generateDashboardMetrics = async (req, res) => {
@@ -77,168 +163,129 @@ exports.generateDashboardMetrics = async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Calculate earnings
-    const earnings = {
-      total: await calculateEarnings(new Date(0)),
-      periodic: {
-        daily: await calculateEarnings(dateRanges.daily),
-        weekly: await calculateEarnings(dateRanges.weekly),
-        monthly: await calculateEarnings(dateRanges.monthly),
-        yearly: await calculateEarnings(dateRanges.yearly),
-      },
-      byService: {
-        rooms: {
-          total: await calculateEarnings(new Date(0), "room"),
-          daily: await calculateEarnings(dateRanges.daily, "room"),
-          weekly: await calculateEarnings(dateRanges.weekly, "room"),
-          monthly: await calculateEarnings(dateRanges.monthly, "room"),
-        },
-        camps: {
-          total: await calculateEarnings(new Date(0), "camp"),
-          daily: await calculateEarnings(dateRanges.daily, "camp"),
-          weekly: await calculateEarnings(dateRanges.weekly, "camp"),
-          monthly: await calculateEarnings(dateRanges.monthly, "camp"),
-        },
-        parking: {
-          total: await calculateEarnings(new Date(0), "parking"),
-          daily: await calculateEarnings(dateRanges.daily, "parking"),
-          weekly: await calculateEarnings(dateRanges.weekly, "parking"),
-          monthly: await calculateEarnings(dateRanges.monthly, "parking"),
-        },
-      },
+    // Fetch all necessary data
+    const [rooms, camps, parkingSlots, messages, activeBookings, allBookings] =
+      await Promise.all([
+        Room.find(),
+        Camp.find(),
+        ParkingSlot.find(),
+        Contact.find({ createdAt: { $gte: today } }),
+        Booking.find({
+          status: { $in: ["confirmed", "completed"] },
+          checkOut: { $gte: today },
+        }),
+        Booking.find({ createdAt: { $gte: today } }),
+      ]);
+
+    // Calculate metrics
+    const roomMetrics = await calculateRoomMetrics(rooms, activeBookings);
+    const campMetrics = await calculateCampMetrics(camps, activeBookings);
+    const parkingMetrics = await calculateParkingMetrics(
+      parkingSlots,
+      activeBookings
+    );
+
+    // Calculate average stay duration
+    const stayDuration = {
+      rooms: 0,
+      camps: 0,
+      parking: 0,
     };
 
-    // Get all relevant data
-    const bookings = await Booking.find({
-      createdAt: { $gte: today },
+    allBookings.forEach((booking) => {
+      const duration = calculateStayDuration(booking.checkIn, booking.checkOut);
+      stayDuration[booking.serviceType] += duration;
     });
 
-    const rooms = await Room.find();
-    const camps = await Camp.find();
-    const parkingSlots = await ParkingSlot.find();
-    const messages = await Contact.find({
-      createdAt: { $gte: today },
+    Object.keys(stayDuration).forEach((type) => {
+      const bookingsOfType = allBookings.filter(
+        (b) => b.serviceType === type
+      ).length;
+      stayDuration[type] = bookingsOfType
+        ? stayDuration[type] / bookingsOfType
+        : 0;
     });
 
-    // Calculate active bookings
-    const activeBookings = await Booking.find({
-      serviceType: { $in: ["room", "camp", "parking"] },
-      roomType: { $exists: true },
-      status: "confirmed",
-      $and: [{ checkIn: { $lte: Date.now() } }, { checkOut: { $gte: Date.now() } }],
-    });
-
-    // Calculate type-specific metrics
-    const roomTypeMetrics = calculateTypeMetrics(
-      rooms,
-      activeBookings,
-      "room",
-      "roomType"
-    );
-    const campTypeMetrics = calculateTypeMetrics(
-      camps,
-      activeBookings,
-      "camp",
-      "tentType"
-    );
-
-    // Calculate totals
-    const totalRooms = rooms.reduce((sum, room) => sum + room.totalRooms, 0);
-    const totalCamps = camps.reduce((sum, camp) => sum + camp.totalCamps, 0);
-    const totalParkingSlots = parkingSlots.reduce(
-      (sum, slot) => sum + slot.totalSlots,
-      0
-    );
-
-    // Calculate occupied counts
-    const occupiedRooms = activeBookings.filter(
-      (b) => b.serviceType === "room"
-    ).length;
-    const occupiedCamps = activeBookings.filter(
-      (b) => b.serviceType === "camp"
-    ).length;
-    const occupiedParkingSlots = activeBookings.filter(
-      (b) => b.serviceType === "parking"
-    ).length;
-    console.log("activeBookings", activeBookings);
-    console.log("occupiedCamps", occupiedCamps);
     const metrics = {
-      totalRevenue: bookings.reduce(
-        (sum, booking) => sum + booking.totalAmount,
-        0
-      ),
-      earnings,
-      bookingMetrics: {
-        totalBookings: bookings.length,
-        serviceTypeDistribution: {
-          rooms: bookings.filter((b) => b.serviceType === "room").length,
-          camps: bookings.filter((b) => b.serviceType === "camp").length,
-          parking: bookings.filter((b) => b.serviceType === "parking").length,
+      date: today,
+      timePeriod: "daily",
+      revenue: {
+        total: await calculateRevenue(new Date(0)),
+        byPeriod: {
+          daily: await calculateRevenue(dateRanges.daily),
+          weekly: await calculateRevenue(dateRanges.weekly),
+          monthly: await calculateRevenue(dateRanges.monthly),
+          yearly: await calculateRevenue(dateRanges.yearly),
         },
-        revenueByService: {
-          rooms: bookings
-            .filter((b) => b.serviceType === "room")
-            .reduce((sum, b) => sum + b.totalAmount, 0),
-          camps: bookings
-            .filter((b) => b.serviceType === "camp")
-            .reduce((sum, b) => sum + b.totalAmount, 0),
-          parking: bookings
-            .filter((b) => b.serviceType === "parking")
-            .reduce((sum, b) => sum + b.totalAmount, 0),
+        byService: {
+          rooms: {
+            total: await calculateRevenue(new Date(0), { serviceType: "room" }),
+            byType: {
+              master: await calculateRevenue(new Date(0), {
+                serviceType: "room",
+                roomType: "master",
+              }),
+              kids: await calculateRevenue(new Date(0), {
+                serviceType: "room",
+                roomType: "kids",
+              }),
+            },
+          },
+          camps: await calculateRevenue(new Date(0), { serviceType: "camp" }),
+          parking: await calculateRevenue(new Date(0), {
+            serviceType: "parking",
+          }),
         },
-        bookingStatusCounts: {
-          pending: bookings.filter((b) => b.status === "pending").length,
-          confirmed: bookings.filter((b) => b.status === "confirmed").length,
-          completed: bookings.filter((b) => b.status === "completed").length,
-          cancelled: bookings.filter((b) => b.status === "cancelled").length,
-        },
-        paymentStatusCounts: {
-          pending: bookings.filter((b) => b.paymentStatus === "pending").length,
-          completed: bookings.filter((b) => b.paymentStatus === "completed")
+      },
+      occupancy: {
+        rooms: roomMetrics,
+        camps: campMetrics,
+        parking: parkingMetrics,
+      },
+      bookings: {
+        total: allBookings.length,
+        byService: {
+          rooms: {
+            total: allBookings.filter((b) => b.serviceType === "room").length,
+            byType: {
+              master: allBookings.filter(
+                (b) => b.serviceType === "room" && b.roomType === "master"
+              ).length,
+              kids: allBookings.filter(
+                (b) => b.serviceType === "room" && b.roomType === "kids"
+              ).length,
+            },
+          },
+          camps: allBookings.filter((b) => b.serviceType === "camp").length,
+          parking: allBookings.filter((b) => b.serviceType === "parking")
             .length,
         },
+        byStatus: {
+          pending: allBookings.filter((b) => b.status === "pending").length,
+          confirmed: allBookings.filter((b) => b.status === "confirmed").length,
+          completed: allBookings.filter((b) => b.status === "completed").length,
+          cancelled: allBookings.filter((b) => b.status === "cancelled").length,
+        },
+        byPaymentStatus: {
+          pending: allBookings.filter((b) => b.paymentStatus === "pending")
+            .length,
+          completed: allBookings.filter((b) => b.paymentStatus === "completed")
+            .length,
+        },
+        averageStayDuration: stayDuration,
       },
-      roomMetrics: {
-        totalRooms,
-        availableRooms: totalRooms - occupiedRooms,
-        occupiedRooms,
-        byType: roomTypeMetrics,
-        roomRevenue: bookings
-          .filter((b) => b.serviceType === "room")
-          .reduce((sum, b) => sum + b.totalAmount, 0),
-        occupancyRate: this.totalRooms ? (occupiedRooms / totalRooms) * 100 : 0,
-      },
-      campMetrics: {
-        totalCamps,
-        availableCamps: totalCamps - camps.availableCamps,
-        occupiedCamps,
-        byType: campTypeMetrics,
-        campRevenue: bookings
-          .filter((b) => b.serviceType === "camp")
-          .reduce((sum, b) => sum + b.totalAmount, 0),
-        occupancyRate: totalCamps ? (occupiedCamps / totalCamps) * 100 : 0,
-      },
-      parkingMetrics: {
-        totalSlots: totalParkingSlots,
-        availableSlots: totalParkingSlots - occupiedParkingSlots,
-        occupiedSlots: occupiedParkingSlots,
-        parkingRevenue: bookings
-          .filter((b) => b.serviceType === "parking")
-          .reduce((sum, b) => sum + b.totalAmount, 0),
-        occupancyRate: totalParkingSlots
-          ? (occupiedParkingSlots / totalParkingSlots) * 100
-          : 0,
-      },
-      customerServiceMetrics: {
+      customerService: {
         totalMessages: messages.length,
         unrepliedMessages: messages.filter((m) => !m.replied).length,
+        responseRate: messages.length
+          ? ((messages.length - messages.filter((m) => !m.replied).length) /
+              messages.length) *
+            100
+          : 0,
       },
-      timePeriod: "daily",
-      date: today,
-      lastUpdated: new Date(),
     };
 
-    // Save or update metrics
+    // Save metrics
     const dashboardMetrics = await DashboardMetrics.findOneAndUpdate(
       { date: today, timePeriod: "daily" },
       metrics,
@@ -250,14 +297,13 @@ exports.generateDashboardMetrics = async (req, res) => {
       data: dashboardMetrics,
     });
   } catch (error) {
-    console.log("error", error);
+    console.error("Error generating dashboard metrics:", error);
     res.status(500).json({
       success: false,
       error: error.message,
     });
   }
 };
-
 exports.getEarningsMetrics = async (req, res) => {
   try {
     const { startDate, endDate, serviceType } = req.query;

@@ -44,7 +44,9 @@ export const getUserBookings = async () => {
  */
 export const getAllBookings = async () => {
   try {
-    const response = await api.get("/bookings/admin");
+    // console.log("Get all booking called.");
+    const response = await api.get("/booking/admin");
+    // console.log("response in get all booking : ", response.data);
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;

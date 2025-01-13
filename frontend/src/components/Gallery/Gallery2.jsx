@@ -8,6 +8,11 @@ import Insta4 from '../../assets/insta4.png'
 import Insta5 from '../../assets/insta5.png'
 import Insta6 from '../../assets/insta6.png'
 import Insta7 from '../../assets/insta7.png'
+import img1 from "./img/img1.jpg"
+import img2 from "./img/img2.jpg"
+import img3 from "./img/img3.jpg"
+import img4 from "./img/img4.jpg"
+import img5 from "./img/img5.jpg"
 
 
 
@@ -20,11 +25,11 @@ const GalleryComponent = () => {
     Insta5,
     Insta6,
     Insta7,
-    "./img1.jpg",
-    "./img2.jpg",
-    "./img3.jpg",
-    "./img4.jpg",
-    "./park.jpg",
+    img1,
+    img2,
+    img3,
+    img4,
+    img5
   
 
   ]);

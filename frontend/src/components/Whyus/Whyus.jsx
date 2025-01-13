@@ -1,6 +1,8 @@
 import React from 'react'
 import './Whyus.css'
 import { Link } from 'react-router-dom'
+import why2 from "./img/why-1.jpg"
+import why1 from "./img/why-2.jpg"
 
 function Whyus() {
   return (
@@ -9,8 +11,8 @@ function Whyus() {
 
         <div className="why-1">
             <h3>Why Choose Us <div className='headingline'></div></h3>
-            <h4>More than an adventure, its a way of life</h4>
-            <p>Welcome to Desert Camping UAE, your one-stop online shop for all your camping gear and accessories needs. Here’s why you should choose us for your next outdoor adventure:</p>
+            <h4>A Cozy Escape – Where the Soul Feels at Haven</h4>
+            <p>Subla Camp welcome those who crave for authenticity over luxury. It’s where mornings begin with golden sunrises over the peaks and nights end with stories shared around a glowing fire. Here, the modern world fades away, leaving room for connection—with nature, with others, and with yourself.</p>
             <div>
                 <h5>Competitive Prices</h5>
                 <p>We believe that everyone should have access to quality camping gear without breaking the bank. Our products are competitively priced, allowing you to embark on your desert escapades without overspending.</p>
@@ -18,14 +20,14 @@ function Whyus() {
             <a href="#Contact">Contact Us</a>
         </div>
         <div className="why-2">
-            <img src="/camp4.jpg" alt="" />
+            <img src={why1} alt="" />
         </div>
         <div className="why-3">
-            <img src="/insta2.png" alt="" />
+            <img src={why2} alt="" />
+            <br />
             <div>
                 <p>"</p>
-                <p>Fill your life with adventures, not things. Have stories to tell not stuff to show. </p>
-                <p>Heidi B. Smith</p>
+                <p>Let the mountains be your walls and the stars your ceiling. Let the earth welcome you home. </p>
             </div>
         </div>
         </div>

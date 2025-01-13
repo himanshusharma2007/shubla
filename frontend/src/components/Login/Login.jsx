@@ -53,8 +53,7 @@ function Login() {
             />
             <button>Sign in</button>
             <span>
-              <input type="checkbox" name="remember" />
-              <label htmlFor="remember">Remember me</label>
+             
               <a href="/register">Forgot Password ?</a>
             </span>
           </form>
@@ -63,16 +62,14 @@ function Login() {
         <div className="registerform">
           <h2>Create an account</h2>
           <p>
-            If you don not yet have an RH account, please create one now so you
-            can easily access your RH Members Program details and order
-            information in My Account.{" "}
+          Create a Subla Camp account right away if you don't already have one so you can quickly access your booking information, special deals, and customized experiences in My Account.{" "}
           </p>
           <Link className="sign-up-button" to={"/register"}>
             Create Account
           </Link>
-          <Link className="sign-up-button" to={"/adminLogin"}>
+          {/* <Link className="sign-up-button" to={"/adminLogin"}>
             Login as Admin
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

@@ -61,10 +61,15 @@
 @media only screen and (max-width: 1100px){
     .f-slider .f-inner{
         width: 80%;
-        height: 50%;
+        margin-top: 5%;
+        height: 40%;
     }
     .Facilities{
         height: 200vh;
+    }
+    .f-inner img{
+        height: 110%;
+        width: auto;
     }
     
 }

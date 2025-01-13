@@ -10,8 +10,8 @@ nav{
     background-color: #CEB79F;
     box-shadow:  rgba(99, 99, 99, 0.126) 0px 1px 0px 0px;
 }
-.left-nav>ul>li>.is-active{
-    color: #FF5733;
+.left-nav>ul>li>.active{
+    color: #d89863;
 }
 
 .dropdown:hover .dropdown-menu{
@@ -39,12 +39,15 @@ nav{
 .dropdown-menu>li>a , .user-menu>li>a{
     font-weight: 500;
     line-height: 30px;
+    display: block;
+    width: 100%;
+    padding: 5% 0%;
     font-size: 13px;
     text-decoration: none;
     color: #333333;
 } 
 .dropdown-menu li:hover,.user-menu li:hover{
-    background-color: #FF5733;
+    background-color: #d89863;
     color: #FFFFF0;
 }
 
@@ -85,16 +88,20 @@ nav{
 }
 
 .left-nav>ul>li>a:hover{
-    color: #FF5733;
+    color: #d89863;
 }
 .left-nav>ul>li:hover{
-    color: #FF5733;
+    color: #d89863;
 }
 
 .moblink{
     display: none;
 }
 .dropdown{
+    display: flex;
+    align-items: center;
+}
+.dropdown>p{
     display: flex;
     align-items: center;
 }
@@ -139,7 +146,7 @@ nav{
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: end;
 }
 .right-nav>ul>li{
     font-size: 13px;
@@ -153,7 +160,7 @@ nav{
     padding: 15% 0%;
 }
 .right-nav>ul>li:hover{
-    color: #FF5733;
+    color: #d89863;
 }
 .right-nav>div{
     width: 50%;
@@ -168,7 +175,7 @@ nav{
    font-size: 25px; 
 }
 .right-nav>div>span>a:hover{
-    color: #FF5733;
+    color: #d89863;
 }
 
 
@@ -239,12 +246,24 @@ nav{
         color: #333333;
     } 
     .openshop li:hover{
-        background-color: #FF5733;
+        background-color: #d89863;
         color: #FFFFF0;
     }
     .moblink{
         display: block;
     }
+    .moblink>p{
+        display: flex;
+        align-items: center;
+    }
+    .dropdown{
+        display: block;
+    }
+    .dropdown>p{
+        display: flex;
+        align-items: center;
+    }
+
 
 
 
@@ -252,7 +271,7 @@ nav{
         padding: 2% 5%;
     }
     .left-nav>ul>li:hover{
-        background-color: #FF5733;
+        background-color: #d89863;
         color: #FFFFF0;
     }
     .left-nav>ul>li>a:hover{
@@ -281,13 +300,12 @@ nav{
         height: 20px;
         cursor: pointer;
         margin-left: 5%;
-       
     }
     .cross :nth-child(1){
         width: 100%;
         height: 4px;
         background-color: #000;
-        rotate: 45deg;
+        transform: rotate(45deg);
         height: 4px;
         position: relative;
         top: 50%;
@@ -301,7 +319,7 @@ nav{
         width: 100%;
         height: 4px;
         background-color: #000;
-        rotate: -45deg;
+        transform: rotate(-45deg);
         height: 4px;
         position: relative;
         top: -26%;
@@ -349,7 +367,7 @@ nav{
 }
 @media only screen and (max-width: 600px){
     .center-nav-logo a img{
-        width: 50%;
+        width: 60%;
     }
 }
 

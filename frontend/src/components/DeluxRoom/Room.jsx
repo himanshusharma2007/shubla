@@ -9,6 +9,8 @@ import { MdFastfood } from "react-icons/md";
 import { IoIosBonfire } from "react-icons/io";
 import { GiDesert } from "react-icons/gi";
 import Contact from "../Contact/Contact";
+import roomhero from "./img/roomhero.jpg"
+import roominfo from "./img/roominfo.jpg"
 import { useLocation, useNavigate } from "react-router-dom";
 
 function Room() {
@@ -25,7 +27,7 @@ function Room() {
       properties: [
         {
           startValue: 0,
-          endValue: -50,
+          endValue: -200,
           property: "translateY",
         },
       ],
@@ -41,7 +43,7 @@ function Room() {
             <p>We Love Camping Too!</p>
           </div>
           <Plx className="camphero-img" parallaxData={camphero}>
-            <img src="./room2.jpg" alt="" />
+            <img src={roomhero} alt="" />
           </Plx>
         </div>
         <div className="abt-camp">
@@ -59,20 +61,20 @@ function Room() {
                 <PiTentFill /> Advanture Experience
               </li>
               <li>
-                <MdFastfood /> Testi Food
+                <MdFastfood /> Tasty Food
               </li>
               <li>
                 <IoIosBonfire /> Bonfire
               </li>
               <li>
-                <GiDesert /> Desert View
+                <GiDesert /> Mountain View
               </li>
             </ul>
             <button className="bg-zinc-900 text-white px-4 py-2 hover:scale-105 transition duration-300" type="submit" onClick={() => navigate("/booking/room")}>
               Book Now
             </button>
           </div>
-          <img src="./room.jpg" alt="" />
+          <img src={roominfo} alt="" />
         </div>
       </div>
       <Contact />

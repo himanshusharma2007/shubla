@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Nav from "../Nav/Nav";
-import "./Parking.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import Plx from "react-plx";
 import Book from "../Booking/Book";
@@ -10,6 +9,8 @@ import { PiTentFill } from "react-icons/pi";
 import { MdFastfood } from "react-icons/md";
 import { IoIosBonfire } from "react-icons/io";
 import { GiDesert } from "react-icons/gi";
+import parking1 from "./img/parking1.jpg"
+import parking2 from "./img/parking2.jpg"
 
 function Parking() {
   const { pathname } = useLocation();
@@ -35,13 +36,13 @@ function Parking() {
     <>
       <Nav />
 
-      <div className="acthero">
-        <div className="acthero-filter">
+      <div className="camphero">
+        <div className="camphero-filter">
           <h2>Caravan Parking</h2>
           <p>Enjoy in your own Caravan</p>
         </div>
-        <Plx className="acthero-img" parallaxData={acthero}>
-          <img src="./park2.jpg" alt="" />
+        <Plx className="camphero-img" parallaxData={acthero}>
+          <img src={parking1} alt="" />
         </Plx>
       </div>
 
@@ -61,7 +62,7 @@ function Parking() {
               <PiTentFill /> Spacious and Secure
             </li>
             <li>
-              <MdFastfood /> Testi Food
+              <MdFastfood /> Tasty Food
             </li>
             <li>
               <IoIosBonfire /> Bonfire
@@ -78,7 +79,7 @@ function Parking() {
             Book Now
           </button>
         </div>
-        <img src="./park1.jpg" alt="" />
+        <img src={parking2} alt="" />
       </div>
 
       <Contact />

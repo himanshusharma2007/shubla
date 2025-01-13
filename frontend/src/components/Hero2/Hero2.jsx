@@ -1,6 +1,9 @@
 import React from 'react'
 import './Hero2.css'
 import Plx from "react-plx";
+import heroimg2 from "./img/heroimg2.png"
+import heroimg1 from "./img/heroimg1.png"
+import heroimg3 from "./img/heroimg3.png"
 
 function Hero2() {
 
@@ -101,16 +104,16 @@ function Hero2() {
 
         <div className="filterhero"></div>
         <Plx className="herolayer0" parallaxData={herolayer0}>
-                    <img src="./bg22.png" alt="" />
+                    <img src={heroimg1} alt="" />
         </Plx>
         <Plx className="herolayer1" parallaxData={herolayer1}>
-                    <h1>Desert <br /> Camping</h1>
+                    <h1>Subla <br /> Camps</h1>
         </Plx>
         <Plx className="herolayer2" parallaxData={herolayer2}>
-                    <img src="./bg12.png" alt="" />
+                    <img src={heroimg2} alt="" />
         </Plx>
         <Plx className="mountain2" parallaxData={herolayer3}>
-                    <img src="./bg11.png" alt="" />
+                    <img src={heroimg3} alt="" />
         </Plx>
 
         

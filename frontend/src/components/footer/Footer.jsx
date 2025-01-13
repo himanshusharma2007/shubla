@@ -8,6 +8,7 @@ import { FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
+import logo from "./img/logo.png"
 
 function Footer() {
   return (
@@ -24,8 +25,8 @@ function Footer() {
 
       <div className="footfilter">
       <div className="upperfoot">
-          <img src="./logo.png" alt="" />
-          <p>Welcome to desertcamping.ae! We’re an online camping store based in the UAE, and we’re passionate about bringing you unique and stylish products that are perfect for your desert camping adventures. </p>
+          <img src={logo} alt="" />
+          <p>Greetings from Subla Camps! For truly remarkable desert camping experiences in the United Arab Emirates, we are your top choice. We're committed to make your desert travels genuinely remarkable, from opulent lodging to distinctive and fashionable amenities. </p>
       </div>
       <div className="donwfoot">
           <ul>
@@ -39,6 +40,7 @@ function Footer() {
             <h2>Rooms</h2>
             <li><Link to='/CampingTents'>Camping Tents</Link></li>
             <li><Link to='/DeluxeRoom'>Deluxe Room</Link></li>
+            <li><Link to='/parking'>Caravan Parking</Link></li>
           </ul>
           <ul>
             <h2>Events</h2>
@@ -54,7 +56,7 @@ function Footer() {
           </ul>
       </div>
       <div className="copright">
-        <p>Copyright © 2024 Desert Camping, All rights reserved</p>
+        <p>Copyright © 2025 Subla Camp, All rights reserved</p>
       </div>
       </div>
     </footer>

@@ -1,138 +1,108 @@
 const mongoose = require("mongoose");
 
 const dashboardMetricsSchema = new mongoose.Schema({
-  // Overall metrics
-  totalRevenue: {
-    type: Number,
+  date: {
+    type: Date,
     required: true,
-    default: 0,
   },
-
-  // Earnings metrics
-  earnings: {
-    total: { type: Number, default: 0 },
-    periodic: {
-      daily: { type: Number, default: 0 },
-      weekly: { type: Number, default: 0 },
-      monthly: { type: Number, default: 0 },
-      yearly: { type: Number, default: 0 },
-    },
-    byService: {
-      rooms: {
-        total: { type: Number, default: 0 },
-        daily: { type: Number, default: 0 },
-        weekly: { type: Number, default: 0 },
-        monthly: { type: Number, default: 0 },
-      },
-      camps: {
-        total: { type: Number, default: 0 },
-        daily: { type: Number, default: 0 },
-        weekly: { type: Number, default: 0 },
-        monthly: { type: Number, default: 0 },
-      },
-      parking: {
-        total: { type: Number, default: 0 },
-        daily: { type: Number, default: 0 },
-        weekly: { type: Number, default: 0 },
-        monthly: { type: Number, default: 0 },
-      },
-    },
-  },
-
-  // Booking metrics
-  bookingMetrics: {
-    totalBookings: { type: Number, default: 0 },
-    serviceTypeDistribution: {
-      rooms: { type: Number, default: 0 },
-      camps: { type: Number, default: 0 },
-      parking: { type: Number, default: 0 },
-    },
-    revenueByService: {
-      rooms: { type: Number, default: 0 },
-      camps: { type: Number, default: 0 },
-      parking: { type: Number, default: 0 },
-    },
-    bookingStatusCounts: {
-      pending: { type: Number, default: 0 },
-      confirmed: { type: Number, default: 0 },
-      completed: { type: Number, default: 0 },
-      cancelled: { type: Number, default: 0 },
-    },
-    paymentStatusCounts: {
-      pending: { type: Number, default: 0 },
-      completed: { type: Number, default: 0 },
-    },
-  },
-
-  // Room metrics
-  roomMetrics: {
-    totalRooms: { type: Number, default: 0 },
-    availableRooms: { type: Number, default: 0 },
-    occupiedRooms: { type: Number, default: 0 },
-    byType: {
-      master: {
-        total: { type: Number, default: 0 },
-        available: { type: Number, default: 0 },
-        occupied: { type: Number, default: 0 },
-        revenue: { type: Number, default: 0 },
-      },
-      kids: {
-        total: { type: Number, default: 0 },
-        available: { type: Number, default: 0 },
-        occupied: { type: Number, default: 0 },
-        revenue: { type: Number, default: 0 },
-      },
-    },
-    roomRevenue: { type: Number, default: 0 },
-    occupancyRate: { type: Number, default: 0 },
-  },
-
-  // Camp metrics
-  campMetrics: {
-    totalCamps: { type: Number, default: 0 },
-    availableCamps: { type: Number, default: 0 },
-    occupiedCamps: { type: Number, default: 0 },
-    byType: {
-      bedouin: {
-        total: { type: Number, default: 0 },
-        available: { type: Number, default: 0 },
-        occupied: { type: Number, default: 0 },
-        revenue: { type: Number, default: 0 },
-      },
-    },
-    campRevenue: { type: Number, default: 0 },
-    occupancyRate: { type: Number, default: 0 },
-  },
-
-  // Parking metrics
-  parkingMetrics: {
-    totalSlots: { type: Number, default: 0 },
-    availableSlots: { type: Number, default: 0 },
-    occupiedSlots: { type: Number, default: 0 },
-    parkingRevenue: { type: Number, default: 0 },
-    occupancyRate: { type: Number, default: 0 },
-  },
-
-  // Customer service metrics
-  customerServiceMetrics: {
-    totalMessages: { type: Number, default: 0 },
-    unrepliedMessages: { type: Number, default: 0 },
-  },
-
   timePeriod: {
     type: String,
     enum: ["daily", "weekly", "monthly", "yearly"],
     required: true,
   },
-
-  date: {
-    type: Date,
-    required: true,
+  revenue: {
+    total: Number,
+    byPeriod: {
+      daily: Number,
+      weekly: Number,
+      monthly: Number,
+      yearly: Number
+    },
+    byService: {
+      rooms: {
+        total: Number,
+        byType: {
+          master: Number,
+          kids: Number
+        }
+      },
+      camps: Number,
+      parking: Number
+    }
   },
-
+  occupancy: {
+    rooms: {
+      master: {
+        total: Number,
+        occupied: Number,
+        available: Number,
+        occupancyRate: Number,
+        capacityUtilization: Number
+      },
+      kids: {
+        total: Number,
+        occupied: Number,
+        available: Number,
+        occupancyRate: Number,
+        capacityUtilization: Number
+      }
+    },
+    camps: {
+      total: Number,
+      occupied: Number,
+      available: Number,
+      occupancyRate: Number,
+      capacityUtilization: Number
+    },
+    parking: {
+      total: Number,
+      occupied: Number,
+      available: Number,
+      occupancyRate: Number,
+      byAmenities: {
+        electricity: Number,
+        water: Number,
+        sanitation: Number
+      }
+    }
+  },
+  bookings: {
+    total: Number,
+    byService: {
+      rooms: {
+        total: Number,
+        byType: {
+          master: Number,
+          kids: Number
+        }
+      },
+      camps: Number,
+      parking: Number
+    },
+    byStatus: {
+      pending: Number,
+      confirmed: Number,
+      completed: Number,
+      cancelled: Number
+    },
+    byPaymentStatus: {
+      pending: Number,
+      completed: Number
+    },
+    averageStayDuration: {
+      rooms: Number,
+      camps: Number,
+      parking: Number
+    }
+  },
+  customerService: {
+    totalMessages: Number,
+    unrepliedMessages: Number,
+    responseRate: Number
+  },
   lastUpdated: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
 });
 module.exports = mongoose.model("DashboardMetrics", dashboardMetricsSchema);

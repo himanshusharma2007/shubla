@@ -12,24 +12,16 @@ exports.createParkingSlot = async (req, res) => {
             totalSlots,
             availableSlots,
             dimension,
-            pricing,
-            amenities,
+            price,
+            amenities
         } = req.body;
 
-        console.log('Request body:', req.body);
+        console.log(req.body)
 
         // Input validation
-        if (
-            !title ||
-            !subtitle ||
-            !facilities ||
-            !description ||
-            !totalSlots ||
-            !availableSlots ||
-            !dimension ||
-            !pricing ||
-            !amenities
-        ) {
+        if (!title || !subtitle || !facilities || !description || 
+            !totalSlots || !availableSlots || !dimension || 
+            !price || !amenities) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required",
@@ -37,7 +29,7 @@ exports.createParkingSlot = async (req, res) => {
         }
 
         // Validate pricing structure
-        if (!pricing.weekday || !pricing.weekend) {
+        if (!price.weekday || !price.weekend) {
             return res.status(400).json({
                 success: false,
                 message: "Both weekday and weekend pricing must be specified",
@@ -74,11 +66,8 @@ exports.createParkingSlot = async (req, res) => {
             totalSlots,
             availableSlots,
             dimension,
-            pricing: {
-                weekday: 200, // Fixed price as per client requirement
-                weekend: 250, // Fixed price as per client requirement
-            },
-            amenities,
+            pricing: price,
+            amenities
         });
 
         res.status(201).json({
@@ -198,9 +187,7 @@ exports.getParkingData = async (req, res) => {
     try {
         // Find the most recent parking slot document
         // Since all slots have the same data, we only need to fetch one
-        const parkingData = await ParkingSlot.findOne()
-            .select('title subtitle facilities description totalSlots availableSlots')
-            .sort({ createdAt: -1 });
+        const parkingData = await ParkingSlot.findOne().sort({ createdAt: -1 });
 
         if (!parkingData) {
             return res.status(404).json({

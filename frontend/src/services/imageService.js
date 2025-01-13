@@ -3,9 +3,11 @@ import api from './api.js';
 const imageService = {
   uploadGalleryImage: async (formData) => {
     try {
+      console.log("form data", formData);
       const response = await api.post('/image/gallery', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+      console.log("gallery image: ", response);
       return response.data;
     } catch (error) {
       throw error;

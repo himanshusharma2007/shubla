@@ -15,6 +15,16 @@ export const createBooking = async (bookingData) => {
   }
 };
 
+export const bookingAvailability = async (bookingData) => {
+  console.log('booking data', bookingData)
+  try {
+    const response = await api.post("/booking/check-availability", bookingData);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
 /**
  * Get the bookings of the currently logged-in user
  * @returns {Promise} - API response
@@ -34,7 +44,9 @@ export const getUserBookings = async () => {
  */
 export const getAllBookings = async () => {
   try {
-    const response = await api.get("/bookings/admin");
+    // console.log("Get all booking called.");
+    const response = await api.get("/booking/admin");
+    // console.log("response in get all booking : ", response.data);
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;

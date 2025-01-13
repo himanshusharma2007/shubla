@@ -8,6 +8,7 @@ const {
   getUserBookings,
   getAllBookings,
   updateBookingStatus,
+  getAvailability,
 } = require("../controller/bookingController");
 
 // Validation middleware
@@ -36,6 +37,7 @@ const bookingValidation = [
 
 // Routes
 router.post("/", checkAuth, createBooking);
+router.post("/check-availability", checkAuth, getAvailability)
 
 router.get("/me", checkAuth, getUserBookings);
 

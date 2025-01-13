@@ -170,16 +170,16 @@ const checkCampAvailability = async (
 
     // Calculate price based on weekday/weekend
     const checkInDay = new Date(checkIn).getDay();
-    const price =
-      checkInDay === 0 || checkInDay === 6
-        ? camp.pricing.weekend
-        : camp.pricing.weekday;
+    // const price =
+    //   checkInDay === 0 || checkInDay === 6
+    //     ? camp.pricing.weekend
+    //     : camp.pricing.weekday;
 
     if (availableCamps >= quantity) {
       return {
         available: true,
         status: "confirmed",
-        price,
+        price: camp.pricing,
         message: "Camps available for booking",
       };
     }
@@ -200,7 +200,7 @@ const checkCampAvailability = async (
       return {
         available: true,
         status: "pending",
-        price,
+        price: camp.pricing,
         message: "Camps may become available",
       };
     }

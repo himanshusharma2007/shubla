@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import {  Tent, Car, Home, AlertCircle } from 'lucide-react';
+import { Tent, Car, Home, AlertCircle } from 'lucide-react';
 import 'react-datepicker/dist/react-datepicker.css';
-import { createBooking } from '../../services/bookingService';
+import { bookingAvailability, createBooking } from '../../services/bookingService';
 import RoomBookingForm from '../bookingForm/RoomBooking';
 import CampBookingForm from '../bookingForm/CampBooking';
 import ParkingBookingForm from '../bookingForm/ParkingBooking';
@@ -10,6 +10,7 @@ import Nav from '../../components/Nav/Nav';
 import Footer from '../../components/footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { setbooking } from '../../redux/bookingSlice';
+import BookingResponseModal from './BookingResponseModal ';
 
 // Main Booking Container Component
 const BookingContainer = () => {
@@ -20,7 +21,9 @@ const BookingContainer = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const {serviceType}= useParams()
+  const [responseData, setResponseData] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { serviceType } = useParams()
   const forms = {
     room: <RoomBookingForm onSubmit={handleBookingSubmit} />,
     camp: <CampBookingForm onSubmit={handleBookingSubmit} />,
@@ -29,18 +32,20 @@ const BookingContainer = () => {
 
   async function handleBookingSubmit(bookingData) {
     try {
-      if(!isAuth){
+      if (!isAuth) {
         navigate("/Login")
       }
       setLoading(true);
       setError(null);
-      dispatch(setbooking({...bookingData, serviceType}));
-      // const response = await createBooking({
-      //   ...bookingData,
-      //   serviceType
-      // });
+      dispatch(setbooking({ ...bookingData, serviceType }));
+      const response = await bookingAvailability({
+        ...bookingData,
+        serviceType
+      });
+      console.log(response)
+      setResponseData(response.data)
       setSuccess(true);
-      navigate("/payment")
+      setIsModalOpen(true)
     } catch (err) {
       setError(err.message || 'An error occurred during booking');
     } finally {
@@ -48,36 +53,43 @@ const BookingContainer = () => {
     }
   }
 
+  const handlePayment = () =>{
+    navigate("/payment")
+  }
+
   return (
     <>
-    <Nav />
-    <div className="min-h-screen mt-[10vh] bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto ">
-        <div className="mt-14 rounded-lg shadow-lg p-6 md:p-8">
-          <BookingHeader serviceType={serviceType} />
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md flex items-center text-red-700">
-              <AlertCircle className="w-5 h-5 mr-2" />
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-md text-green-700">
-              Booking successful! You will receive a confirmation email shortly.
-            </div>
-          )}
-          {loading ? (
-            <div className="flex justify-center  ">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            </div>
-          ) : (
+      <Nav />
+
+      <BookingResponseModal
+        isOpen={isModalOpen}
+        onClose={() => {setIsModalOpen(false)}}
+        responseData={responseData}
+        onPayment={handlePayment}
+      />
+
+      <div className="min-h-screen mt-[10vh] bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto ">
+          <div className="mt-14 rounded-lg shadow-lg p-6 md:p-8">
+            <BookingHeader serviceType={serviceType} />
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md flex items-center text-red-700">
+                <AlertCircle className="w-5 h-5 mr-2" />
+                {error}
+              </div>
+            )}
+            {loading ? (
+              <div className="flex justify-center  ">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              </div>
+            ) : (
 
               forms[serviceType]
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </div>
-    <Footer />
+      <Footer />
     </>
   );
 };

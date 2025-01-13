@@ -44,6 +44,42 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink 
+              to="/parkingmanagement" 
+              className={({ isActive }) => 
+                `block py-2 px-4 rounded hover:bg-gray-700 ${
+                  isActive ? 'bg-gray-700 text-white' : ''
+                }`
+              }
+            >
+             Parking
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/bookingmanagement" 
+              className={({ isActive }) => 
+                `block py-2 px-4 rounded hover:bg-gray-700 ${
+                  isActive ? 'bg-gray-700 text-white' : ''
+                }`
+              }
+            >
+             Booking
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/uploadImage" 
+              className={({ isActive }) => 
+                `block py-2 px-4 rounded hover:bg-gray-700 ${
+                  isActive ? 'bg-gray-700 text-white' : ''
+                }`
+              }
+            >
+             Upload Images
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
               to="/contactAdminPanel" 
               className={({ isActive }) => 
                 `block py-2 px-4 rounded hover:bg-gray-700 ${

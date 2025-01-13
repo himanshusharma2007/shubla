@@ -27,6 +27,9 @@ import ProtectedRoute from "./route/ProtectedRoute";
 import PaymentForm from "./components/Payment/PaymentForm";
 import Rooms from "./adminPanel/Dashboard/Rooms";
 import Camps from "./adminPanel/Dashboard/Camps";
+import ParkingManagement from "./adminPanel/Dashboard/ParkingManagement";
+import AdminBooking from "./adminPanel/Dashboard/AdminBooking";
+import ImageUploadAdmin from "./adminPanel/Dashboard/ImageUploadAdmin";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,6 +73,9 @@ function App() {
         <Route path="/contactAdminPanel" element={<Layout><ContactAdminPanel /></Layout>} />
         <Route path="/rooms" element={<Layout><Rooms /></Layout>} />
         <Route path="/tents" element={<Layout><Camps /></Layout>} />
+        <Route path="/parkingmanagement" element={<Layout><ParkingManagement/></Layout>} />
+        <Route path="/bookingmanagement" element={<Layout><AdminBooking /></Layout>} />
+        <Route path="/uploadImage" element={<Layout><ImageUploadAdmin /></Layout>} />
 
         {/* Booking Routes */}
         <Route path="/booking/:serviceType" element={<BookingContainer />} />

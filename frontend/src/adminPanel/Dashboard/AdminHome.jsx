@@ -1,228 +1,316 @@
-import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
-import { Building2, Tent, Car } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  LineChart, Line, BarChart, Bar, PieChart, Pie, 
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell 
+} from 'recharts';
+import { 
+  Building2, Tent, Car, DollarSign, Users, Clock, Activity,
+  TrendingUp, MessageCircle, Calendar, PercentIcon, RefreshCw
+} from 'lucide-react';
+import { generateDashboardMetrics, getDashboardMetrics } from '../../services/dashboardServices';
 
 const AdminHome = () => {
-  const [activeTab, setActiveTab] = useState('rooms');
-  const [bookings] = useState({
-    rooms: [
-      { id: 1, type: 'Deluxe', guest: 'John Doe', status: 'Occupied', checkIn: '2025-01-06', checkOut: '2025-01-08' },
-      { id: 2, type: 'Suite', guest: 'Jane Smith', status: 'Reserved', checkIn: '2025-01-10', checkOut: '2025-01-15' },
-    ],
-    camps: [
-      { id: 1, location: 'Riverside', guest: 'Mike Johnson', status: 'Active', startDate: '2025-01-06', endDate: '2025-01-09' },
-      { id: 2, location: 'Mountain View', guest: 'Sarah Wilson', status: 'Reserved', startDate: '2025-01-12', endDate: '2025-01-14' },
-    ],
-    parking: [
-      { id: 1, spot: 'A1', vehicle: 'ABC123', guest: 'Robert Brown', status: 'Occupied' },
-      { id: 2, spot: 'B2', vehicle: 'XYZ789', guest: 'Emma Davis', status: 'Reserved' },
-    ]
-  });
-
-  const stats = {
-    totalRooms: 50,
-    occupiedRooms: 35,
-    totalCamps: 20,
-    occupiedCamps: 12,
-    totalParking: 100,
-    occupiedParking: 75,
+  const [metrics, setMetrics] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [timeframe, setTimeframe] = useState('daily');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const COLORS = {
+    master: '#4338ca',
+    kids: '#15803d',
+    camps: '#7e22ce',
+    parking: '#ff7e1c',
+    chart: ['#4338ca', '#15803d', '#7e22ce', '#ff7e1c']
   };
 
-  const occupancyData = [
-    {
-      name: 'Rooms',
-      occupied: stats.occupiedRooms,
-      total: stats.totalRooms,
-      percentage: (stats.occupiedRooms / stats.totalRooms) * 100
-    },
-    {
-      name: 'Camps',
-      occupied: stats.occupiedCamps,
-      total: stats.totalCamps,
-      percentage: (stats.occupiedCamps / stats.totalCamps) * 100
-    },
-    {
-      name: 'Parking',
-      occupied: stats.occupiedParking,
-      total: stats.totalParking,
-      percentage: (stats.occupiedParking / stats.totalParking) * 100
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const metricsData = await getDashboardMetrics({ timePeriod: timeframe });
+      setMetrics(metricsData.data[0]);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  return (
-    <div className="p-6 max-w-screen-xl mx-auto space-y-6 bg-gray-100 min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow">
-        <h1 className="text-3xl font-semibold text-gray-700">Hotel Management Dashboard</h1>
-        <div className="text-gray-500">Admin Portal</div>
+  const handleReload = async () => {
+    try {
+      setIsGenerating(true);
+      // Call generate metrics service
+      await generateDashboardMetrics();
+      // Fetch updated data
+      await fetchData();
+    } catch (error) {
+      console.error('Error generating dashboard metrics:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [timeframe]);
+
+  if (loading || !metrics) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="flex flex-col items-center gap-2">
+          {/* Spinner */}
+          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-600 text-sm">Loading, please wait...</p>
+        </div>
       </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[
-          { title: 'Room Status', value: stats.occupiedRooms, total: stats.totalRooms, color: 'blue', icon: Building2 },
-          { title: 'Camp Status', value: stats.occupiedCamps, total: stats.totalCamps, color: 'green', icon: Tent },
-          { title: 'Parking Status', value: stats.occupiedParking, total: stats.totalParking, color: 'purple', icon: Car },
-        ].map((item, idx) => (
-          <div
-            key={idx}
-            className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium text-gray-700">{item.title}</h3>
-              <item.icon size={32} className={`text-${item.color}-500`} />
-            </div>
-            <div className="mt-4">
-              <div className={`text-4xl font-semibold text-${item.color}-600`}>
-                {item.value}/{item.total}
-              </div>
-              <p className="text-sm text-gray-500 mt-2">Occupied</p>
-              <div className="w-full bg-gray-200 rounded-full h-3 mt-2">
-                <div
-                  className={`bg-${item.color}-600 h-3 rounded-full`}
-                  style={{ width: `${(item.value / item.total) * 100}%` }}
-                />
-              </div>
-            </div>
+    );
+  }
+  
+  const ServiceCard = ({ title, icon: Icon, color, metrics, showTypeMetrics }) => (
+    <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-lg bg-opacity-10" style={{ backgroundColor: `${color}20` }}>
+            <Icon className="w-6 h-6" style={{ color: color }} />
           </div>
-        ))}
+          <h3 className="text-lg font-semibold">{title}</h3>
+        </div>
+        <div className="text-right">
+          <p className="text-sm text-gray-500">Revenue</p>
+          <p className="text-xl font-bold text-gray-800">
+            ${metrics.revenue.toLocaleString()}
+          </p>
+        </div>
       </div>
 
-      {/* Chart Section */}
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="text-lg font-medium text-gray-700 mb-4">Occupancy Overview</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={occupancyData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Bar dataKey="percentage" fill="#4F46E5" name="Occupancy %" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Tabs */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="border-b">
-          <div className="flex">
-            {['rooms', 'camps', 'parking'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-sm font-medium ${
-                  activeTab === tab
-                    ? 'border-b-2 border-blue-500 text-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
+      <div className="space-y-4">
+        {/* Overall Stats */}
+        <div className="grid grid-cols-3 gap-4 bg-gray-50 rounded-lg p-4">
+          <div>
+            <p className="text-sm text-gray-500">Total Units</p>
+            <p className="font-medium">{metrics.total}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Occupied</p>
+            <p className="font-medium">{metrics.occupied}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Available</p>
+            <p className="font-medium">{metrics.available}</p>
           </div>
         </div>
 
-        {/* Tab Content */}
-        <div className="p-4">
-          {activeTab === 'rooms' && (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 text-sm">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 text-left text-gray-500 uppercase">Room Type</th>
-                    <th className="px-4 py-2 text-left text-gray-500 uppercase">Guest</th>
-                    <th className="px-4 py-2 text-left text-gray-500 uppercase">Status</th>
-                    <th className="px-4 py-2 text-left text-gray-500 uppercase">Check In</th>
-                    <th className="px-4 py-2 text-left text-gray-500 uppercase">Check Out</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {bookings.rooms.map((room) => (
-                    <tr key={room.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-2">{room.type}</td>
-                      <td className="px-4 py-2">{room.guest}</td>
-                      <td className="px-4 py-2">
-                        <span
-                          className={`px-2 py-1 rounded text-xs font-medium ${
-                            room.status === 'Occupied'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                          }`}
-                        >
-                          {room.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2">{room.checkIn}</td>
-                      <td className="px-4 py-2">{room.checkOut}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        {/* Type-specific metrics for rooms */}
+        {showTypeMetrics && metrics.byType && (
+          <div className="space-y-4">
+            {/* Master Rooms */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <p className="text-sm font-medium mb-2">Master Rooms</p>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm text-gray-500">Total</p>
+                  <p className="font-medium">{metrics.byType.master.total}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Occupied</p>
+                  <p className="font-medium">{metrics.byType.master.occupied}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Available</p>
+                  <p className="font-medium">{metrics.byType.master.available}</p>
+                </div>
+              </div>
             </div>
-          )}
 
-          {activeTab === 'camps' && (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th className="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase">Location</th>
-                    <th className="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase">Guest</th>
-                    <th className="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase">Start Date</th>
-                    <th className="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase">End Date</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {bookings.camps.map((camp) => (
-                    <tr key={camp.id} className="hover:bg-gray-50">
-                      <td className="px-8 py-4 text-base">{camp.location}</td>
-                      <td className="px-8 py-4 text-base">{camp.guest}</td>
-                      <td className="px-8 py-4">
-                        <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                          camp.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {camp.status}
-                        </span>
-                      </td>
-                      <td className="px-8 py-4 text-base">{camp.startDate}</td>
-                      <td className="px-8 py-4 text-base">{camp.endDate}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {/* Kids Rooms */}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <p className="text-sm font-medium mb-2">Kids Rooms</p>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm text-gray-500">Total</p>
+                  <p className="font-medium">{metrics.byType.kids.total}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Occupied</p>
+                  <p className="font-medium">{metrics.byType.kids.occupied}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Available</p>
+                  <p className="font-medium">{metrics.byType.kids.available}</p>
+                </div>
+              </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {activeTab === 'parking' && (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th className="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase">Spot</th>
-                    <th className="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase">Vehicle</th>
-                    <th className="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase">Guest</th>
-                    <th className="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {bookings.parking.map((spot) => (
-                    <tr key={spot.id} className="hover:bg-gray-50">
-                      <td className="px-8 py-4 text-base">{spot.spot}</td>
-                      <td className="px-8 py-4 text-base">{spot.vehicle}</td>
-                      <td className="px-8 py-4 text-base">{spot.guest}</td>
-                      <td className="px-8 py-4">
-                        <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                          spot.status === 'Occupied' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {spot.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        {/* Average Stay Duration */}
+        {metrics.averageStay && (
+          <div className="mt-4">
+            <p className="text-sm text-gray-600 mb-1">Average Stay Duration</p>
+            <p className="font-medium">{metrics.averageStay.toFixed(1)} days</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const revenueData = Object.entries(metrics.revenue.byPeriod).map(([period, value]) => ({
+    name: period.charAt(0).toUpperCase() + period.slice(1),
+    value
+  }));
+
+  const bookingStatusData = Object.entries(metrics.bookings.byStatus).map(([status, value]) => ({
+    name: status.charAt(0).toUpperCase() + status.slice(1),
+    value
+  }));
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      {/* Header Section */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">Analytics Dashboard</h1>
+          <p className="text-gray-500 mt-2">Track your business performance and insights</p>
+        </div>
+        <div className="flex flex-row-reverse items-center gap-4">
+        <button
+            onClick={handleReload}
+            disabled={isGenerating}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
+          >
+            <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
+            {isGenerating ? 'Generating...' : 'Reload Data'}
+          </button>
+          
+          <div className="flex items-center gap-2 text-gray-600">
+            <Clock className="w-5 h-5" />
+            <span>{new Date(metrics.date).toLocaleDateString()}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Revenue Overview */}
+      <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
+        <h3 className="text-lg font-semibold mb-4">Revenue Overview</h3>
+        <div className="grid grid-cols-4 gap-6">
+          <div className="p-4 bg-blue-50 rounded-lg">
+            <p className="text-gray-600 mb-1">Total Revenue</p>
+            <p className="text-2xl font-bold">${metrics.revenue.total.toLocaleString()}</p>
+          </div>
+          {Object.entries(metrics.revenue.byPeriod).map(([period, amount]) => (
+            <div key={period} className="p-4 bg-gray-50 rounded-lg">
+              <p className="text-gray-600 mb-1 capitalize">{period}</p>
+              <p className="text-2xl font-bold">${amount.toLocaleString()}</p>
             </div>
-          )}
+          ))}
+        </div>
+      </div>
+
+      {/* Service Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Rooms Card */}
+        <ServiceCard 
+          title="Rooms"
+          icon={Building2}
+          color={COLORS.master}
+          metrics={{
+            revenue: metrics.revenue.byService.rooms.total,
+            total: metrics.occupancy.rooms.master.total + metrics.occupancy.rooms.kids.total,
+            occupied: metrics.occupancy.rooms.master.occupied + metrics.occupancy.rooms.kids.occupied,
+            available: metrics.occupancy.rooms.master.available + metrics.occupancy.rooms.kids.available,
+            byType: {
+              master: metrics.occupancy.rooms.master,
+              kids: metrics.occupancy.rooms.kids
+            }
+          }}
+          showTypeMetrics={true}
+        />
+
+        {/* Camps Card */}
+        <ServiceCard 
+          title="Camps"
+          icon={Tent}
+          color={COLORS.camps}
+          metrics={{
+            revenue: metrics.revenue.byService.camps,
+            total: metrics.occupancy.camps.total,
+            occupied: metrics.occupancy.camps.occupied,
+            available: metrics.occupancy.camps.available
+          }}
+        />
+
+        {/* Parking Card */}
+        <ServiceCard 
+          title="Parking"
+          icon={Car}
+          color={COLORS.parking}
+          metrics={{
+            revenue: metrics.revenue.byService.parking,
+            total: metrics.occupancy.parking.total,
+            occupied: metrics.occupancy.parking.occupied,
+            available: metrics.occupancy.parking.available
+          }}
+        />
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {/* Revenue Trend */}
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h3 className="text-lg font-semibold mb-6">Revenue Trend</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={revenueData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+              <Line type="monotone" dataKey="value" stroke={COLORS.master} strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Booking Status Distribution */}
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h3 className="text-lg font-semibold mb-6">Booking Status Distribution</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={bookingStatusData}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={5}
+                dataKey="value"
+              >
+                {bookingStatusData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS.chart[index % COLORS.chart.length]} />
+                ))}
+              </Pie>
+              <Tooltip formatter={(value) => value.toLocaleString()} />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Customer Service Section */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold">Customer Service Overview</h3>
+          <MessageCircle className="w-5 h-5 text-gray-500" />
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-gray-500 mb-1">Total Messages</p>
+            <p className="text-2xl font-bold">{metrics.customerService.totalMessages}</p>
+          </div>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-gray-500 mb-1">Pending Replies</p>
+            <p className="text-2xl font-bold">{metrics.customerService.unrepliedMessages}</p>
+          </div>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-gray-500 mb-1">Response Rate</p>
+            <p className="text-2xl font-bold">{metrics.customerService.responseRate.toFixed(1)}%</p>
+          </div>
         </div>
       </div>
     </div>

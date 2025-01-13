@@ -4,19 +4,19 @@ const {
   generateDashboardMetrics, 
   getDashboardMetrics,
   getEarningsMetrics
-} = require('../controllers/dashboardController');
+} = require('../controller/dashboardController');
 const { checkAdmin } = require('../middleware/checkAdmin');
 
 // Protected admin routes
 router.use(checkAdmin);
 
 // Generate/update dashboard metrics
-router.post('/dashboard/metrics', generateDashboardMetrics);
+router.post('/metrics', generateDashboardMetrics);
 
 // Get dashboard metrics
-router.get('/dashboard/metrics', getDashboardMetrics);
+router.get('/metrics', getDashboardMetrics);
 
 // Get earnings metrics
-router.get('/dashboard/earnings', getEarningsMetrics);
+router.get('/earnings', getEarningsMetrics);
 
 module.exports = router;

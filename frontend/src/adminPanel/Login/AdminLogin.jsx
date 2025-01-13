@@ -107,12 +107,7 @@ const AdminLogin = () => {
             >
               Create Account
             </Link>
-            <Link
-              to="/Login"
-              className="sign-up-button"
-            >
-              Login as User
-            </Link>
+           
           </div>
         </div>
       </div>

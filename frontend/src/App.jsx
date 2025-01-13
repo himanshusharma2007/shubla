@@ -37,13 +37,17 @@ function App() {
   async function getStripeApiKey() {
     const data = await paymentService.stripeapikey();
     setStripeApiKey(data.stripeApiKey);
+    console.log(data.stripeApiKey)
     setStripePromise(loadStripe(data.stripeApiKey));
   }
 
   useEffect(() => {
     dispatch(fetchUser());
-    getStripeApiKey();
   }, [dispatch]);
+
+  useEffect(()=>{
+    getStripeApiKey()
+  }, [])
 
   const [message, setMessage] = useState("");
   console.log("message::", message);

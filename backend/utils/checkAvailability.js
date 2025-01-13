@@ -152,13 +152,8 @@ const checkCampAvailability = async (
     // Get all active bookings
     const activeBookings = await Booking.find({
       serviceType: "camp",
-      status: { $in: ["pending", "confirmed"] },
-      $or: [
-        {
-          checkIn: { $lte: checkOut },
-          checkOut: { $gte: checkIn },
-        },
-      ],
+      status: "confirmed",
+      $or: [{ checkIn: { $lte: checkOut } }, { checkOut: { $lte: checkIn } }],
     });
 
     // Calculate booked camps
@@ -169,7 +164,7 @@ const checkCampAvailability = async (
     const availableCamps = camp.totalCamps - bookedCamps;
 
     // Calculate price based on weekday/weekend
-    const checkInDay = new Date(checkIn).getDay();
+    // const checkInDay = new Date(checkIn).getDay();
     // const price =
     //   checkInDay === 0 || checkInDay === 6
     //     ? camp.pricing.weekend
@@ -188,7 +183,7 @@ const checkCampAvailability = async (
     const checkoutBeforeCheckin = await Booking.find({
       serviceType: "camp",
       status: { $in: ["pending", "confirmed"] },
-      checkOut: { $lt: checkIn },
+      checkOut: { $lte: checkIn },
     });
 
     const potentialAvailableCamps = checkoutBeforeCheckin.reduce(
@@ -226,13 +221,8 @@ const checkParkingAvailability = async (quantity, checkIn, checkOut) => {
     // Get all active bookings
     const activeBookings = await Booking.find({
       serviceType: "parking",
-      status: { $in: ["pending", "confirmed"] },
-      $or: [
-        {
-          checkIn: { $lte: checkOut },
-          checkOut: { $gte: checkIn },
-        },
-      ],
+      status: "confirmed",
+      $or: [{ checkIn: { $lte: checkOut } }, { checkOut: { $lte: checkIn } }],
     });
 
     // Calculate booked slots
@@ -262,7 +252,7 @@ const checkParkingAvailability = async (quantity, checkIn, checkOut) => {
     const checkoutBeforeCheckin = await Booking.find({
       serviceType: "parking",
       status: { $in: ["pending", "confirmed"] },
-      checkOut: { $lt: checkIn },
+      checkOut: { $lte: checkIn },
     });
 
     const potentialAvailableSlots = checkoutBeforeCheckin.reduce(

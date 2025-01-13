@@ -132,10 +132,14 @@ const updateServiceAvailability = async (serviceType) => {
   );
 
   // Update available quantity
-  const availableQuantity =
+  let availableQuantity =
     service[
     `total${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}s`
     ] - bookedQuantity;
+
+  if(serviceType==="parking"){
+    availableQuantity = service["totalSlots"] - bookedQuantity
+  }
 
   console.log(
     `Updating available quantity for ${serviceType}:`,
@@ -152,6 +156,17 @@ const updateServiceAvailability = async (serviceType) => {
       },
     }
   );
+
+  if(serviceType==="parking"){
+    await ServiceModel.updateMany(
+      {},
+      {
+        $set: {
+          [`availableSlots`]: availableQuantity,
+        },
+      }
+    );
+  }
 
   console.log(`Successfully updated available quantity for ${serviceType}`);
   return availableQuantity;

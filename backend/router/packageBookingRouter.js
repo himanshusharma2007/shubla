@@ -9,11 +9,11 @@ const {
 const { checkAuth } = require("../middleware/checkAuth");
 const { checkAdmin } = require("../middleware/checkAdmin");
 
-router.route("/package-booking/new").post(checkAuth, createPackageBooking);
-router.route("/package-bookings").get(checkAuth, getUserPackageBookings);
-router.route("/admin/package-bookings").get(checkAdmin, getAllPackageBookings);
+router.route("/new").post(checkAuth, createPackageBooking);
+router.route("/bookings").get(checkAuth, getUserPackageBookings);
+router.route("/admin/bookings").get(checkAdmin, getAllPackageBookings);
 router
-  .route("/admin/package-booking/:id")
+  .route("/admin/:id")
   .put(checkAdmin, updatePackageBookingStatus);
 
 module.exports = router;

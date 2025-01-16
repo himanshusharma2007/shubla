@@ -26,7 +26,7 @@ const parkingSlotRouter = require("./router/parkingSlotRouter");
 const bookingRouter = require("./router/bookingRouter");
 const paymentRouter = require("./router/paymentRouter")
 const dashboardRouter = require("./router/dashboardRouter")
-
+const packageBookingRouter = require("./router/packageBookingRouter");
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -41,7 +41,7 @@ app.use("/api/admin/dashboard", dashboardRouter );
 app.use("/api/booking", bookingRouter);
 app.use("/api/parking", parkingSlotRouter);
 app.use("/api/payment", paymentRouter);
-
+app.use("/api/package-booking", packageBookingRouter);
 
 app.listen(process.env.PORT, async () => {
   await connectDB(DB_URL);

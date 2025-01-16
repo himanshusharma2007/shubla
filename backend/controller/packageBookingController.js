@@ -1,15 +1,16 @@
 // packageBookingController.js
-const PackageBooking = require("../models/packageBookingModel");
-const Room = require("../models/roomsModel");
-const Camp = require("../models/campsModel");
-const ParkingSlot = require("../models/parkingSlotModel");
-const Booking = require("../models/bookingModel");
+const PackageBooking = require("../model/packageBooking");
+const Room = require("../model/roomsModel");
+const Camp = require("../model/campsModel");
+const ParkingSlot = require("../model/parkingSlotModel");
+const Booking = require("../model/bookingModel");
 const checkAvailability = require("../utils/checkAvailability");
 const mongoose = require("mongoose");
 const sendEmail = require("../utils/sendMail");
 
 // Create Package Booking
 exports.createPackageBooking = async (req, res) => {
+  console.log('req.body', req.body)
   const session = await mongoose.startSession();
   session.startTransaction();
 

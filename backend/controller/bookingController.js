@@ -285,7 +285,7 @@ exports.createBooking = async (req, res) => {
 
     if (availability.status === "confirmed") {
       console.log("Updating service availability as status is confirmed...");
-      await updateServiceAvailability(serviceType);
+      await this.updateServiceAvailability(serviceType);
     }
 
     // Send notifications based on booking status

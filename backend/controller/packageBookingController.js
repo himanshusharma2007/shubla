@@ -94,6 +94,10 @@ exports.createPackageBooking = async (req, res) => {
       };
     };
 
+    const duration = Math.ceil(
+      (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
+    );
+
     // Process room bookings
     if (services.room) {
       if (services.room.master && services.room.master.quantity > 0) {
@@ -105,7 +109,7 @@ exports.createPackageBooking = async (req, res) => {
         services.room.master.bookingRef = booking._id;
         services.room.master.price = price;
         services.room.master.status = status;
-        totalAmount += price * services.room.master.quantity;
+        totalAmount += (price * services.room.master.quantity * duration);
       }
 
       if (services.room.kids && services.room.kids.quantity > 0) {
@@ -117,7 +121,7 @@ exports.createPackageBooking = async (req, res) => {
         services.room.kids.bookingRef = booking._id;
         services.room.kids.price = price;
         services.room.kids.status = status;
-        totalAmount += price * services.room.kids.quantity;
+        totalAmount += (price * services.room.kids.quantity * duration);
       }
     }
 
@@ -131,7 +135,7 @@ exports.createPackageBooking = async (req, res) => {
       services.camp.bookingRef = booking._id;
       services.camp.price = price;
       services.camp.status = status;
-      totalAmount += price * services.camp.quantity;
+      totalAmount += (price * services.camp.quantity * duration);
     }
 
     // Process parking booking
@@ -143,7 +147,7 @@ exports.createPackageBooking = async (req, res) => {
       services.parking.bookingRef = booking._id;
       services.parking.price = price;
       services.parking.status = status;
-      totalAmount += price * services.parking.quantity;
+      totalAmount += (price * services.parking.quantity * duration);
     }
 
     // Create package booking
@@ -265,6 +269,9 @@ exports.checkAvailabilityForPackageBooking = async (req, res) => {
     };
 
     // Process room bookings
+    const duration = Math.ceil(
+      (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
+    );
     if (services.room) {
       if (services.room.master && services.room.master.quantity > 0) {
         const { booking, price, status } = await processBooking('room',
@@ -272,10 +279,9 @@ exports.checkAvailabilityForPackageBooking = async (req, res) => {
           { roomType: 'master', guests: services.room.master.guests }
         );
         bookings.push(booking);
-        services.room.master.bookingRef = booking._id;
         services.room.master.price = price;
         services.room.master.status = status;
-        totalAmount += price * services.room.master.quantity;
+        totalAmount += (price * services.room.master.quantity * duration);
       }
 
       if (services.room.kids && services.room.kids.quantity > 0) {
@@ -284,10 +290,9 @@ exports.checkAvailabilityForPackageBooking = async (req, res) => {
           { roomType: 'kids', guests: services.room.kids.guests }
         );
         bookings.push(booking);
-        services.room.kids.bookingRef = booking._id;
         services.room.kids.price = price;
         services.room.kids.status = status;
-        totalAmount += price * services.room.kids.quantity;
+        totalAmount += (price * services.room.kids.quantity * duration);
       }
     }
 
@@ -298,10 +303,9 @@ exports.checkAvailabilityForPackageBooking = async (req, res) => {
         { guests: services.camp.guests }
       );
       bookings.push(booking);
-      services.camp.bookingRef = booking._id;
       services.camp.price = price;
       services.camp.status = status;
-      totalAmount += price * services.camp.quantity;
+      totalAmount += (price * services.camp.quantity * duration);
     }
 
     // Process parking booking
@@ -310,10 +314,9 @@ exports.checkAvailabilityForPackageBooking = async (req, res) => {
         services.parking.quantity
       );
       bookings.push(booking);
-      services.parking.bookingRef = booking._id;
       services.parking.price = price;
       services.parking.status = status;
-      totalAmount += price * services.parking.quantity;
+      totalAmount += (price * services.parking.quantity * duration);
     }
 
     // Create package booking
@@ -328,14 +331,13 @@ exports.checkAvailabilityForPackageBooking = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: overallStatus === "confirmed"
-        ? "Package booking confirmed successfully"
-        : "Package booking request received and pending confirmation",
-      packageBooking: packageBooking[0],
-      bookings
+      status: overallStatus,
+      totalAmount,
+      packageBooking: packageBooking,
     });
 
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       success: false,
       message: "Error creating package booking",

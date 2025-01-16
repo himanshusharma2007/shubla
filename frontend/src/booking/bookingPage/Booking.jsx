@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setbooking } from '../../redux/bookingSlice';
 import BookingResponseModal from './BookingResponseModal ';
 import PackageBookingForm from '../bookingForm/PackageBookingForm';
+import { checkPackageBookingAvailability } from '../../services/PackageBookingService';
 
 // Main Booking Container Component
 const BookingContainer = () => {
@@ -39,23 +40,33 @@ const BookingContainer = () => {
       }
       setLoading(true);
       setError(null);
-      dispatch(setbooking({ ...bookingData, serviceType, bookingType:"single" }));
-      const response = await bookingAvailability({
-        ...bookingData,
-        serviceType
-      });
-      console.log(response)
-      setResponseData(response.data)
+      if (serviceType === "package") {
+        const response = await checkPackageBookingAvailability({
+          ...bookingData,
+        });
+        dispatch(setbooking({ ...bookingData, totalAmount: response.totalAmount, bookingType: "package" }));
+        console.log("checkPackageBookingAvailability",response)
+        setResponseData(response)
+      } else {
+        dispatch(setbooking({ ...bookingData, serviceType, bookingType: "single" }));
+        const response = await bookingAvailability({
+          ...bookingData,
+          serviceType
+        });
+        console.log(response)
+        setResponseData(response.data)
+      }
       setSuccess(true);
       setIsModalOpen(true)
     } catch (err) {
+      console.log(err)
       setError(err.message || 'An error occurred during booking');
     } finally {
       setLoading(false);
     }
   }
 
-  const handlePayment = () =>{
+  const handlePayment = () => {
     navigate("/payment")
   }
 
@@ -65,7 +76,7 @@ const BookingContainer = () => {
 
       <BookingResponseModal
         isOpen={isModalOpen}
-        onClose={() => {setIsModalOpen(false)}}
+        onClose={() => { setIsModalOpen(false) }}
         responseData={responseData}
         onPayment={handlePayment}
       />
@@ -111,7 +122,7 @@ const BookingHeader = ({ serviceType }) => {
     parking: 'Parking Booking',
     package: 'Package Booking'
   };
-  
+
   return (
     <div className="mb-8 text-center">
       <div className="flex justify-center mb-4">

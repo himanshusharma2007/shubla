@@ -4,13 +4,13 @@ import { AlertCircle, CheckCircle, X } from 'lucide-react';
 const BookingResponseModal = ({ isOpen, onClose, responseData, onPayment }) => {
   if (!isOpen || !responseData) return null;
 
-  const { available, message, price, status, totalAmount } = responseData;
+  const { price, status, totalAmount } = responseData;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg w-full max-w-md relative">
         {/* Close button */}
-        <button 
+        <button
           onClick={onClose}
           className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
         >
@@ -20,7 +20,7 @@ const BookingResponseModal = ({ isOpen, onClose, responseData, onPayment }) => {
         {/* Header */}
         <div className="p-6 border-b">
           <div className="flex items-center gap-2">
-            {available ? (
+            {status === "confirmed" ? (
               <CheckCircle className="w-6 h-6 text-green-500" />
             ) : (
               <AlertCircle className="w-6 h-6 text-yellow-500" />
@@ -38,12 +38,14 @@ const BookingResponseModal = ({ isOpen, onClose, responseData, onPayment }) => {
                 {status?.charAt(0).toUpperCase() + status?.slice(1)}
               </span>
             </div>
-            
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Price:</span>
-              <span className="font-medium">${price}/per Day</span>
-            </div>
-            
+            {
+              price &&
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Price:</span>
+                <span className="font-medium">${price}/per Day</span>
+              </div>
+            }
+
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Total Amount:</span>
               <span className="font-medium">${totalAmount}</span>

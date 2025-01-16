@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Nav from '../Nav/Nav'
 import Hero2 from '../Hero2/Hero2'
-import About from '../About/About'
+import About from '../about/About'
 import Book from '../Booking/Book'
 import Facilities from '../Facilities/Facilities'
 import Footer from '../footer/Footer'

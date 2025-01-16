@@ -14,7 +14,7 @@ import Activity from "./components/Activity/Activity";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./redux/authSlice";         
-import Parking from "./components/parking/PArking";
+import Parking from "./components/parking/Parking";
 import AdminLogin from "./adminPanel/Login/AdminLogin";
 import Layout from "./adminPanel/Layout/Layout";
 import AdminHome from "./adminPanel/Dashboard/AdminHome";

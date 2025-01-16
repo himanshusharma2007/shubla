@@ -9,7 +9,7 @@ import Intro from '../../assets/intro.mp4'
 const headingdata = [
     {
       start: "self",
-      duration: "70vh",
+      duration: "80vh",
       properties: [
         {
           startValue: 0,

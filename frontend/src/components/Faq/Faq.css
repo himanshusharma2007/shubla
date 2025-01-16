@@ -4,7 +4,7 @@
     color: #333333;
     padding-bottom: 5%;
     padding-top: 5%;
-    background-color: #fffff0;
+    background: linear-gradient(180deg, rgba(216,152,99,1) 0%, rgba(206,183,159,1) 100%);
 }
 .headingline{
     width: 70px;
@@ -46,6 +46,8 @@
 }
 .Faq-inner .Faq-1 img{
     width: 100%;
+    border-radius: 10px;
+    margin-top: 5%;
 }
 
 .Faq-inner .Faq-2{

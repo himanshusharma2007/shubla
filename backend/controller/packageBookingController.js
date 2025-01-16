@@ -7,6 +7,7 @@ const Booking = require("../model/bookingModel");
 const checkAvailability = require("../utils/checkAvailability");
 const mongoose = require("mongoose");
 const sendEmail = require("../utils/sendMail");
+const { updateServiceAvailability } = require("./bookingController");
 
 // Create Package Booking
 exports.createPackageBooking = async (req, res) => {
@@ -81,6 +82,11 @@ exports.createPackageBooking = async (req, res) => {
         isPrivateBooking
       }], { session });
 
+      if (availability.status === "confirmed") {
+        console.log("updateServiceAvailability run")
+        await updateServiceAvailability(serviceType)
+      }
+
       return {
         booking: booking[0],
         price: availability.price,
@@ -91,8 +97,8 @@ exports.createPackageBooking = async (req, res) => {
     // Process room bookings
     if (services.room) {
       if (services.room.master && services.room.master.quantity > 0) {
-        const { booking, price, status } = await processBooking('room', 
-          services.room.master.quantity, 
+        const { booking, price, status } = await processBooking('room',
+          services.room.master.quantity,
           { roomType: 'master', guests: services.room.master.guests }
         );
         bookings.push(booking);
@@ -103,8 +109,8 @@ exports.createPackageBooking = async (req, res) => {
       }
 
       if (services.room.kids && services.room.kids.quantity > 0) {
-        const { booking, price, status } = await processBooking('room', 
-          services.room.kids.quantity, 
+        const { booking, price, status } = await processBooking('room',
+          services.room.kids.quantity,
           { roomType: 'kids', guests: services.room.kids.guests }
         );
         bookings.push(booking);
@@ -117,7 +123,7 @@ exports.createPackageBooking = async (req, res) => {
 
     // Process camp booking
     if (services.camp && services.camp.quantity > 0) {
-      const { booking, price, status } = await processBooking('camp', 
+      const { booking, price, status } = await processBooking('camp',
         services.camp.quantity,
         { guests: services.camp.guests }
       );
@@ -130,7 +136,7 @@ exports.createPackageBooking = async (req, res) => {
 
     // Process parking booking
     if (services.parking && services.parking.quantity > 0) {
-      const { booking, price, status } = await processBooking('parking', 
+      const { booking, price, status } = await processBooking('parking',
         services.parking.quantity
       );
       bookings.push(booking);
@@ -152,6 +158,7 @@ exports.createPackageBooking = async (req, res) => {
       paymentStatus
     }], { session });
 
+
     await session.commitTransaction();
 
     // Send notifications
@@ -159,8 +166,8 @@ exports.createPackageBooking = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: overallStatus === "confirmed" 
-        ? "Package booking confirmed successfully" 
+      message: overallStatus === "confirmed"
+        ? "Package booking confirmed successfully"
         : "Package booking request received and pending confirmation",
       packageBooking: packageBooking[0],
       bookings
@@ -168,7 +175,7 @@ exports.createPackageBooking = async (req, res) => {
 
   } catch (error) {
     await session.abortTransaction();
-    
+
     res.status(500).json({
       success: false,
       message: "Error creating package booking",
@@ -176,6 +183,164 @@ exports.createPackageBooking = async (req, res) => {
     });
   } finally {
     session.endSession();
+  }
+};
+
+exports.checkAvailabilityForPackageBooking = async (req, res) => {
+  console.log('req.body', req.body)
+
+  try {
+    const {
+      checkIn,
+      checkOut,
+      services,
+      isPrivateBooking = true
+    } = req.body;
+
+    const user = req.user;
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+
+    // Validate dates
+    if (checkInDate < new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "Check-in time cannot be in the past",
+      });
+    }
+
+    if (checkOutDate <= checkInDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Check-out time must be after check-in time",
+      });
+    }
+
+    // Check availability and create bookings for each service
+    const bookings = [];
+    let totalAmount = 0;
+    let overallStatus = "confirmed"; // Will be set to "pending" if any service is pending
+
+    // Helper function to check and create booking
+    const processBooking = async (serviceType, quantity, options = {}) => {
+      const availability = await checkAvailability(
+        serviceType,
+        quantity,
+        checkInDate,
+        checkOutDate,
+        options
+      );
+
+      if (!availability.available) {
+        throw new Error(`${serviceType} ${options.roomType || ''} not available: ${availability.message}`);
+      }
+
+      // If any service is pending, the whole package becomes pending
+      if (availability.status === "pending") {
+        overallStatus = "pending";
+      }
+
+      const booking = {
+        user: user._id,
+        serviceType,
+        roomType: options.roomType,
+        quantity,
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        totalAmount: quantity * availability.price,
+        status: availability.status,
+        isPrivateBooking
+      };
+
+      if (availability.status === "confirmed") {
+        console.log("updateServiceAvailability run")
+        await updateServiceAvailability(serviceType)
+      }
+
+      return {
+        booking: booking[0],
+        price: availability.price,
+        status: availability.status
+      };
+    };
+
+    // Process room bookings
+    if (services.room) {
+      if (services.room.master && services.room.master.quantity > 0) {
+        const { booking, price, status } = await processBooking('room',
+          services.room.master.quantity,
+          { roomType: 'master', guests: services.room.master.guests }
+        );
+        bookings.push(booking);
+        services.room.master.bookingRef = booking._id;
+        services.room.master.price = price;
+        services.room.master.status = status;
+        totalAmount += price * services.room.master.quantity;
+      }
+
+      if (services.room.kids && services.room.kids.quantity > 0) {
+        const { booking, price, status } = await processBooking('room',
+          services.room.kids.quantity,
+          { roomType: 'kids', guests: services.room.kids.guests }
+        );
+        bookings.push(booking);
+        services.room.kids.bookingRef = booking._id;
+        services.room.kids.price = price;
+        services.room.kids.status = status;
+        totalAmount += price * services.room.kids.quantity;
+      }
+    }
+
+    // Process camp booking
+    if (services.camp && services.camp.quantity > 0) {
+      const { booking, price, status } = await processBooking('camp',
+        services.camp.quantity,
+        { guests: services.camp.guests }
+      );
+      bookings.push(booking);
+      services.camp.bookingRef = booking._id;
+      services.camp.price = price;
+      services.camp.status = status;
+      totalAmount += price * services.camp.quantity;
+    }
+
+    // Process parking booking
+    if (services.parking && services.parking.quantity > 0) {
+      const { booking, price, status } = await processBooking('parking',
+        services.parking.quantity
+      );
+      bookings.push(booking);
+      services.parking.bookingRef = booking._id;
+      services.parking.price = price;
+      services.parking.status = status;
+      totalAmount += price * services.parking.quantity;
+    }
+
+    // Create package booking
+    const packageBooking = {
+      user: user._id,
+      checkIn: checkInDate,
+      checkOut: checkOutDate,
+      services,
+      totalAmount,
+      status: overallStatus
+    };
+
+    res.status(201).json({
+      success: true,
+      message: overallStatus === "confirmed"
+        ? "Package booking confirmed successfully"
+        : "Package booking request received and pending confirmation",
+      packageBooking: packageBooking[0],
+      bookings
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error creating package booking",
+      error: error.message
+    });
   }
 };
 
@@ -314,7 +479,7 @@ const sendPackageBookingNotifications = async (packageBooking, user, bookings) =
   // Create service summary
   const createServiceSummary = () => {
     let summary = [];
-    
+
     if (packageBooking.services.room) {
       if (packageBooking.services.room.master?.quantity) {
         summary.push(`Master Rooms: ${packageBooking.services.room.master.quantity}`);
@@ -329,7 +494,7 @@ const sendPackageBookingNotifications = async (packageBooking, user, bookings) =
     if (packageBooking.services.parking?.quantity) {
       summary.push(`Parking Slots: ${packageBooking.services.parking.quantity}`);
     }
-    
+
     return summary.join('\n');
   };
 

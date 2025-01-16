@@ -37,7 +37,7 @@ const BookingContainer = () => {
       }
       setLoading(true);
       setError(null);
-      dispatch(setbooking({ ...bookingData, serviceType }));
+      dispatch(setbooking({ ...bookingData, serviceType, bookingType:"single" }));
       const response = await bookingAvailability({
         ...bookingData,
         serviceType

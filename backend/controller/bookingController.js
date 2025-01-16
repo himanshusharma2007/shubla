@@ -7,7 +7,7 @@ const sendEmail = require("../utils/sendMail");
 const checkAvailability = require("../utils/checkAvailability");
 
 // Utility function to update service availability
-const updateServiceAvailability = async (serviceType) => {
+exports.updateServiceAvailability = async (serviceType) => {
   console.log("Execution started for service type:", serviceType);
 
   let ServiceModel;

@@ -102,6 +102,11 @@ function Nav() {
                     Caravan Parking
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink to="/booking/package" className="drop-link">
+                   Book Package
+                  </NavLink>
+                </li>
               </ul>
             </li>
             {/* <li className="moblink" onClick={openEvent} >

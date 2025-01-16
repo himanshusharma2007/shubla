@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tent, Car, Home, AlertCircle } from 'lucide-react';
+import { Tent, Car, Home, AlertCircle, Package } from 'lucide-react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { bookingAvailability, createBooking } from '../../services/bookingService';
 import RoomBookingForm from '../bookingForm/RoomBooking';
@@ -11,6 +11,7 @@ import Footer from '../../components/footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { setbooking } from '../../redux/bookingSlice';
 import BookingResponseModal from './BookingResponseModal ';
+import PackageBookingForm from '../bookingForm/PackageBookingForm';
 
 // Main Booking Container Component
 const BookingContainer = () => {
@@ -27,7 +28,8 @@ const BookingContainer = () => {
   const forms = {
     room: <RoomBookingForm onSubmit={handleBookingSubmit} />,
     camp: <CampBookingForm onSubmit={handleBookingSubmit} />,
-    parking: <ParkingBookingForm onSubmit={handleBookingSubmit} />
+    parking: <ParkingBookingForm onSubmit={handleBookingSubmit} />,
+    package: <PackageBookingForm onSubmit={handleBookingSubmit} />
   };
 
   async function handleBookingSubmit(bookingData) {
@@ -99,15 +101,17 @@ const BookingHeader = ({ serviceType }) => {
   const icons = {
     room: Home,
     camp: Tent,
-    parking: Car
+    parking: Car,
+    package: Package // Import Package icon from lucide-react
   };
   const Icon = icons[serviceType];
   const titles = {
     room: 'Room Booking',
     camp: 'Camp Booking',
-    parking: 'Parking Booking'
+    parking: 'Parking Booking',
+    package: 'Package Booking'
   };
-
+  
   return (
     <div className="mb-8 text-center">
       <div className="flex justify-center mb-4">

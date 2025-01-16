@@ -21,6 +21,8 @@ const PaymentForm = () => {
     const stripe = useStripe();
     const elements = useElements();
 
+    console.log(booking)
+
     const [paymentStatus, setPaymentStatus] = useState(null);
     const [bookingStatus, setBookingStatus] = useState(null);
 
@@ -38,7 +40,7 @@ const PaymentForm = () => {
         setPaymentStatus("processing")
         try {
             console.log("payment")
-            const data = await paymentService.processPayment(booking.amount * 100);
+            const data = await paymentService.processPayment(booking.totalAmount * 100);
             const client_secret = data.client_secret;
             console.log(client_secret)
             if (!stripe || !elements) return;
@@ -185,7 +187,7 @@ const PaymentForm = () => {
                             <div className="flex justify-between items-center">
                                 <span className="text-lg font-bold text-amber-800">Pay amount</span>
                                 <span className="text-lg font-bold text-amber-900">
-                                    {booking?.amount}
+                                    {booking?.totalAmount}
                                 </span>
                             </div>
                         </div>

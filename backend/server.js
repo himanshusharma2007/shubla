@@ -9,14 +9,34 @@ const DB_URL = process.env.MONGO_URI;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use((req, res, next) => {
+  console.log('Origin:', req.headers.origin); // Log incoming origin
+  next();
+});
+
+const allowedOrigins = [
+  "https://shubla-frontend.onrender.com",
+  "http://localhost:5174"
+];
 
 app.use(cors({
-  origin: ["https://shubla-frontend.onrender.com"],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    // Check if the origin is in the allowed origins
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
   exposedHeaders: ['Set-Cookie']
 }));
+
 const authRouter = require("./router/authRouter");
 const roomsRouter = require("./router/roomsRouter");
 const campsRouter = require("./router/campsRouter");
@@ -25,8 +45,8 @@ const imageRouter = require("./router/imageRouter");
 const adminRouter = require("./router/adminRouter");
 const parkingSlotRouter = require("./router/parkingSlotRouter");
 const bookingRouter = require("./router/bookingRouter");
-const paymentRouter = require("./router/paymentRouter")
-const dashboardRouter = require("./router/dashboardRouter")
+const paymentRouter = require("./router/paymentRouter");
+const dashboardRouter = require("./router/dashboardRouter");
 const packageBookingRouter = require("./router/packageBookingRouter");
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -38,7 +58,7 @@ app.use("/api/camps", campsRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/image", imageRouter);
 app.use("/api/admin", adminRouter);
-app.use("/api/admin/dashboard", dashboardRouter );
+app.use("/api/admin/dashboard", dashboardRouter);
 app.use("/api/booking", bookingRouter);
 app.use("/api/parking", parkingSlotRouter);
 app.use("/api/payment", paymentRouter);

@@ -10,6 +10,7 @@ import GalleryComponent from './Gallery2'
 import galheroimg from "./img/galleryhero.jpg"
 
 
+
 function Gallery() {
   const { pathname } = useLocation();
     useEffect(() => {

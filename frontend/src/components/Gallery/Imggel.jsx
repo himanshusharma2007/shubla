@@ -28,7 +28,7 @@ function Imggel() {
                     {
                     gellary.map((e , index)=>{
                         return(
-                            <img src={e} alt="" onClick={()=>{setImg(index)}}/>
+                            <img src={e} alt="" key={index} onClick={()=>{setImg(index)}}/>
                         );
                     })
                     }

@@ -15,21 +15,12 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./redux/authSlice";         
 import Parking from "./components/parking/Parking";
-import AdminLogin from "./adminPanel/Login/AdminLogin";
-import Layout from "./adminPanel/Layout/Layout";
-import AdminHome from "./adminPanel/Dashboard/AdminHome";
-import ContactAdminPanel from "./adminPanel/Dashboard/Contact";
 import BookingContainer from "./booking/bookingPage/Booking";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import paymentService from "./services/paymentService";
 import ProtectedRoute from "./route/ProtectedRoute";
 import PaymentForm from "./components/Payment/PaymentForm";
-import Rooms from "./adminPanel/Dashboard/Rooms";
-import Camps from "./adminPanel/Dashboard/Camps";
-import ParkingManagement from "./adminPanel/Dashboard/ParkingManagement";
-import AdminBooking from "./adminPanel/Dashboard/AdminBooking";
-import ImageUploadAdmin from "./adminPanel/Dashboard/ImageUploadAdmin";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,16 +61,6 @@ function App() {
         <Route path="/Private-Events" element={<Event2 />} />
         <Route path="/Activites" element={<Activity />} />
         <Route path="/parking" element={<Parking />} />
-
-        {/* Admin Routes */}
-        <Route path="/adminLogin" element={<AdminLogin />} />
-        <Route path="/dashboard" element={<Layout><AdminHome /></Layout>} />
-        <Route path="/contactAdminPanel" element={<Layout><ContactAdminPanel /></Layout>} />
-        <Route path="/rooms" element={<Layout><Rooms /></Layout>} />
-        <Route path="/tents" element={<Layout><Camps /></Layout>} />
-        <Route path="/parkingmanagement" element={<Layout><ParkingManagement/></Layout>} />
-        <Route path="/bookingmanagement" element={<Layout><AdminBooking /></Layout>} />
-        <Route path="/uploadImage" element={<Layout><ImageUploadAdmin /></Layout>} />
 
         {/* Booking Routes */}
         <Route path="/booking/:serviceType" element={<BookingContainer />} />

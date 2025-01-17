@@ -10,9 +10,15 @@ const DB_URL = process.env.MONGO_URI;
 app.use(express.json());
 app.use(cookieParser());
 app.use((req, res, next) => {
-  console.log('Origin:', req.headers.origin); // Log incoming origin
+  console.log({
+    method: req.method,
+    url: req.url,
+    origin: req.headers.origin || 'No Origin Header',
+    headers: req.headers
+  });
   next();
 });
+
 
 const allowedOrigins = [
   "https://shubla-frontend.onrender.com",

@@ -90,8 +90,12 @@ exports.loginAdmin = async (req, res) => {
     const token = generateToken(admin);
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+      secure: true,  // Required for HTTPS
+      sameSite: 'none',  // Required for cross-origin
+      path: '/',
+      domain: 'shubla-backend.onrender.com',  // Your backend domain
+      maxAge: 24 * 60 * 60 * 1000  // 1 day in milliseconds
+  });
     console.log('token set sucessfully in cookie', token)
     res.json({
       message: "Login successful",

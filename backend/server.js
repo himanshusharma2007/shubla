@@ -10,12 +10,13 @@ const DB_URL = process.env.MONGO_URI;
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(
-  cors({
-    origin: ["https://shubla-frontend.onrender.com", "http://localhost:5173"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: ["https://shubla-frontend.onrender.com"],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Set-Cookie']
+}));
 const authRouter = require("./router/authRouter");
 const roomsRouter = require("./router/roomsRouter");
 const campsRouter = require("./router/campsRouter");

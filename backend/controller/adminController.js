@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const Admin = require("../model/adminModel");
+const sendEmail = require("../utils/sendMail");
 
 // Generate JWT Token
 const generateToken = (admin) => {
@@ -18,7 +19,7 @@ const generateToken = (admin) => {
 // Admin Registration
 exports.registerAdmin = async (req, res) => {
   try {
-    const { username, email, password, role="superAdmin" } = req.body;
+    const { username, email, password, role = "superAdmin" } = req.body;
 
     // Check if admin already exists
     let existingAdmin = await Admin.findOne({
@@ -89,8 +90,12 @@ exports.loginAdmin = async (req, res) => {
     const token = generateToken(admin);
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+      secure: true,  // Required for HTTPS
+      sameSite: 'none',  // Required for cross-origin
+      path: '/',
+      domain: 'shubla-backend.onrender.com',  // Your backend domain
+      maxAge: 24 * 60 * 60 * 1000  // 1 day in milliseconds
+  });
     console.log('token set sucessfully in cookie', token)
     res.json({
       message: "Login successful",
@@ -103,13 +108,29 @@ exports.loginAdmin = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log('error in login', error )
+    console.log('error in login', error)
     res.status(500).json({
       message: "Login error",
       error: error.message,
     });
   }
 };
+
+exports.logoutAdmin = async (req, res) => {
+  try {
+    res.cookie("token", "", {
+      httpOnly: true,
+      maxAge: 0,
+    });
+    return res.status(200).json({message: "Logout successful"})
+  } catch (error) {
+    console.log('error in login', error)
+    res.status(500).json({
+      message: "Login error",
+      error: error.message,
+    });
+  }
+}
 
 // Forgot Password
 exports.forgotPassword = async (req, res) => {
@@ -130,13 +151,19 @@ exports.forgotPassword = async (req, res) => {
 
     // Construct reset URL
     const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const msg = `
+      <a href="${resetURL}">Click for reset password</a>
+    `
+    const isEmailSend = await sendEmail(admin.email, "Forget Password", msg)
 
-    // Send email (you would implement email sending logic here)
-    // sendResetPasswordEmail(admin.email, resetURL);
+    if (!isEmailSend) {
+      res.status(500).json({
+        message: "Email not send retry"// For testing purposes, in production, don't send this
+      });
+    }
 
     res.json({
-      message: "Password reset token sent to email",
-      resetToken, // For testing purposes, in production, don't send this
+      message: "Password reset token sent to email"// For testing purposes, in production, don't send this
     });
   } catch (error) {
     res.status(500).json({

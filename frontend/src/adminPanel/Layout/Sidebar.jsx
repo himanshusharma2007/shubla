@@ -1,9 +1,23 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import adminService from '../../services/adminService';
 
 const Sidebar = () => {
+
+  const navigate = useNavigate()
+
+  const handleLogout = async() =>{
+    try {
+      await adminService.logOutAdmin()
+      navigate("/adminlogin")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
   return (
     <div className="h-screen w-full bg-gray-800 text-white flex flex-col">
-      <div className="p-4 text-xl font-bold border-b border-gray-700">Shubhla</div>
+      <div className="p-4 text-xl font-bold border-b border-gray-700">Subhla</div>
       <div className="flex-1 p-4">
         <ul className="space-y-2">
           <li>
@@ -93,7 +107,7 @@ const Sidebar = () => {
         </ul>
       </div>
       <div className="p-4 border-t border-gray-700">
-        <button className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-500 rounded">
+        <button onClick={handleLogout} className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-500 rounded">
           Log Out
         </button>
       </div>

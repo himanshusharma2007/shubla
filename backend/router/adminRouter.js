@@ -6,6 +6,7 @@ const {
   forgotPassword,
   resetPassword,
   getAdminProfile,
+  logoutAdmin,
 } = require("../controller/adminController");
 const { checkAdmin } = require("../middleware/checkAdmin");
 
@@ -69,6 +70,7 @@ const resetPasswordValidation = [
 router.post("/register", registerValidation, validate, registerAdmin);
 
 router.post("/login", loginValidation, validate, loginAdmin);
+router.get("/logout", logoutAdmin);
 
 router.post(
   "/forgot-password",

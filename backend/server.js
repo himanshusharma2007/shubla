@@ -10,12 +10,13 @@ const DB_URL = process.env.MONGO_URI;
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: ["https://shubla-frontend.onrender.com"],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Set-Cookie']
+}));
 const authRouter = require("./router/authRouter");
 const roomsRouter = require("./router/roomsRouter");
 const campsRouter = require("./router/campsRouter");
@@ -26,7 +27,7 @@ const parkingSlotRouter = require("./router/parkingSlotRouter");
 const bookingRouter = require("./router/bookingRouter");
 const paymentRouter = require("./router/paymentRouter")
 const dashboardRouter = require("./router/dashboardRouter")
-
+const packageBookingRouter = require("./router/packageBookingRouter");
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -41,7 +42,7 @@ app.use("/api/admin/dashboard", dashboardRouter );
 app.use("/api/booking", bookingRouter);
 app.use("/api/parking", parkingSlotRouter);
 app.use("/api/payment", paymentRouter);
-
+app.use("/api/package-booking", packageBookingRouter);
 
 app.listen(process.env.PORT, async () => {
   await connectDB(DB_URL);

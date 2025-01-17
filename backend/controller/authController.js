@@ -31,7 +31,11 @@ const login = async (req, res) => {
         const token = await user.generateAuthToken();
         res.cookie("token", token, {
             httpOnly: true,
-            expires: new Date(Date.now() + 600000 *6 *24), // 10 minutes
+            secure: true,  // Required for HTTPS
+            sameSite: 'none',  // Required for cross-origin
+            path: '/',
+            domain: 'shubla-backend.onrender.com',  // Your backend domain
+            maxAge: 24 * 60 * 60 * 1000  // 1 day in milliseconds
         });
         if(!token) throw new Error("Failed to generate token");
         res.status(200).json({ user });

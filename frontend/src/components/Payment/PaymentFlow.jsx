@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const PaymentFlow = ({ paymentStatus, bookingStatus , retry}) => {
+const PaymentFlow = ({ paymentStatus, bookingStatus, retry }) => {
 
-    const navigate = useNavigate()
+  const navigate = useNavigate()
 
   return (
     // Overlay
@@ -29,8 +29,8 @@ const PaymentFlow = ({ paymentStatus, bookingStatus , retry}) => {
             </div>
             <h2 className="text-2xl font-bold text-red-500 mb-2">Payment Failed</h2>
             <p className="text-gray-600 mb-4">We couldn't process your payment. Please try again.</p>
-            <button 
-              onClick={retry} 
+            <button
+              onClick={retry}
               className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
             >
               Try Again
@@ -57,8 +57,8 @@ const PaymentFlow = ({ paymentStatus, bookingStatus , retry}) => {
             </div>
             <h2 className="text-2xl font-bold text-green-500 mb-2">Booking Confirmed!</h2>
             <p className="text-gray-600 mb-4">Your payment was successful and your booking is confirmed.</p>
-            <button 
-              onClick={() => navigate(-1)} 
+            <button
+              onClick={() => navigate(-1)}
               className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors"
             >
               View Booking

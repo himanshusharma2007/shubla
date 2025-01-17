@@ -12,6 +12,7 @@ import paymentService from '../../services/paymentService';
 import PaymentFlow from './PaymentFlow';
 import { createBooking } from '../../services/bookingService';
 import { useNavigate } from 'react-router-dom';
+import { createPackageBooking } from '../../services/PackageBookingService';
 
 const PaymentForm = () => {
     const navigate = useNavigate()
@@ -19,6 +20,8 @@ const PaymentForm = () => {
     const user = useSelector((state) => state.auth.user);
     const stripe = useStripe();
     const elements = useElements();
+
+    console.log(booking)
 
     const [paymentStatus, setPaymentStatus] = useState(null);
     const [bookingStatus, setBookingStatus] = useState(null);
@@ -37,7 +40,7 @@ const PaymentForm = () => {
         setPaymentStatus("processing")
         try {
             console.log("payment")
-            const data = await paymentService.processPayment(booking.amount * 100);
+            const data = await paymentService.processPayment(booking.totalAmount * 100);
             const client_secret = data.client_secret;
             console.log(client_secret)
             if (!stripe || !elements) return;
@@ -61,16 +64,29 @@ const PaymentForm = () => {
             setPaymentStatus("success")
             setBookingStatus('processing')
             if (result.paymentIntent.status === "succeeded") {
-                const response = await createBooking(
-                    {
-                        ...booking,
-                        paymentInfo: {
-                            id: result.paymentIntent.id,
-                            status: result.paymentIntent.status
-                        },
-                        paymentStatus: "completed"
-                    })
-                console.log(response)
+                if (booking.bookingType === "single") {
+                    const response = await createBooking(
+                        {
+                            ...booking,
+                            paymentInfo: {
+                                id: result.paymentIntent.id,
+                                status: result.paymentIntent.status
+                            },
+                            paymentStatus: "completed"
+                        })
+                    console.log(response)
+                } else {
+                    const response = await createPackageBooking(
+                        {
+                            ...booking,
+                            paymentInfo: {
+                                id: result.paymentIntent.id,
+                                status: result.paymentIntent.status
+                            },
+                            paymentStatus: "completed"
+                        })
+                    console.log(response)
+                }
                 setBookingStatus('success');
             } else {
                 setBookingStatus('failed');
@@ -93,8 +109,8 @@ const PaymentForm = () => {
                 <PaymentFlow
                     paymentStatus={paymentStatus}
                     bookingStatus={bookingStatus}
-                    retry={() => { 
-                        setPaymentStatus(null) 
+                    retry={() => {
+                        setPaymentStatus(null)
                         setBookingStatus(null)
                     }}
                 />}
@@ -167,11 +183,11 @@ const PaymentForm = () => {
                                     {booking?.isPrivateBooking ? 'Yes' : 'No'}
                                 </span>
                             </div>
-                            <hr/>
+                            <hr />
                             <div className="flex justify-between items-center">
                                 <span className="text-lg font-bold text-amber-800">Pay amount</span>
                                 <span className="text-lg font-bold text-amber-900">
-                                    {booking?.amount}
+                                    {booking?.totalAmount}
                                 </span>
                             </div>
                         </div>

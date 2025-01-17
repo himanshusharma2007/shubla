@@ -7,7 +7,7 @@ const sendEmail = require("../utils/sendMail");
 const checkAvailability = require("../utils/checkAvailability");
 
 // Utility function to update service availability
-const updateServiceAvailability = async (serviceType) => {
+exports.updateServiceAvailability = async (serviceType) => {
   console.log("Execution started for service type:", serviceType);
 
   let ServiceModel;
@@ -132,10 +132,14 @@ const updateServiceAvailability = async (serviceType) => {
   );
 
   // Update available quantity
-  const availableQuantity =
+  let availableQuantity =
     service[
     `total${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}s`
     ] - bookedQuantity;
+
+  if(serviceType==="parking"){
+    availableQuantity = service["totalSlots"] - bookedQuantity
+  }
 
   console.log(
     `Updating available quantity for ${serviceType}:`,
@@ -152,6 +156,17 @@ const updateServiceAvailability = async (serviceType) => {
       },
     }
   );
+
+  if(serviceType==="parking"){
+    await ServiceModel.updateMany(
+      {},
+      {
+        $set: {
+          [`availableSlots`]: availableQuantity,
+        },
+      }
+    );
+  }
 
   console.log(`Successfully updated available quantity for ${serviceType}`);
   return availableQuantity;
@@ -270,7 +285,7 @@ exports.createBooking = async (req, res) => {
 
     if (availability.status === "confirmed") {
       console.log("Updating service availability as status is confirmed...");
-      await updateServiceAvailability(serviceType);
+      await this.updateServiceAvailability(serviceType);
     }
 
     // Send notifications based on booking status

@@ -1,9 +1,11 @@
-import api from './api.js';
+import api from "./api.js";
 
 const authService = {
   register: async (userData) => {
     try {
-      const response = await api.post('/auth/register', userData);
+      const response = await api.post("/auth/register", userData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -12,7 +14,9 @@ const authService = {
 
   login: async (credentials) => {
     try {
-      const response = await api.post('/auth/login', credentials);
+      const response = await api.post("/auth/login", credentials, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -21,7 +25,9 @@ const authService = {
 
   logout: async () => {
     try {
-      const response = await api.post('/auth/logout');
+      const response = await api.post("/auth/logout", {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -30,14 +36,15 @@ const authService = {
 
   getUser: async () => {
     try {
-      const response = await api.get('/auth/get-user');
-      console.log('response in get user ', response)
+      const response = await api.get("/auth/get-user", {
+        withCredentials: true,
+      });
+      console.log("response in get user ", response);
       return response.data;
     } catch (error) {
       throw error;
     }
-  }
+  },
 };
 
 export default authService;
-

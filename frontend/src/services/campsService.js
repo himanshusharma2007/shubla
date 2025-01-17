@@ -4,7 +4,9 @@ const campsService = {
   // Create a new camp
   createCampData: async (campData) => {
     try {
-      const response = await api.post('/camps/create', campData);
+      const response = await api.post('/camps/create', campData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       console.error('Failed to create camp:', error.response?.data || error.message);
@@ -15,7 +17,9 @@ const campsService = {
   // Update an existing camp
   updateCampData: async (id, campData) => {
     try {
-      const response = await api.put(`/camps/update/${id}`, campData);
+      const response = await api.put(`/camps/update/${id}`, campData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       console.error('Failed to update camp:', error.response?.data || error.message);
@@ -26,7 +30,9 @@ const campsService = {
   // Fetch all camp data
   getCampsData: async () => {
     try {
-      const response = await api.get('/camps');
+      const response = await api.get('/camps', {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       console.error('Failed to fetch camps:', error.response?.data || error.message);

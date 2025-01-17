@@ -47,8 +47,8 @@ const ParkingBookingForm = ({ onSubmit }) => {
     if (formData.quantity < 1) {
       newErrors.quantity = "Minimum 1 parking slot required";
     }
-    if (formData.quantity > parkingData?.availableSlots) {
-      newErrors.quantity = `Maximum ${parkingData?.availableSlots} slots available`;
+    if (formData.quantity > parkingData?.totalSlots) {
+      newErrors.quantity = `Maximum ${parkingData?.totalSlots} slots`;
     }
 
     setErrors(newErrors);
@@ -186,7 +186,7 @@ const ParkingBookingForm = ({ onSubmit }) => {
             <input
               type="number"
               min="1"
-              max={parkingData?.availableSlots || 1}
+              max={parkingData?.totalSlots}
               value={formData.quantity}
               onChange={(e) =>
                 setFormData((prev) => ({

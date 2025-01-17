@@ -49,11 +49,11 @@ function InstaPost() {
             <button >FOLLOW US</button>
             </a>
         </div>
-        <div className='post'>
+        <div className='post '>
             {img.map((item)=>(
                 <div className='p-img'>
                   <a href={item.link}>
-                  <img src={item.url} alt="" />
+                  <img src={item.url} alt=""  className='rounded-md'/>
                   </a>
                     <MdContentCopy className='icon' />
                 </div>

@@ -4,7 +4,9 @@ import api from "./api";
 export const createPackageBooking = async (packageBookingData) => {
   console.log('package booking data', packageBookingData);
   try {
-    const response = await api.post("/package-booking/new", packageBookingData);
+    const response = await api.post("/package-booking/new", packageBookingData, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -14,7 +16,9 @@ export const createPackageBooking = async (packageBookingData) => {
 export const checkPackageBookingAvailability = async (packageBookingData) => {
   console.log('package booking data', packageBookingData);
   try {
-    const response = await api.post("/package-booking/new-check-availability", packageBookingData);
+    const response = await api.post("/package-booking/new-check-availability", packageBookingData, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -23,7 +27,9 @@ export const checkPackageBookingAvailability = async (packageBookingData) => {
 
 export const getUserPackageBookings = async () => {
   try {
-    const response = await api.get("/package-booking/bookings");
+    const response = await api.get("/package-booking/bookings", {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -32,7 +38,9 @@ export const getUserPackageBookings = async () => {
 
 export const getAllPackageBookings = async () => {
   try {
-    const response = await api.get("/package-booking/admin/bookings");
+    const response = await api.get("/package-booking/admin/bookings", {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -41,7 +49,9 @@ export const getAllPackageBookings = async () => {
 
 export const updatePackageBookingStatus = async (bookingId, statusData) => {
   try {
-    const response = await api.put(`/package-booking/admin/${bookingId}`, statusData);
+    const response = await api.put(`/package-booking/admin/${bookingId}`, statusData, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;

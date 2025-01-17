@@ -5,7 +5,8 @@ const imageService = {
     try {
       console.log("form data", formData);
       const response = await api.post('/image/gallery', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
+        wihtCredentials: true
       });
       console.log("gallery image: ", response);
       return response.data;

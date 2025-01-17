@@ -8,7 +8,9 @@ import api from './api'; // Import your Axios instance
  */
 export const generateDashboardMetrics = async (metricsData) => {
   try {
-    const response = await api.post('/admin/dashboard/metrics', metricsData);
+    const response = await api.post('/admin/dashboard/metrics', metricsData, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error('An error occurred');
@@ -21,7 +23,9 @@ export const generateDashboardMetrics = async (metricsData) => {
  */
 export const getDashboardMetrics = async () => {
   try {
-    const response = await api.get('/admin/dashboard/metrics');
+    const response = await api.get('/admin/dashboard/metrics', {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error('An error occurred');
@@ -34,7 +38,9 @@ export const getDashboardMetrics = async () => {
  */
 export const getEarningsMetrics = async () => {
   try {
-    const response = await api.get('/admin/dashboard/earnings');
+    const response = await api.get('/admin/dashboard/earnings', {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error('An error occurred');

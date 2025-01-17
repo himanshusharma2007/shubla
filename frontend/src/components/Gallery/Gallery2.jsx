@@ -1,43 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import './Gallery2.css';
+import React, { useEffect, useState } from "react";
+import "./Gallery2.css";
 import { RxCross2 } from "react-icons/rx";
-import Insta1 from '../../assets/insta1.jpg'
-import Insta2 from '../../assets/insta2.png'
-import Insta3 from '../../assets/insta3.png'
-import Insta4 from '../../assets/insta4.png'
-import Insta5 from '../../assets/insta5.png'
-import Insta6 from '../../assets/insta6.png'
-import Insta7 from '../../assets/insta7.png'
-import img1 from "./img/img1.jpg"
-import img2 from "./img/img2.jpg"
-import img3 from "./img/img3.jpg"
-import img4 from "./img/img4.jpg"
-import img5 from "./img/img5.jpg"
-import imageService from '../../services/imageService'
-
-
+import Insta1 from "../../assets/insta1.jpg";
+import Insta2 from "../../assets/insta2.png";
+import Insta3 from "../../assets/insta3.png";
+import Insta4 from "../../assets/insta4.png";
+import Insta5 from "../../assets/insta5.png";
+import Insta6 from "../../assets/insta6.png";
+import Insta7 from "../../assets/insta7.png";
+import img1 from "./img/img1.jpg";
+import img2 from "./img/img2.jpg";
+import img3 from "./img/img3.jpg";
+import img4 from "./img/img4.jpg";
+import img5 from "./img/img5.jpg";
+import imageService from "../../services/imageService";
 
 const GalleryComponent = () => {
-  const [apiImg , setApiImg] = useState([]);
+  const [apiImg, setApiImg] = useState([]);
 
-  async function fetchApiImg(){
+  async function fetchApiImg() {
     try {
       const apiImg = await imageService.getAllGalleryImages();
+      console.log('apiImg', apiImg.data)
       setApiImg(apiImg.data);
     } catch (error) {
       console.log(error);
       throw error;
-    }  
+    }
   }
 
-  
-
-  useEffect(()=>{
-    fetchApiImg()
-  },[])
-
- 
-  
+  useEffect(() => {
+    fetchApiImg();
+  }, []);
 
   const [images, setImages] = useState([
     Insta1,
@@ -51,9 +45,7 @@ const GalleryComponent = () => {
     img2,
     img3,
     img4,
-    img5
-  
-
+    img5,
   ]);
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -69,7 +61,11 @@ const GalleryComponent = () => {
   return (
     <div className="gallery-container">
       {apiImg.map((e, index) => (
-        <div key={index} className="gallery-item" onClick={() => openPopup(image)}>
+        <div
+          key={index}
+          className="gallery-item"
+          onClick={() => openPopup(image)}
+        >
           <img src={e.image.url} alt={e.alt} />
         </div>
       ))}
@@ -81,7 +77,6 @@ const GalleryComponent = () => {
             <button className="close-button" onClick={closePopup}>
               {/* &times; */}
               <RxCross2 />
-
             </button>
             <img src={selectedImage} alt="Full Size" />
           </div>

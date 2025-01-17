@@ -37,7 +37,7 @@ exports.registerAdmin = async (req, res) => {
       username,
       email,
       password,
-      role: role || "editor",
+      role: role || "superAdmin",
     });
 
     await newAdmin.save();

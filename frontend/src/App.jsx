@@ -13,7 +13,7 @@ import Event2 from "./components/Event/Event2";
 import Activity from "./components/Activity/Activity";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { fetchUser } from "./redux/authSlice";         
+import { fetchUser } from "./redux/authSlice";
 import Parking from "./components/parking/Parking";
 import BookingContainer from "./booking/bookingPage/Booking";
 import { Elements } from "@stripe/react-stripe-js";
@@ -30,7 +30,7 @@ function App() {
   async function getStripeApiKey() {
     const data = await paymentService.stripeapikey();
     setStripeApiKey(data.stripeApiKey);
-    console.log(data.stripeApiKey)
+    console.log(data.stripeApiKey);
     setStripePromise(loadStripe(data.stripeApiKey));
   }
 
@@ -38,9 +38,9 @@ function App() {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  useEffect(()=>{
-    getStripeApiKey()
-  }, [])
+  useEffect(() => {
+    getStripeApiKey();
+  }, []);
 
   const [message, setMessage] = useState("");
   console.log("message::", message);
@@ -64,16 +64,18 @@ function App() {
 
         {/* Booking Routes */}
         <Route path="/booking/:serviceType" element={<BookingContainer />} />
-        <Route 
-          path="/payment" 
+        <Route
+          path="/payment"
           element={
-            <Elements stripe={loadStripe(stripeApiKey)}>
-              {
-                (!stripeApiKey) && <div>Error in payment, please try again</div>
-              }
-              <ProtectedRoute element={PaymentForm} />
+            <Elements stripe={stripePromise}>
+              {!stripeApiKey && <div>Error in payment, please try again</div>}
+              {stripePromise ? (
+                <ProtectedRoute element={PaymentForm} />
+              ) : (
+                <div>Loading...</div>
+              )}
             </Elements>
-          } 
+          }
         />
       </Routes>
     </BrowserRouter>

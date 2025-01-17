@@ -87,6 +87,7 @@
 }
 
 .openans{
+    transition: height 0.3s ease;
     display: block;
 }
 .closeans{

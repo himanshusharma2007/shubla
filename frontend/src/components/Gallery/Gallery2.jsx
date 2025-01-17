@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Gallery2.css';
 import { RxCross2 } from "react-icons/rx";
 import Insta1 from '../../assets/insta1.jpg'
@@ -13,10 +13,32 @@ import img2 from "./img/img2.jpg"
 import img3 from "./img/img3.jpg"
 import img4 from "./img/img4.jpg"
 import img5 from "./img/img5.jpg"
+import imageService from '../../services/imageService'
 
 
 
 const GalleryComponent = () => {
+  const [apiImg , setApiImg] = useState([]);
+
+  async function fetchApiImg(){
+    try {
+      const apiImg = await imageService.getAllGalleryImages();
+      setApiImg(apiImg.data);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }  
+  }
+
+  
+
+  useEffect(()=>{
+    fetchApiImg()
+  },[])
+
+ 
+  
+
   const [images, setImages] = useState([
     Insta1,
     Insta2,
@@ -46,9 +68,9 @@ const GalleryComponent = () => {
 
   return (
     <div className="gallery-container">
-      {images.map((image, index) => (
+      {apiImg.map((e, index) => (
         <div key={index} className="gallery-item" onClick={() => openPopup(image)}>
-          <img src={image} alt={`Gallery ${index + 1}`} />
+          <img src={e.image.url} alt={e.alt} />
         </div>
       ))}
 

@@ -60,6 +60,8 @@
     width: 50%;
     background-color: #fffff0;
     padding: 3%;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 .abt-camp div h2{
    font-size: 30px;
@@ -91,6 +93,8 @@
 }
 .abt-camp img{
     width: 50%;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 @media only screen and (max-width: 1000px){

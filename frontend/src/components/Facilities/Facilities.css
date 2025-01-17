@@ -33,6 +33,8 @@
 
 .f-inner img{
     width: 100%;
+    height: 110%;
+    object-fit: cover;
     border-radius: 20px;
     position: relative;
     bottom: 105%;
@@ -69,7 +71,7 @@
         height: 200vh;
     }
     .f-inner img{
-        height: 110%;
+        height: auto;
         width: auto;
     }
     

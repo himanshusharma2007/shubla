@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 
 const allowedOrigins = [
   "https://shubla-frontend.onrender.com",
-  "http://localhost:5174"
+  "https://shubla-admin.onrender.com"
 ];
 
 app.use(cors({

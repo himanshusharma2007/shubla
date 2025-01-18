@@ -9,7 +9,7 @@ const emptyTempFolder = require("../utils/emptyTempFolder");
 
 
 // Existing functions remain the same...
-export const ensureTempDir = () => {
+ const ensureTempDir = () => {
     try {
         // Get absolute path to temp directory
         const tempDir = path.resolve(__dirname, '..', 'temp');
@@ -296,4 +296,5 @@ module.exports = {
   getAllInstagramImages,
   deleteGalleryImage,
   deleteInstagramImage,
+  ensureTempDir
 };

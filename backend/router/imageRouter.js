@@ -41,13 +41,12 @@ router.get("/gallery", getAllGalleryImages);
 router.post(
   "/instagram",
   checkAdmin,
-  upload.single("image"),  // Direct middleware usage like in gallery route
+  upload.single("image"), // Direct middleware usage like in gallery route
   instagramImageValidation,
   uploadInstagramImage
 );
 
-
 router.get("/instagram", getAllInstagramImages);
-router.delete('/gallery/:id', deleteGalleryImage);
-router.delete('/instagram/:id', deleteInstagramImage);
+router.delete("/gallery/:id", deleteGalleryImage);
+router.delete("/instagram/:id", deleteInstagramImage);
 module.exports = router;

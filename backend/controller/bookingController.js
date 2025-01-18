@@ -449,7 +449,7 @@ const sendBookingNotifications = async (booking, user) => {
       Quantity: ${booking.quantity}
       Check-in: ${new Date(booking.checkIn).toLocaleString()}
       Check-out: ${new Date(booking.checkOut).toLocaleString()}
-      Total Amount: R${booking.totalAmount}
+      Total Amount: AED${booking.totalAmount}
 
       ${isPending
       ? "Your booking is currently pending availability. We will notify you as soon as we can confirm your booking."
@@ -476,7 +476,7 @@ const sendBookingNotifications = async (booking, user) => {
       Quantity: ${booking.quantity}
       Check-in: ${new Date(booking.checkIn).toLocaleString()}
       Check-out: ${new Date(booking.checkOut).toLocaleString()}
-      Total Amount: R${booking.totalAmount}
+      Total Amount: AED${booking.totalAmount}
 
       Customer Details:
       Name: ${user.name}

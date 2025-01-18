@@ -513,7 +513,7 @@ const sendPackageBookingNotifications = async (packageBooking, user, bookings) =
     ${createServiceSummary()}
     Check-in: ${new Date(packageBooking.checkIn).toLocaleString()}
     Check-out: ${new Date(packageBooking.checkOut).toLocaleString()}
-    Total Amount: R${packageBooking.totalAmount}
+    Total Amount: AED${packageBooking.totalAmount}
 
     ${isPending
       ? "Your package booking is currently pending availability. We will notify you once we can confirm your booking."
@@ -530,7 +530,7 @@ const sendPackageBookingNotifications = async (packageBooking, user, bookings) =
     sendEmail(
       process.env.ADMIN_EMAIL,
       `New ${statusMessage} - Administrative Notice`,
-      `New package booking received. Total amount: R${packageBooking.totalAmount}`
+      `New package booking received. Total amount: AED${packageBooking.totalAmount}`
     ),
   ]);
 };

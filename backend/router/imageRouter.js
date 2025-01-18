@@ -11,6 +11,7 @@ const {
   getAllInstagramImages,
   deleteGalleryImage,
   deleteInstagramImage,
+  ensureTempDir,
 } = require("../controller/imageController");
 
 // Validation middleware
@@ -30,6 +31,7 @@ const instagramImageValidation = [
 router.post(
   "/gallery",
   checkAdmin,
+  ensureTempDir,
   upload.single("image"),
   galleryImageValidation,
   uploadGalleryImage
@@ -41,6 +43,7 @@ router.get("/gallery", getAllGalleryImages);
 router.post(
   "/instagram",
   checkAdmin,
+  ensureTempDir,
   upload.single("image"), // Direct middleware usage like in gallery route
   instagramImageValidation,
   uploadInstagramImage

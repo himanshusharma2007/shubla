@@ -9,7 +9,7 @@ const emptyTempFolder = require("../utils/emptyTempFolder");
 
 
 // Existing functions remain the same...
-const ensureTempDir = () => {
+export const ensureTempDir = () => {
     try {
         // Get absolute path to temp directory
         const tempDir = path.resolve(__dirname, '..', 'temp');

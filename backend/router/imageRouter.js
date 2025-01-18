@@ -9,6 +9,8 @@ const {
   getAllGalleryImages,
   uploadInstagramImage,
   getAllInstagramImages,
+  deleteGalleryImage,
+  deleteInstagramImage,
 } = require("../controller/imageController");
 
 // Validation middleware
@@ -46,5 +48,6 @@ router.post(
 
 
 router.get("/instagram", getAllInstagramImages);
-
+router.delete('/gallery/:id', deleteGalleryImage);
+router.delete('/instagram/:id', deleteInstagramImage);
 module.exports = router;

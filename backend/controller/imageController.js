@@ -1,10 +1,10 @@
 const { GalleryImage, InstagramImage } = require('../model/imageModel');
-const { uploadOnCloudinary } = require('../utils/cloudinary');
+const { uploadOnCloudinary, deleteFromCloudinary } = require('../utils/cloudinary');
 const emptyTempFolder = require('../utils/emptyTempFolder');
-// Gallery Image Controllers
+
+// Existing functions remain the same...
 const uploadGalleryImage = async (req, res) => {
     try {
-        // Check if file exists
         if (!req.file) {
             return res.status(400).json({
                 success: false,
@@ -12,7 +12,6 @@ const uploadGalleryImage = async (req, res) => {
             });
         }
 
-        // Check if alt text is provided
         if (!req.body.alt) {
             return res.status(400).json({
                 success: false,
@@ -20,7 +19,6 @@ const uploadGalleryImage = async (req, res) => {
             });
         }
 
-        // Upload to Cloudinary
         const uploadResult = await uploadOnCloudinary(req.file.path);
         if (!uploadResult) {
             return res.status(500).json({
@@ -29,7 +27,6 @@ const uploadGalleryImage = async (req, res) => {
             });
         }
 
-        // Create gallery image
         const galleryImage = await GalleryImage.create({
             image: {
                 url: uploadResult.url,
@@ -48,8 +45,7 @@ const uploadGalleryImage = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Internal server error",
-            // error: error.message
-            error: "Error i am giving"
+            error: error.message
         });
     }
 };
@@ -73,13 +69,8 @@ const getAllGalleryImages = async (req, res) => {
     }
 };
 
-// Instagram Image Controllers
 const uploadInstagramImage = async (req, res) => {
     try {
-        console.log("Request body:", req.body);
-        console.log("Request file:", req.file);
-        console.log("upload instagram called")
-        // Validate required fields
         if (!req.file) {
             return res.status(400).json({
                 success: false,
@@ -101,7 +92,6 @@ const uploadInstagramImage = async (req, res) => {
             });
         }
 
-        // Basic URL validation
         const urlPattern = /^https?:\/\/.+/i;
         if (!urlPattern.test(req.body.link)) {
             return res.status(400).json({
@@ -110,7 +100,6 @@ const uploadInstagramImage = async (req, res) => {
             });
         }
 
-        // Upload to Cloudinary
         const uploadResult = await uploadOnCloudinary(req.file.path);
         if (!uploadResult) {
             return res.status(500).json({
@@ -119,7 +108,6 @@ const uploadInstagramImage = async (req, res) => {
             });
         }
 
-        // Create Instagram image
         const instagramImage = await InstagramImage.create({
             image: {
                 url: uploadResult.url,
@@ -163,9 +151,78 @@ const getAllInstagramImages = async (req, res) => {
     }
 };
 
+// New delete functions
+const deleteGalleryImage = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find the image
+        const image = await GalleryImage.findById(id);
+        if (!image) {
+            return res.status(404).json({
+                success: false,
+                message: "Gallery image not found"
+            });
+        }
+
+        // Delete from Cloudinary
+        await deleteFromCloudinary(image.image.public_id);
+
+        // Delete from database
+        await GalleryImage.findByIdAndDelete(id);
+
+        return res.status(200).json({
+            success: true,
+            message: "Gallery image deleted successfully"
+        });
+    } catch (error) {
+        console.error("Error in deleteGalleryImage: ", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message
+        });
+    }
+};
+
+const deleteInstagramImage = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find the image
+        const image = await InstagramImage.findById(id);
+        if (!image) {
+            return res.status(404).json({
+                success: false,
+                message: "Instagram image not found"
+            });
+        }
+
+        // Delete from Cloudinary
+        await deleteFromCloudinary(image.image.public_id);
+
+        // Delete from database
+        await InstagramImage.findByIdAndDelete(id);
+
+        return res.status(200).json({
+            success: true,
+            message: "Instagram image deleted successfully"
+        });
+    } catch (error) {
+        console.error("Error in deleteInstagramImage: ", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     uploadGalleryImage,
     getAllGalleryImages,
     uploadInstagramImage,
-    getAllInstagramImages
+    getAllInstagramImages,
+    deleteGalleryImage,
+    deleteInstagramImage
 };

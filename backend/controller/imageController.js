@@ -1,5 +1,5 @@
 const { GalleryImage, InstagramImage } = require('../model/imageModel');
-const { uploadOnCloudinary, deleteFromCloudinary } = require('../utils/cloudinary');
+const { uploadOnCloudinary, deleteOnCloudinary } = require('../utils/cloudinary');
 const emptyTempFolder = require('../utils/emptyTempFolder');
 
 // Existing functions remain the same...
@@ -166,7 +166,7 @@ const deleteGalleryImage = async (req, res) => {
         }
 
         // Delete from Cloudinary
-        await deleteFromCloudinary(image.image.public_id);
+        await deleteOnCloudinary(image.image.public_id);
 
         // Delete from database
         await GalleryImage.findByIdAndDelete(id);
@@ -199,7 +199,7 @@ const deleteInstagramImage = async (req, res) => {
         }
 
         // Delete from Cloudinary
-        await deleteFromCloudinary(image.image.public_id);
+        await deleteOnCloudinary(image.image.public_id);
 
         // Delete from database
         await InstagramImage.findByIdAndDelete(id);

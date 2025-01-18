@@ -12,7 +12,8 @@ const {
   deleteGalleryImage,
   deleteInstagramImage,
 } = require("../controller/imageController");
-
+const fs = require('fs');
+const path = require('path');
 // Validation middleware
 const galleryImageValidation = [body("alt").trim()];
 

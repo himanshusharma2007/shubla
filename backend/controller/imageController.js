@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+
 const { GalleryImage, InstagramImage } = require("../model/imageModel");
 const {
   uploadOnCloudinary,

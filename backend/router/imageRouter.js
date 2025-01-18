@@ -11,7 +11,6 @@ const {
   getAllInstagramImages,
   deleteGalleryImage,
   deleteInstagramImage,
-  ensureTempDir,
 } = require("../controller/imageController");
 
 // Validation middleware
@@ -26,7 +25,31 @@ const instagramImageValidation = [
     .isURL()
     .withMessage("Invalid Instagram link format"),
 ];
-
+const ensureTempDir = (req, res, next) => {
+  try {
+      // Get absolute path to temp directory
+      const tempDir = path.resolve(__dirname, '..', 'temp');
+      console.log('Temp directory path:', tempDir);
+      
+      // Create directory if it doesn't exist
+      if (!fs.existsSync(tempDir)) {
+          console.log('Creating temp directory...');
+          fs.mkdirSync(tempDir, { recursive: true });
+          console.log('Temp directory created successfully');
+      } else {
+          console.log('Temp directory already exists');
+      }
+      
+      // Ensure directory has proper permissions
+      fs.chmodSync(tempDir, '777');
+      console.log('Temp directory permissions updated');
+      
+      next();
+  } catch (error) {
+      console.error('Error in ensureTempDir:', error);
+      throw error;
+  }
+};
 // Gallery Image Routes
 router.post(
   "/gallery",
@@ -44,7 +67,8 @@ router.post(
   "/instagram",
   checkAdmin,
   ensureTempDir,
-  upload.single("image"), // Direct middleware usage like in gallery route
+  upload.single("image"), 
+  // Direct middleware usage like in gallery route
   instagramImageValidation,
   uploadInstagramImage
 );

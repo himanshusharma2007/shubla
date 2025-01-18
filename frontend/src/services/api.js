@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Create an Axios instance with base URL
 const api = axios.create({
-  baseURL: "https://shubla-backend.onrender.com/api",
+  baseURL: "https://shubla-backend.onrender.com/api", 
+  // baseURL:  "http://localhost:3000/api",
   withCredentials: true,
 });
 

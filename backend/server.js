@@ -13,35 +13,43 @@ app.use((req, res, next) => {
   console.log({
     method: req.method,
     url: req.url,
-    origin: req.headers.origin || 'No Origin Header',
-    headers: req.headers
+    origin: req.headers.origin || "No Origin Header",
+    headers: req.headers,
   });
   next();
 });
 
-
 const allowedOrigins = [
   "https://shubla-frontend.onrender.com",
-  "https://shubla-admin.onrender.com"
+  "https://shubla-admin.onrender.com",
+  "http://localhost:5173",
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
 
-    // Check if the origin is in the allowed origins
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
-  exposedHeaders: ['Set-Cookie']
-}));
+      // Check if the origin is in the allowed origins
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Origin",
+      "X-Requested-With",
+      "Accept",
+    ],
+    exposedHeaders: ["Set-Cookie"],
+  })
+);
 
 const authRouter = require("./router/authRouter");
 const roomsRouter = require("./router/roomsRouter");

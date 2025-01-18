@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const { GalleryImage, InstagramImage } = require("../model/imageModel");
 const {
   uploadOnCloudinary,
@@ -5,14 +7,33 @@ const {
 } = require("../utils/cloudinary");
 const emptyTempFolder = require("../utils/emptyTempFolder");
 
+
 // Existing functions remain the same...
 const ensureTempDir = () => {
-    const tempDir = path.join(__dirname, '..', 'temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
+    try {
+        // Get absolute path to temp directory
+        const tempDir = path.resolve(__dirname, '..', 'temp');
+        console.log('Temp directory path:', tempDir);
+        
+        // Create directory if it doesn't exist
+        if (!fs.existsSync(tempDir)) {
+            console.log('Creating temp directory...');
+            fs.mkdirSync(tempDir, { recursive: true });
+            console.log('Temp directory created successfully');
+        } else {
+            console.log('Temp directory already exists');
+        }
+        
+        // Ensure directory has proper permissions
+        fs.chmodSync(tempDir, '777');
+        console.log('Temp directory permissions updated');
+        
+        return tempDir;
+    } catch (error) {
+        console.error('Error in ensureTempDir:', error);
+        throw error;
     }
-    return tempDir;
-  };
+};
 const uploadGalleryImage = async (req, res) => {
   try {
     console.log("Starting uploadGalleryImage function...");

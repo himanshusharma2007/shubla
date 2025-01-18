@@ -6,10 +6,17 @@ const {
 const emptyTempFolder = require("../utils/emptyTempFolder");
 
 // Existing functions remain the same...
+const ensureTempDir = () => {
+    const tempDir = path.join(__dirname, '..', 'temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+    return tempDir;
+  };
 const uploadGalleryImage = async (req, res) => {
   try {
     console.log("Starting uploadGalleryImage function...");
-
+    ensureTempDir();
     // Check if file is provided
     if (!req.file) {
       console.log("No image file provided in the request");
@@ -94,7 +101,7 @@ const getAllGalleryImages = async (req, res) => {
 const uploadInstagramImage = async (req, res) => {
   try {
     console.log("Starting uploadInstagramImage function...");
-
+    ensureTempDir();
     // Check if file is provided
     if (!req.file) {
       console.log("No image file provided in the request");
